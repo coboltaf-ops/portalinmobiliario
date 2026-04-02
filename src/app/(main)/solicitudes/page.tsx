@@ -1,0 +1,339 @@
+'use client'
+
+import { useState } from 'react'
+import { useSolicitudesStore, type Solicitud } from '@/features/solicitudes/store/solicitudes-store'
+import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-store'
+import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
+import { fmtNum } from '@/shared/lib/format-date'
+import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
+import VoiceSearchButton from '@/shared/components/voice-search-button'
+
+const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
+const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
+
+const initForm = (): Solicitud => ({
+  id: '', codigo: '', fecha: '', nombre: '', apellido: '', correo: '', telefono: '',
+  mensaje: '', origen: '', propiedad_id: '', estado: 'Nueva', comercial_asignado: '', notas: '',
+})
+
+export default function SolicitudesPage() {
+  const { solicitudes, addSolicitud, updateSolicitud, deleteSolicitud } = useSolicitudesStore()
+  const propiedades = usePropiedadesStore(s => s.propiedades)
+  const comerciales = useComercialesStore(s => s.comerciales)
+  const config = useConfigStore()
+
+  const monedaSimbolo = (code: string) => {
+    const m = config.monedas.find(m => m.nombre === code)
+    return m ? m.simbolo : '$'
+  }
+
+  const [form, setForm] = useState<Solicitud>(initForm())
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [viewRecord, setViewRecord] = useState<Solicitud | null>(null)
+  const [search, setSearch] = useState('')
+  const [formError, setFormError] = useState('')
+
+  const propSeleccionada = propiedades.find(p => p.id === form.propiedad_id)
+
+  const nextCode = () => {
+    const nums = solicitudes.map(s => parseInt(s.codigo.replace('SOL-', '')) || 0)
+    const max = nums.length > 0 ? Math.max(...nums) : 0
+    return `SOL-${String(max + 1).padStart(5, '0')}`
+  }
+
+  const todayFormatted = () => {
+    const d = new Date()
+    const dd = String(d.getDate()).padStart(2, '0')
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const yyyy = d.getFullYear()
+    return `${dd}/${mm}/${yyyy}`
+  }
+
+  const filtered = solicitudes.filter(s =>
+    s.codigo.toLowerCase().includes(search.toLowerCase()) ||
+    s.nombre.toLowerCase().includes(search.toLowerCase()) ||
+    s.apellido.toLowerCase().includes(search.toLowerCase()) ||
+    s.correo.toLowerCase().includes(search.toLowerCase()) ||
+    s.estado.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault()
+    setFormError('')
+    if (!form.nombre.trim()) { setFormError('El nombre es obligatorio.'); return }
+    if (!form.correo.trim() && !form.telefono.trim()) { setFormError('Debe ingresar correo o telefono.'); return }
+    if (!form.propiedad_id) { setFormError('Debe seleccionar una propiedad.'); return }
+    if (form.id) {
+      updateSolicitud(form.id, form)
+    } else {
+      addSolicitud({ ...form, id: crypto.randomUUID(), codigo: nextCode(), fecha: todayFormatted() })
+    }
+    setIsFormOpen(false)
+    setForm(initForm())
+  }
+
+  const handleEdit = (s: Solicitud) => { setForm({ ...s }); setIsFormOpen(true) }
+  const handleDelete = (id: string) => { if (confirm('¿Eliminar esta solicitud?')) deleteSolicitud(id) }
+
+  const statusBadge = (s: string) => {
+    const colors: Record<string, { bg: string; color: string; border: string }> = {
+      'Nueva': { bg: 'rgba(245,158,11,0.2)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.3)' },
+      'En Atencion': { bg: 'rgba(59,130,246,0.2)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' },
+      'Atendida': { bg: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid rgba(16,185,129,0.3)' },
+      'Descartada': { bg: 'rgba(239,68,68,0.2)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' },
+    }
+    const c = colors[s] || { bg: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
+    return <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{ background: c.bg, color: c.color, border: c.border }}>{s}</span>
+  }
+
+  const nuevasCount = solicitudes.filter(s => s.estado === 'Nueva').length
+
+  const headers = ['Codigo', 'Fecha', 'Nombre', 'Correo', 'Telefono', 'Origen', 'Propiedad', 'Estado', 'Comercial']
+  const rows = filtered.map(s => {
+    const prop = propiedades.find(p => p.id === s.propiedad_id)
+    const com = comerciales.find(c => c.id === s.comercial_asignado)
+    return [s.codigo, s.fecha, `${s.nombre} ${s.apellido}`, s.correo, s.telefono, s.origen || '-',
+      prop ? `${prop.codigo} - ${prop.urbanizacion}` : '-', s.estado,
+      com ? `${com.nombre} ${com.apellido}` : 'Sin asignar']
+  })
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-white">Solicitudes</h1>
+          {nuevasCount > 0 && (
+            <span className="px-2.5 py-1 rounded-full text-xs font-bold" style={{ background: 'rgba(245,158,11,0.85)', color: '#fff' }}>{nuevasCount} nueva{nuevasCount > 1 ? 's' : ''}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => exportToPDF('Solicitudes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+          <button onClick={() => exportToExcel(filtered.map(s => { const prop = propiedades.find(p => p.id === s.propiedad_id); return { Codigo: s.codigo, Fecha: s.fecha, Nombre: s.nombre, Apellido: s.apellido, Correo: s.correo, Telefono: s.telefono, Propiedad: prop ? prop.urbanizacion : '-', Estado: s.estado } }), 'Solicitudes')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+          <button onClick={() => printTable('Solicitudes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
+          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nueva Solicitud</button>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="flex items-center gap-2">
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar solicitudes..." className="flex-1 rounded-lg px-4 py-2 text-sm outline-none" style={inputSt} />
+        <VoiceSearchButton onResult={setSearch} />
+      </div>
+
+      {/* Table */}
+      <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                {['Codigo', 'Fecha', 'Nombre', 'Origen', 'Propiedad', 'Estado', 'Comercial', 'Acciones'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(s => {
+                const prop = propiedades.find(p => p.id === s.propiedad_id)
+                const com = comerciales.find(c => c.id === s.comercial_asignado)
+                return (
+                  <tr key={s.id} className="hover:bg-white/5 transition-colors" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td className="px-4 py-3 font-mono text-xs text-white/60">{s.codigo}</td>
+                    <td className="px-4 py-3 text-white/70">{s.fecha}</td>
+                    <td className="px-4 py-3 text-white">{s.nombre} {s.apellido}</td>
+                    <td className="px-4 py-3 text-white/70">{s.origen || '-'}</td>
+                    <td className="px-4 py-3 text-white/70">{prop ? `${prop.codigo}` : '-'}</td>
+                    <td className="px-4 py-3">{statusBadge(s.estado)}</td>
+                    <td className="px-4 py-3 text-white/70">{com ? `${com.nombre} ${com.apellido}` : 'Sin asignar'}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => setViewRecord(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: 'rgba(4,120,87,0.9)', border: '1px solid rgba(4,120,87,1)', color: '#fff' }}>Ver</button>
+                        <button onClick={() => handleEdit(s)} className="p-1.5 rounded-lg hover:bg-white/10" title="Editar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                        <button onClick={() => handleDelete(s.id)} className="p-1.5 rounded-lg hover:bg-white/10" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+              {filtered.length === 0 && (
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-white/30">No hay solicitudes registradas</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* View Modal */}
+      {viewRecord && (() => {
+        const prop = propiedades.find(p => p.id === viewRecord.propiedad_id)
+        const com = comerciales.find(c => c.id === viewRecord.comercial_asignado)
+        return (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+            <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-white">{viewRecord.codigo} - Solicitud</h2>
+                <button onClick={() => setViewRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Codigo', value: viewRecord.codigo },
+                  { label: 'Fecha', value: viewRecord.fecha },
+                  { label: 'Nombre', value: `${viewRecord.nombre} ${viewRecord.apellido}` },
+                  { label: 'Correo', value: viewRecord.correo },
+                  { label: 'Telefono', value: viewRecord.telefono },
+                  { label: 'Origen', value: viewRecord.origen || '-' },
+                  { label: 'Estado', value: viewRecord.estado },
+                  { label: 'Propiedad', value: prop ? `${prop.codigo} - ${prop.urbanizacion}` : '-' },
+                  { label: 'Comercial Asignado', value: com ? `${com.nombre} ${com.apellido}` : 'Sin asignar' },
+                ].map(f => (
+                  <div key={f.label}>
+                    <p className="text-xs text-white/40">{f.label}</p>
+                    <p className="text-sm text-white">{f.value || '-'}</p>
+                  </div>
+                ))}
+              </div>
+              {viewRecord.mensaje && <div className="mt-3"><p className="text-xs text-white/40">Mensaje del Prospecto</p><p className="text-sm text-white">{viewRecord.mensaje}</p></div>}
+              {viewRecord.notas && <div className="mt-3"><p className="text-xs text-white/40">Notas del Comercial</p><p className="text-sm text-white">{viewRecord.notas}</p></div>}
+              {/* Property preview */}
+              {prop && prop.imagenes && prop.imagenes.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-xs text-white/40 mb-2">Propiedad de Interes</p>
+                  <div className="flex gap-2">
+                    {prop.imagenes.slice(0, 3).map((img, i) => (
+                      <div key={i} className="w-24 h-24 rounded-lg overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
+                        <img src={img} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-white mt-1">{prop.urbanizacion} - {prop.tipo_propiedad} - {prop.ciudad}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* Form Modal */}
+      {isFormOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-white">{form.id ? 'Editar Solicitud' : 'Nueva Solicitud'}</h2>
+              <button onClick={() => setIsFormOpen(false)} className="text-white/60 hover:text-white text-xl">✕</button>
+            </div>
+            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>{formError}</div>}
+            <form onSubmit={handleSave} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Codigo</label>
+                  <input value={form.id ? form.codigo : nextCode()} readOnly className="w-full rounded-lg px-3 py-2 text-sm outline-none cursor-not-allowed opacity-70" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Nombre *</label>
+                  <input value={form.nombre} onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Apellido</label>
+                  <input value={form.apellido} onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Correo</label>
+                  <input type="email" value={form.correo} onChange={e => setForm(f => ({ ...f, correo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Telefono</label>
+                  <input value={form.telefono} onChange={e => setForm(f => ({ ...f, telefono: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Origen de la Solicitud</label>
+                  <select value={form.origen} onChange={e => setForm(f => ({ ...f, origen: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="">Seleccionar...</option>
+                    {config.origenesSolicitud.map(o => <option key={o.id} value={o.nombre}>{o.nombre}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Propiedad de Interes *</label>
+                  <select value={form.propiedad_id} onChange={e => setForm(f => ({ ...f, propiedad_id: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="">Seleccionar...</option>
+                    {propiedades.filter(p => p.estado === 'Disponible').map(p => <option key={p.id} value={p.id}>{p.codigo} - {p.urbanizacion}</option>)}
+                  </select>
+                </div>
+              </div>
+              {/* Property details preview */}
+              {propSeleccionada && (
+                <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <p className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>Datos de la Propiedad Seleccionada</p>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <p className="text-xs text-white/40">Tipo</p>
+                      <p className="text-sm text-white">{propSeleccionada.tipo_propiedad || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40">Valor</p>
+                      <p className="text-sm text-white">{monedaSimbolo(propSeleccionada.tipo_moneda)} {propSeleccionada.precio_venta > 0 ? fmtNum(propSeleccionada.precio_venta, 2) : fmtNum(propSeleccionada.precio_alquiler, 2)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40">Modalidad</p>
+                      <p className="text-sm text-white">{propSeleccionada.modalidad || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40">Direccion</p>
+                      <p className="text-sm text-white">{propSeleccionada.direccion || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40">Ciudad/Poblacion</p>
+                      <p className="text-sm text-white">{propSeleccionada.ciudad || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40">Zona</p>
+                      <p className="text-sm text-white">{propSeleccionada.zona || '-'}</p>
+                    </div>
+                  </div>
+                  {propSeleccionada.imagenes && propSeleccionada.imagenes.length > 0 && (
+                    <div className="flex gap-2 mt-3">
+                      {propSeleccionada.imagenes.slice(0, 3).map((img, i) => (
+                        <div key={i} className="w-20 h-20 rounded-lg overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
+                          <img src={img} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Estado</label>
+                  <select value={form.estado} onChange={e => setForm(f => ({ ...f, estado: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="Nueva">Nueva</option>
+                    <option value="En Atencion">En Atencion</option>
+                    <option value="Atendida">Atendida</option>
+                    <option value="Descartada">Descartada</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Comercial Asignado</label>
+                  <select value={form.comercial_asignado} onChange={e => setForm(f => ({ ...f, comercial_asignado: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="">Sin asignar</option>
+                    {comerciales.filter(c => c.situacion === 'Activo').map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Mensaje del Prospecto</label>
+                <textarea value={form.mensaje} onChange={e => setForm(f => ({ ...f, mensaje: e.target.value }))} rows={3} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Notas del Comercial</label>
+                <textarea value={form.notas} onChange={e => setForm(f => ({ ...f, notas: e.target.value }))} rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>Cancelar</button>
+                <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

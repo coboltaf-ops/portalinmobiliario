@@ -1,0 +1,471 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-store'
+import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
+import { useContratosStore } from '@/features/contratos/store/contratos-store'
+
+export function useAutoSeed() {
+  const [seeded, setSeeded] = useState(false)
+
+  useEffect(() => {
+    if (seeded) return
+
+    const doSeed = () => {
+      const currentProps = usePropiedadesStore.getState().propiedades
+      if (currentProps.length > 0) { setSeeded(true); return }
+
+
+    // --- COMERCIALES ---
+    const comerciales = [
+      {
+        id: crypto.randomUUID(),
+        codigo: "COM-001",
+        nombre: "Carlos",
+        apellido: "Mendoza Rios",
+        correo: "carlos.mendoza@portalinmobiliario.pe",
+        telefono: "01-4567890",
+        movil: "+51 987 654 321",
+        cargo: "Asesor Senior",
+        departamento: "Ventas",
+        zona_asignada: "Este",
+        foto: "",
+        situacion: "Activo"
+      },
+      {
+        id: crypto.randomUUID(),
+        codigo: "COM-002",
+        nombre: "Maria Elena",
+        apellido: "Vargas Torres",
+        correo: "maria.vargas@portalinmobiliario.pe",
+        telefono: "01-4567891",
+        movil: "+51 912 345 678",
+        cargo: "Asesora Comercial",
+        departamento: "Ventas",
+        zona_asignada: "Sur",
+        foto: "",
+        situacion: "Activo"
+      },
+      {
+        id: crypto.randomUUID(),
+        codigo: "COM-003",
+        nombre: "Jorge Luis",
+        apellido: "Paredes Soto",
+        correo: "jorge.paredes@portalinmobiliario.pe",
+        telefono: "01-4567892",
+        movil: "+51 945 678 123",
+        cargo: "Asesor Comercial",
+        departamento: "Ventas",
+        zona_asignada: "Norte",
+        foto: "",
+        situacion: "Activo"
+      }
+    ]
+
+    // --- PROPIEDADES ---
+    const propiedades = [
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 1,
+        codigo: "PROP-00001",
+        urbanizacion: "Urb. Rinconada del Lago",
+        nro_apto_casa: "Lote 15",
+        tipo_propiedad: "Casa",
+        modalidad: "Venta",
+        precio_venta: 485000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 320,
+        habitaciones: 5,
+        banos: 4,
+        estacionamientos: 3,
+        balcones: 2,
+        cuarto_ropas: true,
+        cuarto_servicio: true,
+        amenidades: "Piscina, jardin, terraza, sala de estar, cuarto de juegos",
+        direccion: "Av. La Molina 1280, Urb. Rinconada del Lago",
+        ciudad: "La Molina",
+        zona: "Rinconada del Lago",
+        estado: "Disponible",
+        asesor_asignado: comerciales[0].nombre + " " + comerciales[0].apellido,
+        descripcion: "Amplia casa de 5 dormitorios en exclusiva urbanizacion de La Molina. Acabados de primera, piscina privada y amplios jardines. Cerca a colegios y centros comerciales.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 2,
+        codigo: "PROP-00002",
+        urbanizacion: "Urb. Los Alamos",
+        nro_apto_casa: "Casa 8",
+        tipo_propiedad: "Casa",
+        modalidad: "Venta",
+        precio_venta: 350000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 240,
+        habitaciones: 4,
+        banos: 3,
+        estacionamientos: 2,
+        balcones: 1,
+        cuarto_ropas: true,
+        cuarto_servicio: true,
+        amenidades: "Jardin, terraza, area de parrilla",
+        direccion: "Calle Los Robles 456, Urb. Los Alamos",
+        ciudad: "Surco",
+        zona: "Los Alamos",
+        estado: "Disponible",
+        asesor_asignado: comerciales[1].nombre + " " + comerciales[1].apellido,
+        descripcion: "Casa familiar en Surco con amplio jardin y area de parrilla. Zona residencial tranquila con acceso rapido a la Panamericana Sur.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 3,
+        codigo: "PROP-00003",
+        urbanizacion: "Urb. Country Club",
+        nro_apto_casa: "Lote 22",
+        tipo_propiedad: "Casa",
+        modalidad: "Venta",
+        precio_venta: 290000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 200,
+        habitaciones: 4,
+        banos: 3,
+        estacionamientos: 2,
+        balcones: 1,
+        cuarto_ropas: true,
+        cuarto_servicio: false,
+        amenidades: "Jardin, area de lavanderia, deposito",
+        direccion: "Av. Del Golf 890, Urb. Country Club",
+        ciudad: "San Borja",
+        zona: "Country Club",
+        estado: "Disponible",
+        asesor_asignado: comerciales[2].nombre + " " + comerciales[2].apellido,
+        descripcion: "Casa bien ubicada en San Borja, cerca al Jockey Plaza y el Pentagonito. Ideal para familias que buscan comodidad y seguridad.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 4,
+        codigo: "PROP-00004",
+        urbanizacion: "Urb. Las Casuarinas",
+        nro_apto_casa: "Casa 3",
+        tipo_propiedad: "Casa",
+        modalidad: "Alquiler",
+        precio_venta: 0,
+        precio_alquiler: 2800,
+        tipo_moneda: "USD",
+        area_m2: 280,
+        habitaciones: 4,
+        banos: 3,
+        estacionamientos: 2,
+        balcones: 2,
+        cuarto_ropas: true,
+        cuarto_servicio: true,
+        amenidades: "Piscina, jardin, terraza, vigilancia 24h",
+        direccion: "Calle Las Palmeras 120, Urb. Las Casuarinas",
+        ciudad: "San Isidro",
+        zona: "Las Casuarinas",
+        estado: "Disponible",
+        asesor_asignado: comerciales[0].nombre + " " + comerciales[0].apellido,
+        descripcion: "Elegante casa en alquiler en San Isidro. Zona exclusiva con seguridad permanente. Perfecta para ejecutivos y familias expatriadas.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 5,
+        codigo: "PROP-00005",
+        urbanizacion: "Urb. Sol de La Molina",
+        nro_apto_casa: "Lote 7",
+        tipo_propiedad: "Casa",
+        modalidad: "Venta",
+        precio_venta: 180000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 150,
+        habitaciones: 3,
+        banos: 2,
+        estacionamientos: 1,
+        balcones: 0,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Patio, lavanderia",
+        direccion: "Jr. Los Claveles 345, Urb. Sol de La Molina",
+        ciudad: "La Molina",
+        zona: "Sol de La Molina",
+        estado: "Disponible",
+        asesor_asignado: comerciales[1].nombre + " " + comerciales[1].apellido,
+        descripcion: "Casa acogedora de 3 dormitorios, ideal para parejas jovenes o familias pequenas. Precio accesible en zona residencial de La Molina.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 6,
+        codigo: "PROP-00006",
+        urbanizacion: "Edificio Malecon Premium",
+        nro_apto_casa: "Apto 1402",
+        tipo_propiedad: "Apartamento",
+        modalidad: "Venta",
+        precio_venta: 245000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 120,
+        habitaciones: 3,
+        banos: 2,
+        estacionamientos: 1,
+        balcones: 1,
+        cuarto_ropas: true,
+        cuarto_servicio: false,
+        amenidades: "Gimnasio, area social, vista al mar, ascensor",
+        direccion: "Malecon Cisneros 1450, Piso 14",
+        ciudad: "Miraflores",
+        zona: "Malecon",
+        estado: "Disponible",
+        asesor_asignado: comerciales[2].nombre + " " + comerciales[2].apellido,
+        descripcion: "Departamento con vista panoramica al mar en el Malecon de Miraflores. Edificio moderno con gimnasio y areas comunes de primer nivel.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 7,
+        codigo: "PROP-00007",
+        urbanizacion: "Condominio Parque Central",
+        nro_apto_casa: "Apto 803",
+        tipo_propiedad: "Apartamento",
+        modalidad: "Alquiler",
+        precio_venta: 0,
+        precio_alquiler: 1200,
+        tipo_moneda: "USD",
+        area_m2: 85,
+        habitaciones: 2,
+        banos: 2,
+        estacionamientos: 1,
+        balcones: 1,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Piscina, gimnasio, juegos infantiles, sala de eventos",
+        direccion: "Av. Guardia Civil 567, Piso 8",
+        ciudad: "Surco",
+        zona: "Monterrico",
+        estado: "Disponible",
+        asesor_asignado: comerciales[0].nombre + " " + comerciales[0].apellido,
+        descripcion: "Moderno departamento en condominio con amenidades completas en Surco. Cerca a Wong y centros educativos. Ideal para pareja joven.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 8,
+        codigo: "PROP-00008",
+        urbanizacion: "Torre Barranco Arts",
+        nro_apto_casa: "Apto 502",
+        tipo_propiedad: "Apartamento",
+        modalidad: "Venta",
+        precio_venta: 135000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 72,
+        habitaciones: 2,
+        banos: 1,
+        estacionamientos: 1,
+        balcones: 1,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Terraza comun, coworking, bicicletero",
+        direccion: "Av. Grau 310, Piso 5",
+        ciudad: "Barranco",
+        zona: "Grau",
+        estado: "Disponible",
+        asesor_asignado: comerciales[1].nombre + " " + comerciales[1].apellido,
+        descripcion: "Departamento tipo loft en el corazon de Barranco. Zona bohemia con restaurantes, galerias y vida nocturna. Ideal para jovenes profesionales.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 9,
+        codigo: "PROP-00009",
+        urbanizacion: "Parque Industrial Villa El Salvador",
+        nro_apto_casa: "Nave B-12",
+        tipo_propiedad: "Bodega",
+        modalidad: "Venta",
+        precio_venta: 280000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 500,
+        habitaciones: 0,
+        banos: 2,
+        estacionamientos: 4,
+        balcones: 0,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Patio de maniobras, oficina administrativa, bano para personal",
+        direccion: "Av. Industrial 2340, Parque Industrial",
+        ciudad: "Villa El Salvador",
+        zona: "Parque Industrial",
+        estado: "Disponible",
+        asesor_asignado: comerciales[2].nombre + " " + comerciales[2].apellido,
+        descripcion: "Bodega industrial de 500 m2 con patio de maniobras para camiones. Acceso directo a la Panamericana Sur. Ideal para logistica y almacenamiento.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 10,
+        codigo: "PROP-00010",
+        urbanizacion: "Zona Industrial Gambetta",
+        nro_apto_casa: "Lote C-5",
+        tipo_propiedad: "Bodega",
+        modalidad: "Alquiler",
+        precio_venta: 0,
+        precio_alquiler: 3500,
+        tipo_moneda: "USD",
+        area_m2: 750,
+        habitaciones: 0,
+        banos: 3,
+        estacionamientos: 6,
+        balcones: 0,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Muelle de carga, oficinas, vigilancia, cisterna",
+        direccion: "Av. Gambetta 4500, Zona Industrial",
+        ciudad: "Callao",
+        zona: "Zona Industrial Gambetta",
+        estado: "Disponible",
+        asesor_asignado: comerciales[0].nombre + " " + comerciales[0].apellido,
+        descripcion: "Gran bodega en Callao cerca al puerto y aeropuerto. Muelle de carga propio, oficinas equipadas y vigilancia permanente. Perfecta para importadores.",
+        imagenes: []
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_propiedad: 11,
+        codigo: "PROP-00011",
+        urbanizacion: "Centro Comercial Boulevard",
+        nro_apto_casa: "Local 215",
+        tipo_propiedad: "Local Comercial",
+        modalidad: "Venta",
+        precio_venta: 195000,
+        precio_alquiler: 0,
+        tipo_moneda: "USD",
+        area_m2: 95,
+        habitaciones: 0,
+        banos: 1,
+        estacionamientos: 0,
+        balcones: 0,
+        cuarto_ropas: false,
+        cuarto_servicio: false,
+        amenidades: "Vitrina, aire acondicionado central, estacionamiento de clientes",
+        direccion: "Av. Javier Prado Este 1234, Local 215",
+        ciudad: "San Isidro",
+        zona: "Centro Financiero",
+        estado: "Disponible",
+        asesor_asignado: comerciales[1].nombre + " " + comerciales[1].apellido,
+        descripcion: "Local comercial en primer piso de centro comercial en San Isidro. Alto trafico peatonal, ideal para retail, cafeteria o showroom.",
+        imagenes: []
+      }
+    ]
+
+    // --- CONTRATOS DE EJEMPLO ---
+    const seedContratos = [
+      {
+        id: crypto.randomUUID(),
+        nro_contrato: "CTR-00001",
+        tipo: "Venta",
+        fecha: "02/04/2026",
+        cliente_id: "",
+        propiedad_id: propiedades[0].id,
+        comercial_id: comerciales[0].id,
+        tipo_moneda: "USD",
+        monto: 485000,
+        plazo: 0,
+        fecha_inicio: "15/04/2026",
+        fecha_fin: "15/04/2026",
+        condiciones: "Pago del 30% al momento de la firma de la minuta. El 70% restante mediante credito hipotecario a ser desembolsado en un plazo no mayor a 30 dias calendarios.",
+        observaciones: "El inmueble se entrega completamente amoblado con cocina equipada. Incluye 3 estacionamientos en sotano.",
+        situacion: "Vigente",
+        documentos: [],
+      },
+      {
+        id: crypto.randomUUID(),
+        nro_contrato: "CTR-00002",
+        tipo: "Arrendamiento",
+        fecha: "02/04/2026",
+        cliente_id: "",
+        propiedad_id: propiedades[3].id,
+        comercial_id: comerciales[0].id,
+        tipo_moneda: "USD",
+        monto: 2800,
+        plazo: 12,
+        fecha_inicio: "01/05/2026",
+        fecha_fin: "30/04/2027",
+        condiciones: "Deposito de garantia equivalente a 2 meses de renta. Pago mensual los primeros 5 dias de cada mes. Incluye mantenimiento de areas comunes.",
+        observaciones: "Contrato renovable por periodos iguales de mutuo acuerdo. El arrendatario se compromete a mantener el jardin y la piscina.",
+        situacion: "Borrador",
+        documentos: [],
+      }
+    ]
+
+    // Bulk set all stores
+    useComercialesStore.setState({ comerciales })
+    usePropiedadesStore.setState({ propiedades })
+    useContratosStore.setState({ contratos: seedContratos })
+
+    // Configuracion for Lima, Peru (includes Bodega type)
+    useConfigStore.setState({
+      tiposPropiedad: [
+        { id: "1", nombre: "Casa" },
+        { id: "2", nombre: "Apartamento" },
+        { id: "3", nombre: "Local Comercial" },
+        { id: "4", nombre: "Oficina" },
+        { id: "5", nombre: "Terreno" },
+        { id: "6", nombre: "Townhouse" },
+        { id: "7", nombre: "Bodega" }
+      ],
+      monedas: [
+        { id: "1", nombre: "USD", simbolo: "$" },
+        { id: "2", nombre: "PEN", simbolo: "S/" },
+        { id: "3", nombre: "EUR", simbolo: "\u20AC" }
+      ],
+      ciudades: [
+        { id: "1", nombre: "La Molina", zonas: [{ id: "1", nombre: "Rinconada del Lago" }, { id: "2", nombre: "Sol de La Molina" }, { id: "3", nombre: "Residencial" }, { id: "4", nombre: "Las Lagunas" }] },
+        { id: "2", nombre: "San Isidro", zonas: [{ id: "1", nombre: "Centro Financiero" }, { id: "2", nombre: "Chacarilla" }, { id: "3", nombre: "Country Club" }, { id: "4", nombre: "Las Casuarinas" }] },
+        { id: "3", nombre: "Miraflores", zonas: [{ id: "1", nombre: "Malecon" }, { id: "2", nombre: "Centro" }, { id: "3", nombre: "Benavides" }, { id: "4", nombre: "Aurora" }] },
+        { id: "4", nombre: "Surco", zonas: [{ id: "1", nombre: "Monterrico" }, { id: "2", nombre: "Los Alamos" }, { id: "3", nombre: "Camacho" }, { id: "4", nombre: "Chacarilla" }] },
+        { id: "5", nombre: "San Borja", zonas: [{ id: "1", nombre: "Country Club" }, { id: "2", nombre: "Centro" }, { id: "3", nombre: "Torres de San Borja" }] },
+        { id: "6", nombre: "Barranco", zonas: [{ id: "1", nombre: "Centro Historico" }, { id: "2", nombre: "Malecon" }, { id: "3", nombre: "Grau" }] },
+        { id: "7", nombre: "Callao", zonas: [{ id: "1", nombre: "Zona Industrial Gambetta" }, { id: "2", nombre: "Centro" }, { id: "3", nombre: "La Punta" }] },
+        { id: "8", nombre: "Villa El Salvador", zonas: [{ id: "1", nombre: "Parque Industrial" }, { id: "2", nombre: "Centro" }, { id: "3", nombre: "Pachacamac" }] },
+        { id: "9", nombre: "Medellin", zonas: [{ id: "1", nombre: "El Poblado" }, { id: "2", nombre: "Laureles" }, { id: "3", nombre: "Envigado" }, { id: "4", nombre: "Sabaneta" }, { id: "5", nombre: "Belen" }, { id: "6", nombre: "La Estrella" }, { id: "7", nombre: "Itagui" }, { id: "8", nombre: "Calasanz" }] }
+      ],
+      paises: [
+        { id: "1", nombre: "Peru" },
+        { id: "2", nombre: "Colombia" },
+        { id: "3", nombre: "Estados Unidos" },
+        { id: "4", nombre: "Espana" }
+      ],
+      situacionesPropiedad: [
+        { id: "1", nombre: "Disponible" },
+        { id: "2", nombre: "Reservada" },
+        { id: "3", nombre: "Vendida" },
+        { id: "4", nombre: "Alquilada" }
+      ],
+      tiposIdentificacion: [
+        { id: "1", nombre: "DNI" },
+        { id: "2", nombre: "RUC" },
+        { id: "3", nombre: "Pasaporte" },
+        { id: "4", nombre: "Carnet de Extranjeria" }
+      ],
+      origenesSolicitud: [
+        { id: "1", nombre: "Pagina Web" },
+        { id: "2", nombre: "Redes Sociales" },
+        { id: "3", nombre: "Referido" },
+        { id: "4", nombre: "Llamada Telefonica" },
+        { id: "5", nombre: "Visita Oficina" },
+        { id: "6", nombre: "Portal Inmobiliario" }
+      ]
+    })
+      setSeeded(true)
+    }
+
+    doSeed()
+  }, [seeded])
+}
