@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-store'
-import { useConfigStore, getZonasByCiudad, getAllZonas } from '@/features/configuracion/store/configuracion-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { fmtNum } from '@/shared/lib/format-date'
 
 export default function CatalogoPage() {
@@ -61,7 +61,7 @@ export default function CatalogoPage() {
           </select>
           <select value={filtroZona} onChange={e => setFiltroZona(e.target.value)} className="rounded-lg px-3 py-2.5 text-sm outline-none" style={selectSt}>
             <option value="">Todas las zonas</option>
-            {(filtroCiudad ? getZonasByCiudad(config.ciudades, filtroCiudad) : getAllZonas(config.ciudades)).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
+            {config.zonas.map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
           </select>
           <select value={filtroModalidad} onChange={e => setFiltroModalidad(e.target.value)} className="rounded-lg px-3 py-2.5 text-sm outline-none" style={selectSt}>
             <option value="">Todas las modalidades</option>

@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { usePropiedadesStore, type Propiedad } from '@/features/propiedades/store/propiedades-store'
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
-import { useConfigStore, getZonasByCiudad } from '@/features/configuracion/store/configuracion-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { useEmpresaStore } from '@/features/datos-empresa/store/empresa-store'
 import { formatDate, toInputDate, todayFormatted, fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
@@ -537,7 +537,7 @@ export default function PropiedadesPage() {
                   <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona</label>
                   <select value={form.zona} onChange={e => setForm(f => ({ ...f, zona: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
-                    {getZonasByCiudad(config.ciudades, form.ciudad).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
+                    {config.zonas.map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>

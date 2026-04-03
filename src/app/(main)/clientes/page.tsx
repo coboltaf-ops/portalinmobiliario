@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useClientesStore, type Cliente } from '@/features/clientes/store/clientes-store'
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
-import { useConfigStore, getAllZonas } from '@/features/configuracion/store/configuracion-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import { compressImage } from '@/shared/lib/compress-image'
@@ -250,7 +250,7 @@ export default function ClientesPage() {
                   <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona Preferida</label>
                   <select value={form.zona_preferida} onChange={e => setForm(f => ({ ...f, zona_preferida: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
-                    {(form.ciudad_deseada ? (config.ciudades.find(c => c.nombre === form.ciudad_deseada)?.zonas || []) : getAllZonas(config.ciudades)).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
+                    {config.zonas.map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>

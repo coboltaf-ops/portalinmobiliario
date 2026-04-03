@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useComercialesStore, type Comercial } from '@/features/comerciales/store/comerciales-store'
 import { compressImage } from '@/shared/lib/compress-image'
-import { useConfigStore, getAllZonas } from '@/features/configuracion/store/configuracion-store'
+import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 
@@ -206,7 +206,7 @@ export default function ComercialesPage() {
                   <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona Asignada</label>
                   <select value={form.zona_asignada} onChange={e => setForm(f => ({ ...f, zona_asignada: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
-                    {getAllZonas(config.ciudades).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
+                    {config.zonas.map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>
