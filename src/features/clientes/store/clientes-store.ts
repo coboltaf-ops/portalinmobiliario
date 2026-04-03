@@ -14,6 +14,7 @@ export type Cliente = {
   presupuesto_min: number
   presupuesto_max: number
   tipo_moneda: string
+  ciudad_deseada: string
   zona_preferida: string
   tipo_propiedad_buscada: string
   asesor_asignado: string

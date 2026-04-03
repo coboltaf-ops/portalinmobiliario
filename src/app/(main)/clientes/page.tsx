@@ -15,7 +15,7 @@ const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border:
 const initForm = (): Cliente => ({
   id: '', codigo: '', nombre: '', apellido: '', correo: '', telefono: '', movil: '',
   tipo: 'Prospecto', interes: 'Compra', presupuesto_min: 0, presupuesto_max: 0,
-  tipo_moneda: 'USD', zona_preferida: '', tipo_propiedad_buscada: '', asesor_asignado: '',
+  tipo_moneda: 'USD', ciudad_deseada: '', zona_preferida: '', tipo_propiedad_buscada: '', asesor_asignado: '',
   observaciones: '', situacion: 'Activo', imagen: '',
 })
 
@@ -80,12 +80,12 @@ export default function ClientesPage() {
     return m ? m.simbolo : '$'
   }
 
-  const headers = ['Codigo', 'Nombre', 'Apellido', 'Tipo', 'Interes', 'Presupuesto', 'Zona', 'Asesor', 'Situacion']
+  const headers = ['Codigo', 'Nombre', 'Apellido', 'Tipo', 'Interes', 'Presupuesto', 'Ciudad', 'Zona', 'Asesor', 'Situacion']
   const rows = filtered.map(c => {
     const asesor = comerciales.find(a => a.id === c.asesor_asignado)
     return [c.codigo, c.nombre, c.apellido, c.tipo, c.interes,
       `${monedaSimbolo(c.tipo_moneda)} ${fmtNum(c.presupuesto_min, 2)} - ${fmtNum(c.presupuesto_max, 2)}`,
-      c.zona_preferida, asesor ? `${asesor.nombre} ${asesor.apellido}` : '', c.situacion]
+      c.ciudad_deseada || '-', c.zona_preferida, asesor ? `${asesor.nombre} ${asesor.apellido}` : '', c.situacion]
   })
 
   return (
@@ -166,6 +166,7 @@ export default function ClientesPage() {
                 { label: 'Movil', value: viewRecord.movil },
                 { label: 'Presupuesto Min', value: `${monedaSimbolo(viewRecord.tipo_moneda)} ${fmtNum(viewRecord.presupuesto_min, 2)}` },
                 { label: 'Presupuesto Max', value: `${monedaSimbolo(viewRecord.tipo_moneda)} ${fmtNum(viewRecord.presupuesto_max, 2)}` },
+                { label: 'Ciudad Deseada', value: viewRecord.ciudad_deseada },
                 { label: 'Zona Preferida', value: viewRecord.zona_preferida },
                 { label: 'Tipo Propiedad Buscada', value: viewRecord.tipo_propiedad_buscada },
                 { label: 'Asesor', value: (() => { const a = comerciales.find(x => x.id === viewRecord.asesor_asignado); return a ? `${a.nombre} ${a.apellido}` : '-' })() },
@@ -239,10 +240,17 @@ export default function ClientesPage() {
                   <input type="number" min="0" value={form.presupuesto_max || ''} onChange={e => setForm(f => ({ ...f, presupuesto_max: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Ciudad Deseada</label>
+                  <select value={form.ciudad_deseada} onChange={e => setForm(f => ({ ...f, ciudad_deseada: e.target.value, zona_preferida: '' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="">Seleccionar...</option>
+                    {config.ciudades.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+                  </select>
+                </div>
+                <div>
                   <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona Preferida</label>
                   <select value={form.zona_preferida} onChange={e => setForm(f => ({ ...f, zona_preferida: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
-                    {getAllZonas(config.ciudades).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
+                    {(form.ciudad_deseada ? (config.ciudades.find(c => c.nombre === form.ciudad_deseada)?.zonas || []) : getAllZonas(config.ciudades)).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>
