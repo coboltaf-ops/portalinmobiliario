@@ -29,7 +29,7 @@ export const useCotizacionesStore = create<CotizacionesState>()((set, get) => ({
   cotizaciones: [],
   loaded: false,
   fetchCotizaciones: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('cotizaciones').select('*')
     if (data) set({ cotizaciones: data, loaded: true })
   },

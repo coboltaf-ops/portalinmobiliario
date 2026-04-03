@@ -29,7 +29,7 @@ export const useComercialesStore = create<ComercialesState>()((set, get) => ({
   comerciales: [],
   loaded: false,
   fetchComerciales: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('comerciales').select('*')
     if (data) set({ comerciales: data, loaded: true })
   },

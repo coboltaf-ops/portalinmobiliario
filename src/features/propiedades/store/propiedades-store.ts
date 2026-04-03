@@ -42,7 +42,7 @@ export const usePropiedadesStore = create<PropiedadesState>()((set, get) => ({
   propiedades: [],
   loaded: false,
   fetchPropiedades: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('propiedades').select('*')
     if (data) set({ propiedades: data, loaded: true })
   },

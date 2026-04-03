@@ -30,7 +30,7 @@ export const useSolicitudesStore = create<SolicitudesState>()((set, get) => ({
   solicitudes: [],
   loaded: false,
   fetchSolicitudes: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('solicitudes').select('*')
     if (data) set({ solicitudes: data, loaded: true })
   },

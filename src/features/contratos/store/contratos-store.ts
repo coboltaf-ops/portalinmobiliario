@@ -42,7 +42,7 @@ export const useContratosStore = create<ContratosState>()((set, get) => ({
   contratos: [],
   loaded: false,
   fetchContratos: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('contratos').select('*')
     if (data) {
       const contratos = data.map((c: Record<string, unknown>) => ({

@@ -27,7 +27,7 @@ export const useEmpresaStore = create<EmpresaState>()((set, get) => ({
   empresa: null,
   loaded: false,
   fetchEmpresa: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('empresa').select('*').limit(1).single()
     set({ empresa: data ?? null, loaded: true })
   },

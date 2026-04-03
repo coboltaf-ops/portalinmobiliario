@@ -24,7 +24,7 @@ export const useCorreosStore = create<CorreosState>()((set, get) => ({
   correos: [],
   loaded: false,
   fetchCorreos: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('correos_enviados').select('*').order('fecha', { ascending: false })
     if (data) set({ correos: data, loaded: true })
   },

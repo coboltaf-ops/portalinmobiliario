@@ -36,7 +36,7 @@ export const useClientesStore = create<ClientesState>()((set, get) => ({
   clientes: [],
   loaded: false,
   fetchClientes: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('clientes').select('*')
     if (data) set({ clientes: data, loaded: true })
   },

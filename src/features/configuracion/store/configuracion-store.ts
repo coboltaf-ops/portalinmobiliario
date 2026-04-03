@@ -49,7 +49,7 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
   loaded: false,
 
   fetchConfig: async () => {
-    if (get().loaded) return
+
     const { data } = await supabase.from('configuracion').select('*')
     if (!data) return
     const grouped: Record<string, unknown[]> = {}
