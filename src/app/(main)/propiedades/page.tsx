@@ -17,7 +17,9 @@ const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border:
 const initForm = (): Propiedad => ({
   id: '', nro_propiedad: 0, codigo: '', urbanizacion: '', nro_apto_casa: '', tipo_propiedad: '', modalidad: 'Venta',
   precio_venta: 0, precio_alquiler: 0, tipo_moneda: 'USD', area_m2: 0,
-  habitaciones: 0, banos: 0, estacionamientos: 0, balcones: 0, cuarto_ropas: false, cuarto_servicio: false, amenidades: '', direccion: '',
+  habitaciones: 0, banos: 0, estacionamientos: 0, balcones: 0, cuarto_ropas: false, cuarto_servicio: false,
+  piscina: false, juegos_infantiles: false, gimnasio: false, monto_administracion_mes: 0, monto_predial_anual: 0,
+  amenidades: '', direccion: '',
   ciudad: '', zona: '', estado: 'Disponible', asesor_asignado: '', descripcion: '', imagenes: [],
 })
 
@@ -171,6 +173,11 @@ export default function PropiedadesPage() {
         ['Balcones', fmtNum(p.balcones ?? 0)],
         ['Cuarto de Ropas', p.cuarto_ropas ? 'Si' : 'No'],
         ['Cuarto de Servicio', p.cuarto_servicio ? 'Si' : 'No'],
+        ['Piscina', p.piscina ? 'Si' : 'No'],
+        ['Juegos Infantiles', p.juegos_infantiles ? 'Si' : 'No'],
+        ['Gimnasio', p.gimnasio ? 'Si' : 'No'],
+        ['Monto Admin (Mes)', `${sym} ${fmtNum(p.monto_administracion_mes || 0, 2)}`],
+        ['Monto Predial (Anual)', `${sym} ${fmtNum(p.monto_predial_anual || 0, 2)}`],
         ['Direccion', safe(p.direccion)],
         ['Ciudad/Poblacion', safe(p.ciudad)],
         ['Zona', safe(p.zona)],
@@ -418,6 +425,11 @@ export default function PropiedadesPage() {
                 { label: 'Balcones', value: fmtNum(viewRecord.balcones || 0) },
                 { label: 'Cuarto de Ropas', value: viewRecord.cuarto_ropas ? 'Si' : 'No' },
                 { label: 'Cuarto de Servicio', value: viewRecord.cuarto_servicio ? 'Si' : 'No' },
+                { label: 'Piscina', value: viewRecord.piscina ? 'Si' : 'No' },
+                { label: 'Juegos Infantiles', value: viewRecord.juegos_infantiles ? 'Si' : 'No' },
+                { label: 'Gimnasio', value: viewRecord.gimnasio ? 'Si' : 'No' },
+                { label: 'Monto Administracion (Mes)', value: `${monedaSimbolo(viewRecord.tipo_moneda)} ${fmtNum(viewRecord.monto_administracion_mes || 0, 2)}` },
+                { label: 'Monto Predial (Anual)', value: `${monedaSimbolo(viewRecord.tipo_moneda)} ${fmtNum(viewRecord.monto_predial_anual || 0, 2)}` },
                 { label: 'Direccion', value: viewRecord.direccion },
                 { label: 'Ciudad/Poblacion', value: viewRecord.ciudad },
                 { label: 'Zona', value: viewRecord.zona },
@@ -521,6 +533,35 @@ export default function PropiedadesPage() {
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Piscina</label>
+                  <select value={form.piscina ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, piscina: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="No">No</option>
+                    <option value="Si">Si</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Juegos Infantiles</label>
+                  <select value={form.juegos_infantiles ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, juegos_infantiles: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="No">No</option>
+                    <option value="Si">Si</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Gimnasio</label>
+                  <select value={form.gimnasio ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, gimnasio: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
+                    <option value="No">No</option>
+                    <option value="Si">Si</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Monto Administracion (Mes)</label>
+                  <input type="number" min="0" step="0.01" value={form.monto_administracion_mes || ''} onChange={e => setForm(f => ({ ...f, monto_administracion_mes: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Monto Predial (Anual)</label>
+                  <input type="number" min="0" step="0.01" value={form.monto_predial_anual || ''} onChange={e => setForm(f => ({ ...f, monto_predial_anual: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Direccion</label>

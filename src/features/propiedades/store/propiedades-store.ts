@@ -19,6 +19,11 @@ export type Propiedad = {
   balcones: number
   cuarto_ropas: boolean
   cuarto_servicio: boolean
+  piscina: boolean
+  juegos_infantiles: boolean
+  gimnasio: boolean
+  monto_administracion_mes: number
+  monto_predial_anual: number
   amenidades: string
   direccion: string
   ciudad: string
