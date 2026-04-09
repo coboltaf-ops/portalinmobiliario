@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-store'
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
 import { useClientesStore } from '@/features/clientes/store/clientes-store'
@@ -20,13 +21,13 @@ export default function DashboardPage() {
   const prospectos = clientes.filter(c => c.tipo === 'Prospecto')
 
   const cards = [
-    { label: 'Total Propiedades', value: propiedades.length, icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', color: '#1d4ed8' },
-    { label: 'Disponibles Venta', value: disponiblesVenta.length, icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: '#10b981' },
-    { label: 'Disponibles Alquiler', value: disponiblesAlquiler.length, icon: 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z', color: '#8b5cf6' },
-    { label: 'Comerciales Activos', value: comercialesActivos.length, icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', color: '#f59e0b' },
-    { label: 'Prospectos', value: prospectos.length, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z', color: '#06b6d4' },
-    { label: 'Cotizaciones', value: cotizaciones.length, icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z', color: '#ec4899' },
-    { label: 'Contratos', value: contratos.length, icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', color: '#3b82f6' },
+    { label: 'Total Propiedades', value: propiedades.length, icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', color: '#1d4ed8', href: '/propiedades' },
+    { label: 'Disponibles Venta', value: disponiblesVenta.length, icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: '#10b981', href: '/propiedades' },
+    { label: 'Disponibles Alquiler', value: disponiblesAlquiler.length, icon: 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z', color: '#8b5cf6', href: '/propiedades' },
+    { label: 'Comerciales Activos', value: comercialesActivos.length, icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', color: '#f59e0b', href: '/comerciales' },
+    { label: 'Prospectos', value: prospectos.length, icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z', color: '#06b6d4', href: '/clientes' },
+    { label: 'Cotizaciones', value: cotizaciones.length, icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z', color: '#ec4899', href: '/cotizaciones' },
+    { label: 'Contratos', value: contratos.length, icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', color: '#3b82f6', href: '/contratos' },
   ]
 
   const propiedadesPorEstado = propiedades.reduce((acc, p) => {
@@ -72,24 +73,24 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {cards.slice(0, 4).map(c => (
-          <div key={c.label} className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <Link key={c.label} href={c.href} className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="flex items-center justify-between mb-3">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
               <div className="w-2 h-2 rounded-full" style={{ background: c.color }} />
             </div>
             <p className="text-2xl font-bold text-white">{fmtNum(c.value)}</p>
             <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {cards.slice(4).map(c => (
-          <div key={c.label} className="rounded-xl p-4 text-center" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <Link key={c.label} href={c.href} className="rounded-xl p-4 text-center hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <svg className="mx-auto" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
             <p className="text-xl font-bold text-white mt-2">{fmtNum(c.value)}</p>
             <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{c.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
 
