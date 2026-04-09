@@ -95,7 +95,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <Link href="/propiedades" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Estado</h2>
           {(() => {
             const entries = Object.entries(propiedadesPorEstado)
@@ -132,9 +132,9 @@ export default function DashboardPage() {
               </div>
             )
           })()}
-        </div>
+        </Link>
 
-        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <Link href="/cotizaciones" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h2 className="text-lg font-semibold text-white mb-4">Cotizaciones por Estado</h2>
           {(() => {
             const entries = Object.entries(cotizacionesPorEstado)
@@ -209,11 +209,11 @@ export default function DashboardPage() {
               </div>
             )
           })()}
-        </div>
+        </Link>
       </div>
 
       {/* Propiedades por Ciudad y Tipo - Stacked Vertical Bars */}
-      <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <Link href="/propiedades" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Ciudad y Tipo</h2>
         {(() => {
           const ciudades = Object.keys(propiedadesPorCiudadTipo).sort((a, b) => (propiedadesPorCiudad[b] || 0) - (propiedadesPorCiudad[a] || 0))
@@ -287,10 +287,10 @@ export default function DashboardPage() {
             </>
           )
         })()}
-      </div>
+      </Link>
 
       {/* Propiedades por Ciudad - Vertical Bars */}
-      <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <Link href="/propiedades" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Ciudad</h2>
         {(() => {
           const entries = Object.entries(propiedadesPorCiudad).sort((a, b) => b[1] - a[1])
@@ -314,7 +314,7 @@ export default function DashboardPage() {
             </div>
           )
         })()}
-      </div>
+      </Link>
     </div>
   )
 }
