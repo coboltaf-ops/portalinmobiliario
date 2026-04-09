@@ -39,6 +39,11 @@ export default function DashboardPage() {
     return acc
   }, {} as Record<string, number>)
 
+  const montoCotizacionesPorEstado = cotizaciones.reduce((acc, c) => {
+    acc[c.situacion] = (acc[c.situacion] || 0) + (c.precio_ofertado || 0)
+    return acc
+  }, {} as Record<string, number>)
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -165,15 +170,18 @@ export default function DashboardPage() {
                   <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="bold">{total}</text>
                   <text x="100" y="115" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11">Total</text>
                 </svg>
-                <div className="flex-1 space-y-2 min-w-[140px]">
-                  {slices.map(s => (
-                    <div key={s.estado} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-sm shrink-0" style={{ background: s.color }} />
-                      <span className="text-sm text-white flex-1">{s.estado}</span>
-                      <span className="text-sm font-bold text-white">{s.count}</span>
-                      <span className="text-xs text-white/40">({s.pct}%)</span>
-                    </div>
-                  ))}
+                <div className="flex-1 space-y-2 min-w-[220px]">
+                  {slices.map(s => {
+                    const monto = montoCotizacionesPorEstado[s.estado] || 0
+                    return (
+                      <div key={s.estado} className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-sm shrink-0" style={{ background: s.color }} />
+                        <span className="text-sm text-white flex-1">{s.estado}</span>
+                        <span className="text-sm font-bold text-white">{s.count}</span>
+                        <span className="text-xs font-semibold" style={{ color: s.color }}>$ {fmtNum(monto, 2)}</span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )
