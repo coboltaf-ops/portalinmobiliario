@@ -50,6 +50,14 @@ export default function DashboardPage() {
     return acc
   }, {} as Record<string, number>)
 
+  const propiedadesPorCiudadTipo = propiedades.reduce((acc, p) => {
+    const ciudad = p.ciudad || 'Sin ciudad'
+    const tipo = p.tipo_propiedad || 'Sin tipo'
+    if (!acc[ciudad]) acc[ciudad] = {}
+    acc[ciudad][tipo] = (acc[ciudad][tipo] || 0) + 1
+    return acc
+  }, {} as Record<string, Record<string, number>>)
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -193,6 +201,65 @@ export default function DashboardPage() {
             )
           })()}
         </div>
+      </div>
+
+      {/* Propiedades por Ciudad y Tipo - Stacked Vertical Bars */}
+      <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Ciudad y Tipo</h2>
+        {(() => {
+          const ciudades = Object.keys(propiedadesPorCiudadTipo).sort((a, b) => (propiedadesPorCiudad[b] || 0) - (propiedadesPorCiudad[a] || 0))
+          if (ciudades.length === 0) return <p className="text-white/30 text-sm">Sin propiedades registradas</p>
+          const tipos = Array.from(new Set(propiedades.map(p => p.tipo_propiedad || 'Sin tipo')))
+          const tipoColors: Record<string, string> = {
+            'Casa': '#10b981',
+            'Apartamento': '#3b82f6',
+            'Townhouse': '#a855f7',
+            'Local Comercial': '#f59e0b',
+            'Oficina': '#06b6d4',
+            'Terreno': '#ec4899',
+          }
+          const fallback = ['#eab308', '#14b8a6', '#f97316', '#ef4444']
+          const max = Math.max(...ciudades.map(c => propiedadesPorCiudad[c] || 0))
+          const chartHeight = 240
+          return (
+            <>
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                {tipos.map((tipo, i) => (
+                  <div key={tipo} className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-sm" style={{ background: tipoColors[tipo] || fallback[i % fallback.length] }} />
+                    <span className="text-xs text-white/70">{tipo}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-end justify-around gap-4 overflow-x-auto pb-4" style={{ minHeight: `${chartHeight + 60}px` }}>
+                {ciudades.map(ciudad => {
+                  const total = propiedadesPorCiudad[ciudad] || 0
+                  const tiposEnCiudad = propiedadesPorCiudadTipo[ciudad] || {}
+                  const totalHeight = (total / max) * chartHeight
+                  return (
+                    <div key={ciudad} className="flex flex-col items-center gap-2 min-w-[80px]">
+                      <span className="text-sm font-bold text-white">{total}</span>
+                      <div className="w-16 rounded-lg overflow-hidden flex flex-col-reverse" style={{ height: `${totalHeight}px`, minHeight: total > 0 ? '12px' : '0' }}>
+                        {tipos.map((tipo, i) => {
+                          const count = tiposEnCiudad[tipo] || 0
+                          if (count === 0) return null
+                          const segHeight = (count / total) * 100
+                          const color = tipoColors[tipo] || fallback[i % fallback.length]
+                          return (
+                            <div key={tipo} className="w-full flex items-center justify-center transition-all duration-500" style={{ height: `${segHeight}%`, background: color }}>
+                              {segHeight > 15 && <span className="text-xs font-bold text-white">{count}</span>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <span className="text-xs text-center text-white/70 mt-1 whitespace-nowrap">{ciudad}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )
+        })()}
       </div>
 
       {/* Propiedades por Ciudad - Vertical Bars */}
