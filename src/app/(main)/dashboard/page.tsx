@@ -220,8 +220,8 @@ export default function DashboardPage() {
           if (ciudades.length === 0) return <p className="text-white/30 text-sm">Sin propiedades registradas</p>
           const tipos = Array.from(new Set(propiedades.map(p => p.tipo_propiedad || 'Sin tipo')))
           const tipoColors: Record<string, string> = {
-            'Casa': '#10b981',
-            'Apartamento': '#3b82f6',
+            'Casa': '#3b82f6',
+            'Apartamento': '#f97316',
             'Townhouse': '#a855f7',
             'Local Comercial': '#f59e0b',
             'Oficina': '#06b6d4',
