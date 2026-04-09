@@ -44,6 +44,12 @@ export default function DashboardPage() {
     return acc
   }, {} as Record<string, number>)
 
+  const propiedadesPorCiudad = propiedades.reduce((acc, p) => {
+    const ciudad = p.ciudad || 'Sin ciudad'
+    acc[ciudad] = (acc[ciudad] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -187,6 +193,33 @@ export default function DashboardPage() {
             )
           })()}
         </div>
+      </div>
+
+      {/* Propiedades por Ciudad - Vertical Bars */}
+      <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Ciudad</h2>
+        {(() => {
+          const entries = Object.entries(propiedadesPorCiudad).sort((a, b) => b[1] - a[1])
+          if (entries.length === 0) return <p className="text-white/30 text-sm">Sin propiedades registradas</p>
+          const max = Math.max(...entries.map(([, v]) => v))
+          const colors = ['#3b82f6', '#10b981', '#f59e0b', '#a855f7', '#06b6d4', '#ec4899', '#eab308', '#14b8a6', '#f97316', '#ef4444']
+          const chartHeight = 220
+          return (
+            <div className="flex items-end justify-around gap-4 overflow-x-auto pb-4" style={{ minHeight: `${chartHeight + 60}px` }}>
+              {entries.map(([ciudad, count], i) => {
+                const color = colors[i % colors.length]
+                const barHeight = (count / max) * chartHeight
+                return (
+                  <div key={ciudad} className="flex flex-col items-center gap-2 min-w-[70px]">
+                    <span className="text-sm font-bold" style={{ color }}>{count}</span>
+                    <div className="w-14 rounded-t-lg transition-all duration-500 flex items-start justify-center pt-2" style={{ height: `${barHeight}px`, background: color, minHeight: count > 0 ? '8px' : '0' }} />
+                    <span className="text-xs text-center text-white/70 mt-1 whitespace-nowrap">{ciudad}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })()}
       </div>
     </div>
   )
