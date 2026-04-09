@@ -61,9 +61,8 @@ export default function DashboardPage() {
   const montoPorCiudadTipo = propiedades.reduce((acc, p) => {
     const ciudad = p.ciudad || 'Sin ciudad'
     const tipo = p.tipo_propiedad || 'Sin tipo'
-    const valor = p.precio_venta > 0 ? p.precio_venta : p.precio_alquiler
     if (!acc[ciudad]) acc[ciudad] = {}
-    acc[ciudad][tipo] = (acc[ciudad][tipo] || 0) + (valor || 0)
+    acc[ciudad][tipo] = (acc[ciudad][tipo] || 0) + (p.precio_venta || 0)
     return acc
   }, {} as Record<string, Record<string, number>>)
 
