@@ -39,17 +39,6 @@ export default function DashboardPage() {
     return acc
   }, {} as Record<string, number>)
 
-  const statusColor = (s: string) => {
-    switch (s) {
-      case 'Disponible': case 'Activo': return { bg: 'rgba(29,78,216,0.2)', color: '#3b82f6', border: '1px solid rgba(29,78,216,0.3)' }
-      case 'Vendida': case 'Aceptada': case 'Vigente': return { bg: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid rgba(16,185,129,0.3)' }
-      case 'Reservada': case 'Pendiente': case 'Borrador': return { bg: 'rgba(245,158,11,0.2)', color: '#60a5fa', border: '1px solid rgba(245,158,11,0.3)' }
-      case 'Alquilada': return { bg: 'rgba(139,92,246,0.2)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.3)' }
-      case 'Cancelado': case 'Rechazada': case 'Inactivo': return { bg: 'rgba(239,68,68,0.2)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }
-      default: return { bg: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
-    }
-  }
-
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -119,20 +108,67 @@ export default function DashboardPage() {
 
         <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h2 className="text-lg font-semibold text-white mb-4">Cotizaciones por Estado</h2>
-          <div className="flex flex-wrap gap-4">
-            {Object.entries(cotizacionesPorEstado).map(([estado, count]) => {
-              const st = statusColor(estado)
-              return (
-                <div key={estado} className="rounded-xl px-5 py-3" style={{ background: st.bg, border: st.border }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl font-bold" style={{ color: st.color }}>{count}</span>
-                    <span className="text-sm font-medium" style={{ color: st.color }}>{estado}</span>
-                  </div>
+          {(() => {
+            const entries = Object.entries(cotizacionesPorEstado)
+            const total = entries.reduce((sum, [, v]) => sum + v, 0)
+            const cotColors: Record<string, string> = {
+              'Pendiente': '#f59e0b',
+              'Aceptada': '#10b981',
+              'Rechazada': '#ef4444',
+              'Borrador': '#6b7280',
+              'Vigente': '#3b82f6',
+              'Cancelado': '#dc2626',
+            }
+            const fallback = ['#06b6d4', '#ec4899', '#a855f7', '#14b8a6', '#f97316']
+
+            if (total === 0) return <p className="text-white/30 text-sm">Sin cotizaciones registradas</p>
+
+            const radius = 80
+            const innerRadius = 50
+            const cx = 100
+            const cy = 100
+            let cumulative = 0
+
+            const slices = entries.map(([estado, count], i) => {
+              const color = cotColors[estado] || fallback[i % fallback.length]
+              const startAngle = (cumulative / total) * 2 * Math.PI - Math.PI / 2
+              cumulative += count
+              const endAngle = (cumulative / total) * 2 * Math.PI - Math.PI / 2
+              const largeArc = endAngle - startAngle > Math.PI ? 1 : 0
+              const x1 = cx + radius * Math.cos(startAngle)
+              const y1 = cy + radius * Math.sin(startAngle)
+              const x2 = cx + radius * Math.cos(endAngle)
+              const y2 = cy + radius * Math.sin(endAngle)
+              const xi1 = cx + innerRadius * Math.cos(startAngle)
+              const yi1 = cy + innerRadius * Math.sin(startAngle)
+              const xi2 = cx + innerRadius * Math.cos(endAngle)
+              const yi2 = cy + innerRadius * Math.sin(endAngle)
+              const path = `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${xi1} ${yi1} Z`
+              return { estado, count, color, path, pct: ((count / total) * 100).toFixed(1) }
+            })
+
+            return (
+              <div className="flex items-center gap-6 flex-wrap">
+                <svg width="200" height="200" viewBox="0 0 200 200" className="shrink-0">
+                  {slices.map(s => (
+                    <path key={s.estado} d={s.path} fill={s.color} stroke="rgba(15,23,42,0.5)" strokeWidth="1" />
+                  ))}
+                  <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="bold">{total}</text>
+                  <text x="100" y="115" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11">Total</text>
+                </svg>
+                <div className="flex-1 space-y-2 min-w-[140px]">
+                  {slices.map(s => (
+                    <div key={s.estado} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-sm shrink-0" style={{ background: s.color }} />
+                      <span className="text-sm text-white flex-1">{s.estado}</span>
+                      <span className="text-sm font-bold text-white">{s.count}</span>
+                      <span className="text-xs text-white/40">({s.pct}%)</span>
+                    </div>
+                  ))}
                 </div>
-              )
-            })}
-            {Object.keys(cotizacionesPorEstado).length === 0 && <p className="text-white/30 text-sm">Sin cotizaciones registradas</p>}
-          </div>
+              </div>
+            )
+          })()}
         </div>
       </div>
     </div>
