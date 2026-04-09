@@ -80,20 +80,32 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Estado</h2>
-          <div className="flex flex-wrap gap-4">
-            {Object.entries(propiedadesPorEstado).map(([estado, count]) => {
-              const st = statusColor(estado)
-              return (
-                <div key={estado} className="rounded-xl px-5 py-3" style={{ background: st.bg, border: st.border }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl font-bold" style={{ color: st.color }}>{count}</span>
-                    <span className="text-sm font-medium" style={{ color: st.color }}>{estado}</span>
-                  </div>
-                </div>
-              )
-            })}
-            {Object.keys(propiedadesPorEstado).length === 0 && <p className="text-white/30 text-sm">Sin propiedades registradas</p>}
-          </div>
+          {(() => {
+            const entries = Object.entries(propiedadesPorEstado)
+            const max = Math.max(...entries.map(([, v]) => v), 1)
+            return (
+              <div className="space-y-3">
+                {entries.map(([estado, count]) => {
+                  const st = statusColor(estado)
+                  const pct = (count / max) * 100
+                  return (
+                    <div key={estado}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-white">{estado}</span>
+                        <span className="text-sm font-bold" style={{ color: st.color }}>{count}</span>
+                      </div>
+                      <div className="w-full h-6 rounded-lg overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                        <div className="h-full rounded-lg transition-all duration-500 flex items-center justify-end pr-2" style={{ width: `${pct}%`, background: st.color, minWidth: count > 0 ? '24px' : '0' }}>
+                          <span className="text-xs font-bold text-white">{count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+                {entries.length === 0 && <p className="text-white/30 text-sm">Sin propiedades registradas</p>}
+              </div>
+            )
+          })()}
         </div>
 
         <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
