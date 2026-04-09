@@ -221,7 +221,7 @@ export default function DashboardPage() {
           const tipos = Array.from(new Set(propiedades.map(p => p.tipo_propiedad || 'Sin tipo')))
           const tipoColors: Record<string, string> = {
             'Casa': '#3b82f6',
-            'Apartamento': '#f97316',
+            'Apartamento': '#facc15',
             'Townhouse': '#a855f7',
             'Local Comercial': '#f59e0b',
             'Oficina': '#06b6d4',
@@ -247,7 +247,7 @@ export default function DashboardPage() {
                   const montosEnCiudad = montoPorCiudadTipo[ciudad] || {}
                   const totalHeight = (total / max) * chartHeight
                   return (
-                    <div key={ciudad} className="flex flex-col items-center gap-2 min-w-[160px]">
+                    <div key={ciudad} className="flex flex-col items-center gap-2 min-w-[200px]">
                       <span className="text-sm font-bold text-white">{total}</span>
                       <div className="w-16 rounded-lg overflow-hidden flex flex-col-reverse" style={{ height: `${totalHeight}px`, minHeight: total > 0 ? '12px' : '0' }}>
                         {tipos.map((tipo, i) => {
@@ -263,19 +263,19 @@ export default function DashboardPage() {
                         })}
                       </div>
                       <span className="text-xs text-center text-white/70 mt-1 whitespace-nowrap font-semibold">{ciudad}</span>
-                      <div className="flex flex-col gap-0.5 w-full">
+                      <div className="flex flex-col gap-1 w-full">
                         {tipos.map((tipo, i) => {
                           const count = tiposEnCiudad[tipo] || 0
                           if (count === 0) return null
                           const monto = montosEnCiudad[tipo] || 0
                           const color = tipoColors[tipo] || fallback[i % fallback.length]
                           return (
-                            <div key={tipo} className="flex items-center justify-between gap-2 text-[10px]">
-                              <div className="flex items-center gap-1 min-w-0">
-                                <div className="w-2 h-2 rounded-sm shrink-0" style={{ background: color }} />
-                                <span className="text-white/60 truncate">{tipo}</span>
+                            <div key={tipo} className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <div className="w-3 h-3 rounded-sm shrink-0" style={{ background: color }} />
+                                <span className="text-sm font-semibold text-white/80 truncate">{tipo}</span>
                               </div>
-                              <span className="font-bold whitespace-nowrap" style={{ color }}>$ {fmtNum(monto, 0)}</span>
+                              <span className="text-sm font-bold whitespace-nowrap" style={{ color }}>$ {fmtNum(monto, 0)}</span>
                             </div>
                           )
                         })}
