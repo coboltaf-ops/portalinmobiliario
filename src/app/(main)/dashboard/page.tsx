@@ -83,10 +83,19 @@ export default function DashboardPage() {
           {(() => {
             const entries = Object.entries(propiedadesPorEstado)
             const max = Math.max(...entries.map(([, v]) => v), 1)
+            const estadoColors: Record<string, string> = {
+              'Disponible': '#3b82f6',
+              'Reservada': '#f59e0b',
+              'Vendida': '#10b981',
+              'Alquilada': '#a855f7',
+              'Inactivo': '#ef4444',
+            }
+            const fallback = ['#06b6d4', '#ec4899', '#eab308', '#14b8a6', '#f97316']
             return (
               <div className="space-y-3">
-                {entries.map(([estado, count]) => {
-                  const st = statusColor(estado)
+                {entries.map(([estado, count], i) => {
+                  const color = estadoColors[estado] || fallback[i % fallback.length]
+                  const st = { color }
                   const pct = (count / max) * 100
                   return (
                     <div key={estado}>
