@@ -147,12 +147,21 @@ export default function DashboardPage() {
               return { estado, count, color, path, pct: ((count / total) * 100).toFixed(1) }
             })
 
+            const isSingle = slices.length === 1
+
             return (
               <div className="flex items-center gap-6 flex-wrap">
                 <svg width="200" height="200" viewBox="0 0 200 200" className="shrink-0">
-                  {slices.map(s => (
-                    <path key={s.estado} d={s.path} fill={s.color} stroke="rgba(15,23,42,0.5)" strokeWidth="1" />
-                  ))}
+                  {isSingle ? (
+                    <>
+                      <circle cx={cx} cy={cy} r={radius} fill={slices[0].color} />
+                      <circle cx={cx} cy={cy} r={innerRadius} fill="rgba(15,23,42,1)" />
+                    </>
+                  ) : (
+                    slices.map(s => (
+                      <path key={s.estado} d={s.path} fill={s.color} stroke="rgba(15,23,42,0.5)" strokeWidth="1" />
+                    ))
+                  )}
                   <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="bold">{total}</text>
                   <text x="100" y="115" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11">Total</text>
                 </svg>
