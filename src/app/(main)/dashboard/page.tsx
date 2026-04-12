@@ -6,6 +6,7 @@ import { useComercialesStore } from '@/features/comerciales/store/comerciales-st
 import { useClientesStore } from '@/features/clientes/store/clientes-store'
 import { useCotizacionesStore } from '@/features/cotizaciones/store/cotizaciones-store'
 import { useContratosStore } from '@/features/contratos/store/contratos-store'
+import { useSolicitudesStore } from '@/features/solicitudes/store/solicitudes-store'
 import { fmtNum } from '@/shared/lib/format-date'
 
 export default function DashboardPage() {
@@ -14,6 +15,7 @@ export default function DashboardPage() {
   const clientes = useClientesStore(s => s.clientes)
   const cotizaciones = useCotizacionesStore(s => s.cotizaciones)
   const contratos = useContratosStore(s => s.contratos)
+  const solicitudes = useSolicitudesStore(s => s.solicitudes)
 
   const disponiblesVenta = propiedades.filter(p => p.estado === 'Disponible' && (p.modalidad === 'Venta' || p.modalidad === 'Venta y Alquiler'))
   const disponiblesAlquiler = propiedades.filter(p => p.estado === 'Disponible' && (p.modalidad === 'Alquiler' || p.modalidad === 'Venta y Alquiler'))
@@ -58,6 +60,11 @@ export default function DashboardPage() {
     acc[ciudad][tipo] = (acc[ciudad][tipo] || 0) + 1
     return acc
   }, {} as Record<string, Record<string, number>>)
+
+  const solicitudesPorEstado = solicitudes.reduce((acc, s) => {
+    acc[s.estado] = (acc[s.estado] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
 
   const montoPorCiudadTipo = propiedades.reduce((acc, p) => {
     const ciudad = p.ciudad || 'Sin ciudad'
@@ -315,6 +322,121 @@ export default function DashboardPage() {
           )
         })()}
       </Link>
+
+      {/* Solicitudes por Estado - Vertical Bars + Cotizaciones Pie */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <Link href="/solicitudes" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-lg font-semibold text-white mb-4">Solicitudes por Situacion</h2>
+          {(() => {
+            const entries = Object.entries(solicitudesPorEstado).sort((a, b) => b[1] - a[1])
+            if (entries.length === 0) return <p className="text-white/30 text-sm">Sin solicitudes registradas</p>
+            const max = Math.max(...entries.map(([, v]) => v))
+            const solColors: Record<string, string> = {
+              'Nueva': '#fbbf24',
+              'En Atencion': '#3b82f6',
+              'Atendida': '#10b981',
+              'Descartada': '#ef4444',
+            }
+            const fallbackSol = ['#06b6d4', '#ec4899', '#a855f7', '#f97316']
+            const chartH = 180
+            return (
+              <div className="flex items-end justify-around gap-4 overflow-x-auto pb-4" style={{ minHeight: `${chartH + 50}px` }}>
+                {entries.map(([estado, count], i) => {
+                  const color = solColors[estado] || fallbackSol[i % fallbackSol.length]
+                  const barH = (count / max) * chartH
+                  return (
+                    <div key={estado} className="flex flex-col items-center gap-2 min-w-[80px]">
+                      <span className="text-sm font-bold" style={{ color }}>{count}</span>
+                      <div className="w-14 rounded-t-lg transition-all duration-500 flex items-start justify-center pt-2" style={{ height: `${barH}px`, background: color, minHeight: count > 0 ? '12px' : '0' }} />
+                      <span className="text-xs text-center text-white/70 mt-1 whitespace-nowrap">{estado}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })()}
+        </Link>
+
+        <Link href="/cotizaciones" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-lg font-semibold text-white mb-4">Cotizaciones por Situacion y Total</h2>
+          {(() => {
+            const entries = Object.entries(cotizacionesPorEstado)
+            const total = entries.reduce((sum, [, v]) => sum + v, 0)
+            const montoTotal = cotizaciones.reduce((sum, c) => sum + (c.precio_ofertado || 0), 0)
+            const cotColorsP: Record<string, string> = {
+              'Pendiente': '#f59e0b',
+              'Aceptada': '#10b981',
+              'Rechazada': '#ef4444',
+              'Borrador': '#6b7280',
+              'Vigente': '#3b82f6',
+              'Cancelado': '#dc2626',
+            }
+            const fallbackP = ['#06b6d4', '#ec4899', '#a855f7', '#14b8a6', '#f97316']
+
+            if (total === 0) return <p className="text-white/30 text-sm">Sin cotizaciones registradas</p>
+
+            const radius = 80
+            const innerRadius = 50
+            const cx = 100
+            const cy = 100
+            let cumulative = 0
+            const isSingleP = entries.length === 1
+
+            const slicesP = entries.map(([estado, count], i) => {
+              const color = cotColorsP[estado] || fallbackP[i % fallbackP.length]
+              const startAngle = (cumulative / total) * 2 * Math.PI - Math.PI / 2
+              cumulative += count
+              const endAngle = (cumulative / total) * 2 * Math.PI - Math.PI / 2
+              const largeArc = endAngle - startAngle > Math.PI ? 1 : 0
+              const x1 = cx + radius * Math.cos(startAngle)
+              const y1 = cy + radius * Math.sin(startAngle)
+              const x2 = cx + radius * Math.cos(endAngle)
+              const y2 = cy + radius * Math.sin(endAngle)
+              const xi1 = cx + innerRadius * Math.cos(startAngle)
+              const yi1 = cy + innerRadius * Math.sin(startAngle)
+              const xi2 = cx + innerRadius * Math.cos(endAngle)
+              const yi2 = cy + innerRadius * Math.sin(endAngle)
+              const path = `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${xi1} ${yi1} Z`
+              return { estado, count, color, path, monto: montoCotizacionesPorEstado[estado] || 0 }
+            })
+
+            return (
+              <div className="flex items-center gap-6 flex-wrap">
+                <svg width="200" height="200" viewBox="0 0 200 200" className="shrink-0">
+                  {isSingleP ? (
+                    <>
+                      <circle cx={cx} cy={cy} r={radius} fill={slicesP[0].color} />
+                      <circle cx={cx} cy={cy} r={innerRadius} fill="rgba(15,23,42,1)" />
+                    </>
+                  ) : (
+                    slicesP.map(s => (
+                      <path key={s.estado} d={s.path} fill={s.color} stroke="rgba(15,23,42,0.5)" strokeWidth="1" />
+                    ))
+                  )}
+                  <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="bold">{total}</text>
+                  <text x="100" y="115" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="10">Total</text>
+                </svg>
+                <div className="flex-1 space-y-2 min-w-[220px]">
+                  {slicesP.map(s => (
+                    <div key={s.estado} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-sm shrink-0" style={{ background: s.color }} />
+                      <span className="text-sm text-white flex-1">{s.estado}</span>
+                      <span className="text-sm font-bold text-white">{s.count}</span>
+                      <span className="text-xs font-semibold" style={{ color: s.color }}>$ {fmtNum(s.monto, 2)}</span>
+                    </div>
+                  ))}
+                  <div className="pt-2 mt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-white">Total General</span>
+                      <span className="text-lg font-black" style={{ color: '#fbbf24' }}>$ {fmtNum(montoTotal, 2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
+        </Link>
+      </div>
     </div>
   )
 }
