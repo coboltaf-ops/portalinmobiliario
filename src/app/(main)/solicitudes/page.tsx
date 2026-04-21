@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useSolicitudesStore, type Solicitud } from '@/features/solicitudes/store/solicitudes-store'
 import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-store'
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
+import { useClientesStore } from '@/features/clientes/store/clientes-store'
 import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
@@ -18,9 +20,11 @@ const initForm = (): Solicitud => ({
 })
 
 export default function SolicitudesPage() {
+  const router = useRouter()
   const { solicitudes, addSolicitud, updateSolicitud, deleteSolicitud } = useSolicitudesStore()
   const propiedades = usePropiedadesStore(s => s.propiedades)
   const comerciales = useComercialesStore(s => s.comerciales)
+  const { clientes, addCliente } = useClientesStore()
   const config = useConfigStore()
 
   const monedaSimbolo = (code: string) => {
@@ -75,6 +79,51 @@ export default function SolicitudesPage() {
 
   const handleEdit = (s: Solicitud) => { setForm({ ...s }); setIsFormOpen(true) }
   const handleDelete = (id: string) => { if (confirm('¿Eliminar esta solicitud?')) deleteSolicitud(id) }
+
+  const handleAtender = (s: Solicitud) => {
+    updateSolicitud(s.id, { estado: 'En Atencion' })
+  }
+
+  const handleConvertirCliente = (s: Solicitud) => {
+    const existe = clientes.find(c => c.correo && c.correo.toLowerCase() === s.correo.toLowerCase())
+    if (existe) { alert(`Ya existe un cliente con este correo: ${existe.codigo} - ${existe.nombre} ${existe.apellido}`); return }
+    if (!confirm(`¿Convertir a ${s.nombre} ${s.apellido} en Cliente/Prospecto?`)) return
+
+    const nums = clientes.map(c => parseInt(c.codigo.replace('CLI-', '')) || 0)
+    const max = nums.length > 0 ? Math.max(...nums) : 0
+    const nuevoCodigo = `CLI-${String(max + 1).padStart(5, '0')}`
+
+    const prop = propiedades.find(p => p.id === s.propiedad_id)
+
+    addCliente({
+      id: crypto.randomUUID(),
+      codigo: nuevoCodigo,
+      nombre: s.nombre,
+      apellido: s.apellido,
+      correo: s.correo,
+      telefono: s.telefono,
+      movil: s.telefono,
+      tipo: 'Prospecto',
+      interes: prop?.modalidad === 'Alquiler' ? 'Alquiler' : 'Compra',
+      presupuesto_min: 0,
+      presupuesto_max: prop?.precio_venta || prop?.precio_alquiler || 0,
+      tipo_moneda: prop?.tipo_moneda || 'USD',
+      ciudad_deseada: prop?.ciudad || '',
+      zona_preferida: prop?.zona || '',
+      tipo_propiedad_buscada: prop?.tipo_propiedad || '',
+      asesor_asignado: s.comercial_asignado,
+      observaciones: `Viene de Solicitud ${s.codigo} - Origen: ${s.origen}. ${s.mensaje}`,
+      situacion: 'Activo',
+      imagen: '',
+    })
+    updateSolicitud(s.id, { estado: 'Atendida', notas: `${s.notas}\n[${todayFormatted()}] Convertido a Cliente ${nuevoCodigo}` })
+    alert(`Cliente creado: ${nuevoCodigo}`)
+  }
+
+  const handleCotizar = (s: Solicitud) => {
+    updateSolicitud(s.id, { estado: 'En Atencion' })
+    router.push('/cotizaciones')
+  }
 
   const statusBadge = (s: string) => {
     const colors: Record<string, { bg: string; color: string; border: string }> = {
@@ -146,8 +195,13 @@ export default function SolicitudesPage() {
                     <td className="px-4 py-3">{statusBadge(s.estado)}</td>
                     <td className="px-4 py-3 text-white/70">{com ? `${com.nombre} ${com.apellido}` : 'Sin asignar'}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 flex-wrap">
                         <button onClick={() => setViewRecord(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: 'rgba(4,120,87,0.9)', border: '1px solid rgba(4,120,87,1)', color: '#fff' }}>Ver</button>
+                        {s.estado === 'Nueva' && (
+                          <button onClick={() => handleAtender(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: 'rgba(59,130,246,0.9)', border: '1px solid rgba(59,130,246,1)', color: '#fff' }} title="Marcar como En Atencion">Atender</button>
+                        )}
+                        <button onClick={() => handleConvertirCliente(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: 'rgba(139,92,246,0.9)', border: '1px solid rgba(139,92,246,1)', color: '#fff' }} title="Convertir a Cliente/Prospecto">→ Cliente</button>
+                        <button onClick={() => handleCotizar(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: 'rgba(234,88,12,0.9)', border: '1px solid rgba(234,88,12,1)', color: '#fff' }} title="Ir a Cotizaciones">Cotizar</button>
                         <button onClick={() => handleEdit(s)} className="p-1.5 rounded-lg hover:bg-white/10" title="Editar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
                         <button onClick={() => handleDelete(s.id)} className="p-1.5 rounded-lg hover:bg-white/10" title="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
                       </div>
