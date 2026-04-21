@@ -7,6 +7,7 @@ import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-st
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
 import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { useSolicitudesStore } from '@/features/solicitudes/store/solicitudes-store'
+import { supabase } from '@/shared/lib/supabase'
 import { fmtNum } from '@/shared/lib/format-date'
 
 export default function PropiedadDetallePage() {
@@ -34,9 +35,10 @@ export default function PropiedadDetallePage() {
     return m ? m.simbolo : '$'
   }
 
-  const nextCode = () => {
-    const nums = solicitudes.map(s => parseInt(s.codigo.replace('SOL-', '')) || 0)
-    const max = nums.length > 0 ? Math.max(...nums) : 0
+  const nextCode = async () => {
+    const { data } = await supabase.from('solicitudes').select('codigo').order('codigo', { ascending: false }).limit(1)
+    const maxCode = data && data.length > 0 ? data[0].codigo : 'SOL-00000'
+    const max = parseInt(String(maxCode).replace('SOL-', '')) || 0
     return `SOL-${String(max + 1).padStart(5, '0')}`
   }
 
@@ -52,9 +54,10 @@ export default function PropiedadDetallePage() {
     if (!correo.trim() && !telefono.trim()) { setFormError('Debe ingresar correo o telefono.'); return }
 
     try {
+      const codigo = await nextCode()
       await addSolicitud({
         id: crypto.randomUUID(),
-        codigo: nextCode(),
+        codigo,
         fecha: todayFormatted(),
         nombre: nombre.trim(),
         apellido: apellido.trim(),
