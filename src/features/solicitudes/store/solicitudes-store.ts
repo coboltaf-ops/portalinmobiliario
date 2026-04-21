@@ -35,8 +35,9 @@ export const useSolicitudesStore = create<SolicitudesState>()((set, get) => ({
     if (data) set({ solicitudes: data, loaded: true })
   },
   addSolicitud: async (s) => {
+    const { error } = await supabase.from('solicitudes').insert(s)
+    if (error) throw new Error(error.message)
     set((st) => ({ solicitudes: [...st.solicitudes, s] }))
-    await supabase.from('solicitudes').insert(s)
   },
   updateSolicitud: async (id, s) => {
     set((st) => ({ solicitudes: st.solicitudes.map((r) => r.id === id ? { ...r, ...s } : r) }))

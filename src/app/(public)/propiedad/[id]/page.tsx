@@ -45,34 +45,38 @@ export default function PropiedadDetallePage() {
     return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setFormError('')
     if (!nombre.trim()) { setFormError('El nombre es obligatorio.'); return }
     if (!correo.trim() && !telefono.trim()) { setFormError('Debe ingresar correo o telefono.'); return }
 
-    addSolicitud({
-      id: crypto.randomUUID(),
-      codigo: nextCode(),
-      fecha: todayFormatted(),
-      nombre: nombre.trim(),
-      apellido: apellido.trim(),
-      correo: correo.trim(),
-      telefono: telefono.trim(),
-      mensaje: mensaje.trim(),
-      origen: 'Pagina Web',
-      propiedad_id: propiedad!.id,
-      estado: 'Nueva',
-      comercial_asignado: propiedad!.asesor_asignado || '',
-      notas: '',
-    })
+    try {
+      await addSolicitud({
+        id: crypto.randomUUID(),
+        codigo: nextCode(),
+        fecha: todayFormatted(),
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        correo: correo.trim(),
+        telefono: telefono.trim(),
+        mensaje: mensaje.trim(),
+        origen: 'Pagina Web',
+        propiedad_id: propiedad!.id,
+        estado: 'Nueva',
+        comercial_asignado: propiedad!.asesor_asignado || '',
+        notas: '',
+      })
 
-    setEnviado(true)
-    setNombre('')
-    setApellido('')
-    setCorreo('')
-    setTelefono('')
-    setMensaje('')
+      setEnviado(true)
+      setNombre('')
+      setApellido('')
+      setCorreo('')
+      setTelefono('')
+      setMensaje('')
+    } catch (err) {
+      setFormError('Error al enviar: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   if (!propiedad) {
