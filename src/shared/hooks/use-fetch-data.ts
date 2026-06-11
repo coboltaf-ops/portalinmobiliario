@@ -11,6 +11,7 @@ import { useCotizacionesStore } from '@/features/cotizaciones/store/cotizaciones
 import { useContratosStore } from '@/features/contratos/store/contratos-store'
 import { useEmpresaStore } from '@/features/datos-empresa/store/empresa-store'
 import { useCorreosStore } from '@/features/correos-enviados/store/correos-store'
+import { useModulosStore } from '@/features/configuracion/store/modulos-store'
 
 export function useFetchData() {
   const fetchUsers = useAuthStore(s => s.fetchUsers)
@@ -23,6 +24,7 @@ export function useFetchData() {
   const fetchContratos = useContratosStore(s => s.fetchContratos)
   const fetchEmpresa = useEmpresaStore(s => s.fetchEmpresa)
   const fetchCorreos = useCorreosStore(s => s.fetchCorreos)
+  const fetchModulos = useModulosStore(s => s.fetchModulos)
 
   useEffect(() => {
     fetchUsers()
@@ -35,5 +37,6 @@ export function useFetchData() {
     fetchContratos()
     fetchEmpresa()
     fetchCorreos()
-  }, [fetchUsers, fetchConfig, fetchPropiedades, fetchComerciales, fetchClientes, fetchSolicitudes, fetchCotizaciones, fetchContratos, fetchEmpresa, fetchCorreos])
+    fetchModulos()
+  }, [fetchUsers, fetchConfig, fetchPropiedades, fetchComerciales, fetchClientes, fetchSolicitudes, fetchCotizaciones, fetchContratos, fetchEmpresa, fetchCorreos, fetchModulos])
 }
