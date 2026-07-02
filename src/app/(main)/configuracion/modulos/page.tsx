@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useModulosStore, type Modulo } from '@/features/configuracion/store/modulos-store'
 
+export const dynamic = 'force-dynamic'
+
 export default function ModulosPage() {
   const { modulos, loading, fetchModulos, toggleModulo } = useModulosStore()
   const [loadingId, setLoadingId] = useState<string | null>(null)
