@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useRef } from 'react'
 import { usePropiedadesStore, type Propiedad } from '@/features/propiedades/store/propiedades-store'
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'

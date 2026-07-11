@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSolicitudesStore, type Solicitud } from '@/features/solicitudes/store/solicitudes-store'

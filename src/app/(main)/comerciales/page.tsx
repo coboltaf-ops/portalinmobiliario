@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useRef } from 'react'
 import { useComercialesStore, type Comercial } from '@/features/comerciales/store/comerciales-store'
 import { compressImage } from '@/shared/lib/compress-image'

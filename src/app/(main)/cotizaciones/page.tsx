@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { useCotizacionesStore, type Cotizacion } from '@/features/cotizaciones/store/cotizaciones-store'
 import { useClientesStore } from '@/features/clientes/store/clientes-store'
