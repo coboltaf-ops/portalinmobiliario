@@ -26,7 +26,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   ]
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-white">
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#001e4d] border-r border-white/10 z-50 flex flex-col">
         <div className="px-6 py-5 shrink-0 flex flex-col items-center gap-2">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: 'rgba(30,64,175,0.2)', border: '1px solid rgba(30,64,175,0.3)' }}>
