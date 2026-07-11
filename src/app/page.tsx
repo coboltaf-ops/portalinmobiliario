@@ -81,7 +81,7 @@ export default function LoginPage() {
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+              style={{ background: '#ffffff', border: '2px solid #000000', color: '#000000' }}
               placeholder="admin"
             />
           </div>
@@ -93,7 +93,7 @@ export default function LoginPage() {
               value={clave}
               onChange={(e) => setClave(e.target.value)}
               className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+              style={{ background: '#ffffff', border: '2px solid #000000', color: '#000000' }}
               placeholder="••••••••"
             />
           </div>

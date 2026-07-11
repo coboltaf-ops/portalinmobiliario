@@ -27,7 +27,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen">
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-black/30 backdrop-blur-2xl border-r border-white/10 z-50 flex flex-col">
+      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#001e4d] border-r border-white/10 z-50 flex flex-col">
         <div className="px-6 py-5 shrink-0 flex flex-col items-center gap-2">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: 'rgba(30,64,175,0.2)', border: '1px solid rgba(30,64,175,0.3)' }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -47,8 +47,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ${
                   isActive
-                    ? 'text-white bg-white/15 border border-white/10 shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'text-white bg-[#0a3d99] border border-[#1e64d4] shadow-lg'
+                    : 'text-white/60 hover:text-white hover:bg-[#0a2460]'
                 }`}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -75,13 +75,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
 
-      <main className="ml-64 flex-1 flex flex-col min-h-screen">
-        <header className="px-8 py-3 shrink-0 flex items-center justify-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <main className="ml-64 flex-1 flex flex-col min-h-screen bg-white">
+        <header className="px-8 py-3 shrink-0 flex items-center justify-between bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
           <div className="w-16" />
           {user && (
             <div className="text-center flex-1">
-              <p className="text-sm font-black text-white">{user.nombre.toUpperCase()}</p>
-              <p className="text-xs font-bold text-white/80">{user.rol?.toUpperCase() || 'USUARIO'}</p>
+              <p className="text-sm font-black text-[#001e4d]">{user.nombre.toUpperCase()}</p>
+              <p className="text-xs font-bold text-[#001e4d]/70">{user.rol?.toUpperCase() || 'USUARIO'}</p>
             </div>
           )}
           <button
@@ -96,7 +96,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             Inicio
           </button>
         </header>
-        <div className="flex-1 p-8 overflow-x-auto">
+        <div className="flex-1 p-8 overflow-x-auto bg-white">
           {children}
         </div>
       </main>

@@ -6,8 +6,8 @@ import { useConfigStore } from '@/features/configuracion/store/configuracion-sto
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import { compressImage } from '@/shared/lib/compress-image'
 
-const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
-const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
+const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
+const selectSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 
 const initForm = (): DatosEmpresa => ({
   id: '', nombre: '', tipo_identificacion: '', nro_documento: '', correo: '',

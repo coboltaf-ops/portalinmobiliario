@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useConfigStore, type RefItem, type MonedaItem, type CiudadItem } from '@/features/configuracion/store/configuracion-store'
 
-const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
+const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 
 type SimpleTableKey = 'tiposPropiedad' | 'monedas' | 'paises' | 'situacionesPropiedad' | 'tiposIdentificacion' | 'origenesSolicitud'
 

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useCorreosStore } from '@/features/correos-enviados/store/correos-store'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 
-const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
+const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 
 export default function CorreosEnviadosPage() {
   const { correos, deleteCorreo } = useCorreosStore()
