@@ -10,6 +10,7 @@ import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-help
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import jsPDF from 'jspdf'
 import { compressImage } from '@/shared/lib/compress-image'
+import { PDFPreview } from '@/shared/components/pdf-preview'
 
 const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
 const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
@@ -35,6 +36,9 @@ export default function PropiedadesPage() {
   const [galleryIndex, setGalleryIndex] = useState(0)
   const [search, setSearch] = useState('')
   const [formError, setFormError] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null)
+  const [pdfFileName, setPdfFileName] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const nextNro = () => {
@@ -288,7 +292,11 @@ export default function PropiedadesPage() {
         doc.text(`Pagina ${i} de ${pageCount}`, pageW - margin, 294, { align: 'right' })
       }
 
-      doc.save(`Ficha_${p.codigo || 'PROP'}_${nombre.replace(/\s+/g, '_')}.pdf`)
+      const blob = doc.output('blob') as Blob
+      const fileName = `Ficha_${p.codigo || 'PROP'}_${nombre.replace(/\s+/g, '_')}.pdf`
+      setPdfBlob(blob)
+      setPdfFileName(fileName)
+      setShowPreview(true)
     } catch (err) {
       alert('Error al generar el PDF: ' + (err instanceof Error ? err.message : String(err)))
     }
@@ -628,6 +636,15 @@ export default function PropiedadesPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {pdfBlob && (
+        <PDFPreview
+          isOpen={showPreview}
+          onClose={() => setShowPreview(false)}
+          pdfBlob={pdfBlob}
+          fileName={pdfFileName}
+        />
       )}
     </div>
   )

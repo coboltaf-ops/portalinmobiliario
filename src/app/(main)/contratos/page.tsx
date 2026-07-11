@@ -11,6 +11,8 @@ import { formatDate, toInputDate, todayFormatted, fmtNum } from '@/shared/lib/fo
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { compressImage } from '@/shared/lib/compress-image'
+import jsPDF from 'jspdf'
+import { PDFPreview } from '@/shared/components/pdf-preview'
 
 const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
 const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
@@ -35,6 +37,9 @@ export default function ContratosPage() {
   const [docsRecord, setDocsRecord] = useState<Contrato | null>(null)
   const [search, setSearch] = useState('')
   const [formError, setFormError] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null)
+  const [pdfFileName, setPdfFileName] = useState('')
 
   const nextCode = () => {
     const nums = contratos.map(c => parseInt(c.nro_contrato.replace('CTR-', '')) || 0)
@@ -74,193 +79,302 @@ export default function ContratosPage() {
   const handleDelete = (id: string) => { if (confirm('¿Eliminar este contrato?')) deleteContrato(id) }
 
   const generateContractPDF = (ctr: Contrato) => {
-    const cli = clientes.find(c => c.id === ctr.cliente_id)
-    const prop = propiedades.find(p => p.id === ctr.propiedad_id)
-    const com = comerciales.find(c => c.id === ctr.comercial_id)
-    const w = window.open('', '_blank')
-    if (!w) return
-    w.document.write(`<!DOCTYPE html><html><head><title>Contrato ${ctr.nro_contrato}</title></head>
-    <body style="font-family:Arial;padding:40px;max-width:800px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:30px">
-        ${empresa?.logo ? `<img src="${empresa.logo}" style="height:60px;margin-bottom:10px" />` : ''}
-        <h1 style="margin:0;color:#1e3a5f">${empresa?.nombre || 'Portal Inmobiliario'}</h1>
-        <p style="color:#666">${empresa?.direccion || ''} ${empresa?.ciudad || ''}</p>
-      </div>
-      <h2 style="color:#1e3a5f;border-bottom:2px solid #3b82f6;padding-bottom:10px">CONTRATO DE ${ctr.tipo.toUpperCase()} ${ctr.nro_contrato}</h2>
-      <p>En la ciudad de ${empresa?.ciudad || '___'}, a fecha ${ctr.fecha}, se celebra el presente contrato de ${ctr.tipo.toLowerCase()} entre:</p>
-      <h3 style="color:#1e3a5f">PARTE VENDEDORA / ARRENDADORA</h3>
-      <p><strong>${empresa?.nombre || '___'}</strong>, representada por ${empresa?.representante_legal || '___'}, identificado con ${empresa?.tipo_identificacion || ''} ${empresa?.nro_documento || '___'}.</p>
-      <h3 style="color:#1e3a5f">PARTE COMPRADORA / ARRENDATARIA</h3>
-      <p><strong>${cli ? `${cli.nombre} ${cli.apellido}` : '___'}</strong></p>
-      <p>Correo: ${cli?.correo || '-'} | Telefono: ${cli?.telefono || '-'}</p>
-      <h3 style="color:#1e3a5f">PROPIEDAD</h3>
-      <p><strong>${prop?.urbanizacion || '___'}</strong></p>
-      <p>Tipo: ${prop?.tipo_propiedad || '-'} | Area: ${fmtNum(prop?.area_m2 || 0)} m²</p>
-      <p>Direccion: ${prop?.direccion || '-'}, ${prop?.ciudad || ''}, ${prop?.zona || ''}</p>
-      <h3 style="color:#1e3a5f">CONDICIONES ECONOMICAS</h3>
-      <p style="font-size:20px;font-weight:bold;color:#1e3a5f">Monto: ${monedaSimbolo(ctr.tipo_moneda)} ${fmtNum(ctr.monto, 2)}</p>
-      ${ctr.tipo === 'Arrendamiento' ? `<p><strong>Plazo:</strong> ${ctr.plazo} meses</p><p><strong>Fecha Inicio:</strong> ${ctr.fecha_inicio} | <strong>Fecha Fin:</strong> ${ctr.fecha_fin}</p>` : ''}
-      ${ctr.condiciones ? `<h3 style="color:#1e3a5f">CONDICIONES</h3><p>${ctr.condiciones}</p>` : ''}
-      ${ctr.observaciones ? `<h3 style="color:#1e3a5f">OBSERVACIONES</h3><p>${ctr.observaciones}</p>` : ''}
-      ${com ? `<p style="margin-top:20px"><strong>Asesor Comercial:</strong> ${com.nombre} ${com.apellido}</p>` : ''}
-      <div style="margin-top:60px;display:flex;justify-content:space-between">
-        <div style="text-align:center"><div style="border-top:1px solid #000;width:200px;padding-top:5px">Parte Vendedora/Arrendadora</div></div>
-        <div style="text-align:center"><div style="border-top:1px solid #000;width:200px;padding-top:5px">Parte Compradora/Arrendataria</div></div>
-      </div>
-      <script>setTimeout(()=>window.print(),500)</script>
-    </body></html>`)
-    w.document.close()
+    try {
+      const cli = clientes.find(c => c.id === ctr.cliente_id)
+      const prop = propiedades.find(p => p.id === ctr.propiedad_id)
+      const com = comerciales.find(c => c.id === ctr.comercial_id)
+
+      const doc = new jsPDF('p', 'mm', 'a4')
+      const pageW = 210
+      const margin = 15
+      const contentW = pageW - margin * 2
+      let y = margin
+
+      doc.setFillColor(30, 64, 175)
+      doc.rect(0, 0, pageW, 30, 'F')
+
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(14)
+      doc.setFont('helvetica', 'bold')
+      doc.text(empresa?.nombre || 'Portal Inmobiliario', margin, 12)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      if (empresa?.direccion) doc.text(empresa.direccion, margin, 17)
+      if (empresa?.ciudad) doc.text(empresa.ciudad, margin, 21)
+
+      y = 40
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`CONTRATO DE ${ctr.tipo.toUpperCase()} ${ctr.nro_contrato}`, margin, y)
+      y += 8
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const lines1 = doc.splitTextToSize(`En la ciudad de ${empresa?.ciudad || '___'}, a fecha ${ctr.fecha}, se celebra el presente contrato de ${ctr.tipo.toLowerCase()} entre:`, contentW)
+      doc.text(lines1, margin, y)
+      y += lines1.length * 4 + 6
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('PARTE VENDEDORA / ARRENDADORA', margin, y)
+      y += 6
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const lines2 = doc.splitTextToSize(`${empresa?.nombre || '___'}, representada por ${empresa?.representante_legal || '___'}, identificado con ${empresa?.tipo_identificacion || ''} ${empresa?.nro_documento || '___'}.`, contentW)
+      doc.text(lines2, margin, y)
+      y += lines2.length * 4 + 6
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('PARTE COMPRADORA / ARRENDATARIA', margin, y)
+      y += 6
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${cli ? `${cli.nombre} ${cli.apellido}` : '___'}`, margin, y)
+      y += 6
+      doc.text(`Correo: ${cli?.correo || '-'} | Telefono: ${cli?.telefono || '-'}`, margin, y)
+      y += 12
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('PROPIEDAD', margin, y)
+      y += 6
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${prop?.urbanizacion || '___'}`, margin, y)
+      y += 6
+      doc.text(`Tipo: ${prop?.tipo_propiedad || '-'} | Area: ${fmtNum(prop?.area_m2 || 0)} m²`, margin, y)
+      y += 6
+      doc.text(`Direccion: ${prop?.direccion || '-'}, ${prop?.ciudad || ''}, ${prop?.zona || ''}`, margin, y)
+      y += 12
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('CONDICIONES ECONOMICAS', margin, y)
+      y += 6
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`Monto: ${monedaSimbolo(ctr.tipo_moneda)} ${fmtNum(ctr.monto, 2)}`, margin, y)
+      y += 8
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      if (ctr.tipo === 'Arrendamiento') {
+        doc.text(`Plazo: ${ctr.plazo} meses`, margin, y)
+        y += 6
+        doc.text(`Fecha Inicio: ${ctr.fecha_inicio} | Fecha Fin: ${ctr.fecha_fin}`, margin, y)
+        y += 8
+      }
+      if (ctr.condiciones) {
+        doc.setTextColor(30, 64, 175)
+        doc.setFontSize(10)
+        doc.setFont('helvetica', 'bold')
+        doc.text('CONDICIONES', margin, y)
+        y += 6
+        doc.setTextColor(0, 0, 0)
+        doc.setFontSize(9)
+        doc.setFont('helvetica', 'normal')
+        const lines3 = doc.splitTextToSize(ctr.condiciones, contentW)
+        doc.text(lines3, margin, y)
+        y += lines3.length * 4 + 8
+      }
+      if (ctr.observaciones) {
+        doc.setTextColor(30, 64, 175)
+        doc.setFontSize(10)
+        doc.setFont('helvetica', 'bold')
+        doc.text('OBSERVACIONES', margin, y)
+        y += 6
+        doc.setTextColor(0, 0, 0)
+        doc.setFontSize(9)
+        doc.setFont('helvetica', 'normal')
+        const lines4 = doc.splitTextToSize(ctr.observaciones, contentW)
+        doc.text(lines4, margin, y)
+        y += lines4.length * 4 + 8
+      }
+      if (com) {
+        doc.text(`Asesor Comercial: ${com.nombre} ${com.apellido}`, margin, y)
+      }
+
+      const blob = doc.output('blob') as Blob
+      const fileName = `Contrato_${ctr.nro_contrato}.pdf`
+      setPdfBlob(blob)
+      setPdfFileName(fileName)
+      setShowPreview(true)
+    } catch (err) {
+      alert('Error al generar el PDF: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   const generateDocumento = (ctr: Contrato) => {
-    const cli = clientes.find(c => c.id === ctr.cliente_id)
-    const prop = propiedades.find(p => p.id === ctr.propiedad_id)
-    const com = comerciales.find(c => c.id === ctr.comercial_id)
-    const w = window.open('', '_blank')
-    if (!w) return
-    const isVenta = ctr.tipo === 'Venta'
-    const titulo = isVenta ? 'CONTRATO DE COMPRAVENTA DE INMUEBLE' : 'CONTRATO DE ARRENDAMIENTO DE INMUEBLE'
-    const simb = monedaSimbolo(ctr.tipo_moneda)
-    const montoFmt = `${simb} ${fmtNum(ctr.monto, 2)} ${ctr.tipo_moneda}`
+    try {
+      const cli = clientes.find(c => c.id === ctr.cliente_id)
+      const prop = propiedades.find(p => p.id === ctr.propiedad_id)
+      const com = comerciales.find(c => c.id === ctr.comercial_id)
+      const isVenta = ctr.tipo === 'Venta'
+      const titulo = isVenta ? 'CONTRATO DE COMPRAVENTA DE INMUEBLE' : 'CONTRATO DE ARRENDAMIENTO DE INMUEBLE'
+      const simb = monedaSimbolo(ctr.tipo_moneda)
+      const montoFmt = `${simb} ${fmtNum(ctr.monto, 2)} ${ctr.tipo_moneda}`
 
-    const clausulasVenta = `
-      <h3>CLAUSULA PRIMERA: OBJETO DEL CONTRATO</h3>
-      <p>Por medio del presente contrato, <strong>EL VENDEDOR</strong> transfiere a favor de <strong>EL COMPRADOR</strong> la propiedad del inmueble descrito en la Clausula Segunda, en las condiciones y terminos aqui establecidos.</p>
+      const doc = new jsPDF('p', 'mm', 'a4')
+      const pageW = 210
+      const margin = 20
+      const contentW = pageW - margin * 2
+      let y = margin
 
-      <h3>CLAUSULA SEGUNDA: DESCRIPCION DEL INMUEBLE</h3>
-      <p>El inmueble objeto del presente contrato se encuentra ubicado en:</p>
-      <ul>
-        <li><strong>Urbanizacion:</strong> ${prop?.urbanizacion || '___'}</li>
-        <li><strong>Unidad:</strong> ${prop?.nro_apto_casa || '___'}</li>
-        <li><strong>Direccion:</strong> ${prop?.direccion || '___'}</li>
-        <li><strong>Ciudad/Poblacion:</strong> ${prop?.ciudad || '___'}, Zona: ${prop?.zona || '___'}</li>
-        <li><strong>Tipo de Propiedad:</strong> ${prop?.tipo_propiedad || '___'}</li>
-        <li><strong>Area:</strong> ${fmtNum(prop?.area_m2 || 0)} m²</li>
-        <li><strong>Habitaciones:</strong> ${prop?.habitaciones || 0} | <strong>Banos:</strong> ${prop?.banos || 0} | <strong>Estacionamientos:</strong> ${prop?.estacionamientos || 0}</li>
-      </ul>
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text(titulo, pageW / 2, y, { align: 'center' })
+      y += 8
+      doc.setFontSize(11)
+      doc.text(`Documento Nro. ${ctr.nro_contrato}`, pageW / 2, y, { align: 'center' })
+      y += 12
 
-      <h3>CLAUSULA TERCERA: PRECIO Y FORMA DE PAGO</h3>
-      <p>El precio total de la compraventa es de <strong>${montoFmt}</strong> (${ctr.tipo_moneda}), que EL COMPRADOR se compromete a pagar de la siguiente forma:</p>
-      <p>${ctr.condiciones || 'Pago unico al momento de la firma de la escritura publica.'}</p>
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const lines1 = doc.splitTextToSize(`Conste por el presente documento, el contrato de ${isVenta ? 'compraventa' : 'arrendamiento'} que celebran:`, contentW)
+      doc.text(lines1, margin, y)
+      y += lines1.length * 4 + 6
 
-      <h3>CLAUSULA CUARTA: ENTREGA DEL INMUEBLE</h3>
-      <p>EL VENDEDOR se compromete a entregar el inmueble a EL COMPRADOR en la fecha <strong>${ctr.fecha_inicio || '___'}</strong>, libre de gravamenes, cargas, deudas, inquilinos y ocupantes.</p>
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('LAS PARTES', margin, y)
+      y += 6
 
-      <h3>CLAUSULA QUINTA: SANEAMIENTO</h3>
-      <p>EL VENDEDOR declara que el inmueble se encuentra libre de todo gravamen, hipoteca, embargo, litigio, proceso judicial o carga de cualquier naturaleza. Se obliga al saneamiento por eviccion y por vicios ocultos conforme a ley.</p>
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const vendedorLine = `${isVenta ? 'EL VENDEDOR' : 'EL ARRENDADOR'}: ${empresa?.nombre || '___'}, con ${empresa?.tipo_identificacion || 'identificacion'} Nro. ${empresa?.nro_documento || '___'}, representada por ${empresa?.representante_legal || '___'}, con domicilio en ${empresa?.direccion || '___'}, ${empresa?.ciudad || '___'}.`
+      const vendedorLines = doc.splitTextToSize(vendedorLine, contentW)
+      doc.text(vendedorLines, margin, y)
+      y += vendedorLines.length * 4 + 4
 
-      <h3>CLAUSULA SEXTA: GASTOS</h3>
-      <p>Los gastos notariales, registrales e impuestos que genere la presente transferencia seran asumidos por ambas partes en proporcion igual, salvo acuerdo distinto.</p>
+      const compradorLine = `${isVenta ? 'EL COMPRADOR' : 'EL ARRENDATARIO'}: ${cli ? `${cli.nombre} ${cli.apellido}` : '___'}. Correo: ${cli?.correo || '-'}, Telefono: ${cli?.telefono || cli?.movil || '-'}.`
+      const compradorLines = doc.splitTextToSize(compradorLine, contentW)
+      doc.text(compradorLines, margin, y)
+      y += compradorLines.length * 4 + 10
 
-      <h3>CLAUSULA SEPTIMA: VIGENCIA</h3>
-      <p>El presente contrato entra en vigencia a partir de la fecha de su suscripcion: <strong>${ctr.fecha}</strong>.</p>
-    `
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('CLAUSULA PRIMERA: OBJETO DEL CONTRATO', margin, y)
+      y += 6
 
-    const clausulasAlquiler = `
-      <h3>CLAUSULA PRIMERA: OBJETO DEL CONTRATO</h3>
-      <p>Por medio del presente contrato, <strong>EL ARRENDADOR</strong> cede en uso a <strong>EL ARRENDATARIO</strong> el inmueble descrito en la Clausula Segunda, para uso exclusivo de vivienda/oficina, en las condiciones aqui establecidas.</p>
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const clausula1 = isVenta
+        ? `Por medio del presente contrato, EL VENDEDOR transfiere a favor de EL COMPRADOR la propiedad del inmueble descrito en la Clausula Segunda, en las condiciones y terminos aqui establecidos.`
+        : `Por medio del presente contrato, EL ARRENDADOR cede en uso a EL ARRENDATARIO el inmueble descrito en la Clausula Segunda, para uso exclusivo de vivienda/oficina, en las condiciones aqui establecidas.`
+      const clause1Lines = doc.splitTextToSize(clausula1, contentW)
+      doc.text(clause1Lines, margin, y)
+      y += clause1Lines.length * 4 + 8
 
-      <h3>CLAUSULA SEGUNDA: DESCRIPCION DEL INMUEBLE</h3>
-      <p>El inmueble objeto del presente contrato se encuentra ubicado en:</p>
-      <ul>
-        <li><strong>Urbanizacion:</strong> ${prop?.urbanizacion || '___'}</li>
-        <li><strong>Unidad:</strong> ${prop?.nro_apto_casa || '___'}</li>
-        <li><strong>Direccion:</strong> ${prop?.direccion || '___'}</li>
-        <li><strong>Ciudad/Poblacion:</strong> ${prop?.ciudad || '___'}, Zona: ${prop?.zona || '___'}</li>
-        <li><strong>Tipo de Propiedad:</strong> ${prop?.tipo_propiedad || '___'}</li>
-        <li><strong>Area:</strong> ${fmtNum(prop?.area_m2 || 0)} m²</li>
-        <li><strong>Habitaciones:</strong> ${prop?.habitaciones || 0} | <strong>Banos:</strong> ${prop?.banos || 0} | <strong>Estacionamientos:</strong> ${prop?.estacionamientos || 0}</li>
-      </ul>
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('CLAUSULA SEGUNDA: DESCRIPCION DEL INMUEBLE', margin, y)
+      y += 6
 
-      <h3>CLAUSULA TERCERA: PLAZO DEL CONTRATO</h3>
-      <p>El plazo del presente contrato es de <strong>${ctr.plazo} meses</strong>, iniciando el <strong>${ctr.fecha_inicio || '___'}</strong> y finalizando el <strong>${ctr.fecha_fin || '___'}</strong>. Al vencimiento, las partes podran acordar su renovacion por escrito.</p>
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text('El inmueble objeto del presente contrato se encuentra ubicado en:', margin, y)
+      y += 4
+      doc.text(`- Urbanizacion: ${prop?.urbanizacion || '___'}`, margin + 4, y)
+      y += 4
+      doc.text(`- Unidad: ${prop?.nro_apto_casa || '___'}`, margin + 4, y)
+      y += 4
+      doc.text(`- Direccion: ${prop?.direccion || '___'}`, margin + 4, y)
+      y += 4
+      doc.text(`- Ciudad/Poblacion: ${prop?.ciudad || '___'}, Zona: ${prop?.zona || '___'}`, margin + 4, y)
+      y += 4
+      doc.text(`- Tipo de Propiedad: ${prop?.tipo_propiedad || '___'}`, margin + 4, y)
+      y += 4
+      doc.text(`- Area: ${fmtNum(prop?.area_m2 || 0)} m²`, margin + 4, y)
+      y += 4
+      doc.text(`- Habitaciones: ${prop?.habitaciones || 0} | Banos: ${prop?.banos || 0} | Estacionamientos: ${prop?.estacionamientos || 0}`, margin + 4, y)
+      y += 10
 
-      <h3>CLAUSULA CUARTA: RENTA MENSUAL</h3>
-      <p>EL ARRENDATARIO se obliga a pagar una renta mensual de <strong>${montoFmt}</strong>, pagadera dentro de los primeros cinco (5) dias de cada mes, mediante transferencia bancaria o medio acordado.</p>
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text(isVenta ? 'CLAUSULA TERCERA: PRECIO Y FORMA DE PAGO' : 'CLAUSULA TERCERA: PLAZO DEL CONTRATO', margin, y)
+      y += 6
 
-      <h3>CLAUSULA QUINTA: GARANTIA / DEPOSITO</h3>
-      <p>EL ARRENDATARIO entregara al momento de la firma un deposito de garantia equivalente a dos (2) meses de renta, que sera devuelto al termino del contrato, previa verificacion del estado del inmueble. ${ctr.condiciones || ''}</p>
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      if (isVenta) {
+        const clause3 = `El precio total de la compraventa es de ${montoFmt} (${ctr.tipo_moneda}), que EL COMPRADOR se compromete a pagar de la siguiente forma: ${ctr.condiciones || 'Pago unico al momento de la firma de la escritura publica.'}`
+        const clause3Lines = doc.splitTextToSize(clause3, contentW)
+        doc.text(clause3Lines, margin, y)
+        y += clause3Lines.length * 4 + 8
+      } else {
+        const clause3 = `El plazo del presente contrato es de ${ctr.plazo} meses, iniciando el ${ctr.fecha_inicio || '___'} y finalizando el ${ctr.fecha_fin || '___'}. Al vencimiento, las partes podran acordar su renovacion por escrito.`
+        const clause3Lines = doc.splitTextToSize(clause3, contentW)
+        doc.text(clause3Lines, margin, y)
+        y += clause3Lines.length * 4 + 8
+      }
 
-      <h3>CLAUSULA SEXTA: OBLIGACIONES DEL ARRENDATARIO</h3>
-      <p>a) Usar el inmueble exclusivamente para el fin acordado.<br/>
-      b) Mantener el inmueble en buen estado de conservacion.<br/>
-      c) No realizar modificaciones estructurales sin autorizacion escrita.<br/>
-      d) Pagar puntualmente los servicios publicos (agua, luz, gas, internet).<br/>
-      e) No subarrendar total o parcialmente sin autorizacion.</p>
+      if (ctr.observaciones) {
+        doc.setTextColor(30, 64, 175)
+        doc.setFontSize(10)
+        doc.setFont('helvetica', 'bold')
+        doc.text('OBSERVACIONES ADICIONALES', margin, y)
+        y += 6
+        doc.setTextColor(0, 0, 0)
+        doc.setFontSize(9)
+        doc.setFont('helvetica', 'normal')
+        const obsLines = doc.splitTextToSize(ctr.observaciones, contentW)
+        doc.text(obsLines, margin, y)
+        y += obsLines.length * 4 + 8
+      }
 
-      <h3>CLAUSULA SEPTIMA: OBLIGACIONES DEL ARRENDADOR</h3>
-      <p>a) Entregar el inmueble en condiciones habitables.<br/>
-      b) Realizar las reparaciones mayores necesarias.<br/>
-      c) Garantizar el uso pacifico del inmueble.<br/>
-      d) Respetar el plazo del contrato.</p>
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('CLAUSULA FINAL: JURISDICCION', margin, y)
+      y += 6
 
-      <h3>CLAUSULA OCTAVA: TERMINACION ANTICIPADA</h3>
-      <p>Cualquiera de las partes podra resolver el contrato anticipadamente, notificando por escrito con treinta (30) dias de anticipacion. En caso de resolucion anticipada por EL ARRENDATARIO, perdera el deposito de garantia.</p>
-    `
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      const clausulaFinal = `Para cualquier controversia derivada del presente contrato, las partes se someten a la jurisdiccion de los juzgados y tribunales de ${empresa?.ciudad || '___'}, renunciando a cualquier otro fuero que pudiera corresponderles.`
+      const clausulaFinalLines = doc.splitTextToSize(clausulaFinal, contentW)
+      doc.text(clausulaFinalLines, margin, y)
+      y += clausulaFinalLines.length * 4 + 10
 
-    w.document.write(`<!DOCTYPE html><html><head><title>${titulo} - ${ctr.nro_contrato}</title>
-    <style>
-      body { font-family: 'Georgia', 'Times New Roman', serif; max-width: 800px; margin: 0 auto; padding: 50px 60px; color: #1a1a1a; line-height: 1.7; font-size: 13px; }
-      h1 { text-align: center; font-size: 18px; color: #1e3a5f; margin-bottom: 5px; letter-spacing: 2px; }
-      h2 { text-align: center; font-size: 14px; color: #333; font-weight: normal; margin-top: 0; }
-      h3 { color: #1e3a5f; font-size: 13px; margin-top: 25px; margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-      p { text-align: justify; margin: 8px 0; }
-      ul { margin: 8px 0; padding-left: 25px; }
-      li { margin: 4px 0; }
-      .header { text-align: center; margin-bottom: 40px; border-bottom: 3px double #1e3a5f; padding-bottom: 20px; }
-      .header img { height: 70px; margin-bottom: 10px; }
-      .firma { margin-top: 80px; display: flex; justify-content: space-between; }
-      .firma-box { text-align: center; width: 250px; }
-      .firma-linea { border-top: 1px solid #000; padding-top: 8px; font-size: 12px; font-weight: bold; }
-      .firma-sub { font-size: 11px; color: #666; margin-top: 2px; }
-      .footer { margin-top: 50px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #ddd; padding-top: 10px; }
-      @media print { body { padding: 30px 40px; } }
-    </style></head>
-    <body>
-      <div class="header">
-        ${empresa?.logo ? `<img src="${empresa.logo}" />` : ''}
-        <h1>${titulo}</h1>
-        <h2>Documento Nro. ${ctr.nro_contrato}</h2>
-      </div>
+      const clausulaConformidad = `En senal de conformidad, las partes suscriben el presente documento en la ciudad de ${empresa?.ciudad || '___'}, a los ${ctr.fecha || '___'}.`
+      const clausulaConformidadLines = doc.splitTextToSize(clausulaConformidad, contentW)
+      doc.text(clausulaConformidadLines, margin, y)
 
-      <p>Conste por el presente documento, el contrato de ${isVenta ? 'compraventa' : 'arrendamiento'} que celebran:</p>
-
-      <h3>LAS PARTES</h3>
-      <p><strong>${isVenta ? 'EL VENDEDOR' : 'EL ARRENDADOR'}:</strong> ${empresa?.nombre || '___'}, con ${empresa?.tipo_identificacion || 'identificacion'} Nro. ${empresa?.nro_documento || '___'}, representada por ${empresa?.representante_legal || '___'}, con domicilio en ${empresa?.direccion || '___'}, ${empresa?.ciudad || '___'}.</p>
-      <p><strong>${isVenta ? 'EL COMPRADOR' : 'EL ARRENDATARIO'}:</strong> ${cli ? `${cli.nombre} ${cli.apellido}` : '___'}. Correo: ${cli?.correo || '-'}, Telefono: ${cli?.telefono || cli?.movil || '-'}.</p>
-
-      ${isVenta ? clausulasVenta : clausulasAlquiler}
-
-      ${ctr.observaciones ? `<h3>OBSERVACIONES ADICIONALES</h3><p>${ctr.observaciones}</p>` : ''}
-
-      <h3>CLAUSULA FINAL: JURISDICCION</h3>
-      <p>Para cualquier controversia derivada del presente contrato, las partes se someten a la jurisdiccion de los juzgados y tribunales de ${empresa?.ciudad || '___'}, renunciando a cualquier otro fuero que pudiera corresponderles.</p>
-
-      <p style="margin-top:30px">En senal de conformidad, las partes suscriben el presente documento en la ciudad de ${empresa?.ciudad || '___'}, a los ${ctr.fecha || '___'}.</p>
-
-      ${com ? `<p style="margin-top:15px; font-size:12px; color:#666"><strong>Asesor Comercial:</strong> ${com.nombre} ${com.apellido} | ${com.correo || ''} | ${com.movil || ''}</p>` : ''}
-
-      <div class="firma">
-        <div class="firma-box">
-          <div class="firma-linea">${isVenta ? 'EL VENDEDOR' : 'EL ARRENDADOR'}</div>
-          <div class="firma-sub">${empresa?.representante_legal || '___'}</div>
-          <div class="firma-sub">${empresa?.nombre || '___'}</div>
-        </div>
-        <div class="firma-box">
-          <div class="firma-linea">${isVenta ? 'EL COMPRADOR' : 'EL ARRENDATARIO'}</div>
-          <div class="firma-sub">${cli ? `${cli.nombre} ${cli.apellido}` : '___'}</div>
-          <div class="firma-sub">${cli?.correo || '___'}</div>
-        </div>
-      </div>
-
-      <div class="footer">
-        <p>${empresa?.nombre || 'Portal Inmobiliario'} | ${empresa?.direccion || ''} | ${empresa?.telefono || ''}</p>
-        <p>Documento generado el ${new Date().toLocaleDateString('es-PE')} - ${ctr.nro_contrato}</p>
-      </div>
-
-      <script>setTimeout(()=>window.print(),800)</script>
-    </body></html>`)
-    w.document.close()
+      const blob = doc.output('blob') as Blob
+      const fileName = `Documento_${ctr.nro_contrato}.pdf`
+      setPdfBlob(blob)
+      setPdfFileName(fileName)
+      setShowPreview(true)
+    } catch (err) {
+      alert('Error al generar el PDF: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   const statusBadge = (s: string) => {
@@ -593,6 +707,15 @@ export default function ContratosPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {pdfBlob && (
+        <PDFPreview
+          isOpen={showPreview}
+          onClose={() => setShowPreview(false)}
+          pdfBlob={pdfBlob}
+          fileName={pdfFileName}
+        />
       )}
     </div>
   )

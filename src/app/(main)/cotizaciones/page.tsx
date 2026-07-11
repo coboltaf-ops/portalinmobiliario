@@ -12,6 +12,8 @@ import { formatDate, toInputDate, todayFormatted, fmtNum } from '@/shared/lib/fo
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { compressImage } from '@/shared/lib/compress-image'
+import jsPDF from 'jspdf'
+import { PDFPreview } from '@/shared/components/pdf-preview'
 
 const inputSt: React.CSSProperties = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
 const selectSt: React.CSSProperties = { background: 'rgba(41,15,5,0.9)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }
@@ -37,6 +39,9 @@ export default function CotizacionesPage() {
   const [search, setSearch] = useState('')
   const [formError, setFormError] = useState('')
   const [sending, setSending] = useState<string | null>(null)
+  const [showPreview, setShowPreview] = useState(false)
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null)
+  const [pdfFileName, setPdfFileName] = useState('')
 
   const nextCode = () => {
     const nums = cotizaciones.map(c => parseInt(c.nro_cotizacion.replace('COT-', '')) || 0)
@@ -87,41 +92,117 @@ export default function CotizacionesPage() {
   const handleDelete = (id: string) => { if (confirm('¿Eliminar esta cotizacion?')) deleteCotizacion(id) }
 
   const generatePDF = (cot: Cotizacion) => {
-    const cliente = clientes.find(c => c.id === cot.cliente_id)
-    const prop = propiedades.find(p => p.id === cot.propiedad_id)
-    const com = comerciales.find(c => c.id === cot.comercial_id)
-    const w = window.open('', '_blank')
-    if (!w) return
-    w.document.write(`<!DOCTYPE html><html><head><title>Cotizacion ${cot.nro_cotizacion}</title></head>
-    <body style="font-family:Arial;padding:40px;max-width:800px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:30px">
-        ${empresa?.logo ? `<img src="${empresa.logo}" style="height:60px;margin-bottom:10px" />` : ''}
-        <h1 style="margin:0;color:#1e3a5f">${empresa?.nombre || 'Portal Inmobiliario'}</h1>
-        <p style="color:#666">${empresa?.direccion || ''} ${empresa?.ciudad || ''}</p>
-      </div>
-      <h2 style="color:#1e3a5f;border-bottom:2px solid #3b82f6;padding-bottom:10px">COTIZACION ${cot.nro_cotizacion}</h2>
-      <table style="width:100%;margin-bottom:20px"><tr>
-        <td><strong>Fecha:</strong> ${cot.fecha}</td>
-        <td><strong>Estado:</strong> ${cot.situacion}</td>
-      </tr></table>
-      <h3 style="color:#1e3a5f">Datos del Cliente</h3>
-      <p><strong>Nombre:</strong> ${cliente ? `${cliente.nombre} ${cliente.apellido}` : '-'}</p>
-      <p><strong>Correo:</strong> ${cliente?.correo || '-'}</p>
-      <p><strong>Telefono:</strong> ${cliente?.telefono || '-'}</p>
-      <h3 style="color:#1e3a5f">Propiedad</h3>
-      <p><strong>Proyecto:</strong> ${prop?.urbanizacion || '-'}</p>
-      <p><strong>Tipo:</strong> ${prop?.tipo_propiedad || '-'} | <strong>Modalidad:</strong> ${prop?.modalidad || '-'}</p>
-      <p><strong>Area:</strong> ${fmtNum(prop?.area_m2 || 0)} m² | <strong>Habitaciones:</strong> ${fmtNum(prop?.habitaciones || 0)} | <strong>Banos:</strong> ${fmtNum(prop?.banos || 0)}</p>
-      <p><strong>Direccion:</strong> ${prop?.direccion || '-'}, ${prop?.ciudad || ''}, ${prop?.zona || ''}</p>
-      ${prop?.amenidades ? `<p><strong>Amenidades:</strong> ${prop.amenidades}</p>` : ''}
-      <h3 style="color:#1e3a5f">Precio y Condiciones</h3>
-      <p style="font-size:24px;color:#1e3a5f;font-weight:bold">${monedaSimbolo(cot.tipo_moneda)} ${fmtNum(cot.precio_ofertado, 2)}</p>
-      ${cot.condiciones_pago ? `<p><strong>Condiciones de Pago:</strong> ${cot.condiciones_pago}</p>` : ''}
-      ${cot.observaciones ? `<p><strong>Observaciones:</strong> ${cot.observaciones}</p>` : ''}
-      ${com ? `<p style="margin-top:30px"><strong>Asesor:</strong> ${com.nombre} ${com.apellido} | ${com.correo} | ${com.movil}</p>` : ''}
-      <script>setTimeout(()=>window.print(),500)</script>
-    </body></html>`)
-    w.document.close()
+    try {
+      const cliente = clientes.find(c => c.id === cot.cliente_id)
+      const prop = propiedades.find(p => p.id === cot.propiedad_id)
+      const com = comerciales.find(c => c.id === cot.comercial_id)
+
+      const doc = new jsPDF('p', 'mm', 'a4')
+      const pageW = 210
+      const margin = 15
+      const contentW = pageW - margin * 2
+      let y = margin
+
+      doc.setFillColor(30, 64, 175)
+      doc.rect(0, 0, pageW, 30, 'F')
+
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(14)
+      doc.setFont('helvetica', 'bold')
+      doc.text(empresa?.nombre || 'Portal Inmobiliario', margin, 12)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      if (empresa?.direccion) doc.text(empresa.direccion, margin, 17)
+      if (empresa?.ciudad) doc.text(empresa.ciudad, margin, 21)
+
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text('COTIZACION', pageW - margin, 12, { align: 'right' })
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(cot.nro_cotizacion, pageW - margin, 17, { align: 'right' })
+      doc.text(cot.fecha, pageW - margin, 21, { align: 'right' })
+
+      y = 40
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Datos del Cliente', margin, y)
+      y += 8
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`Nombre: ${cliente ? `${cliente.nombre} ${cliente.apellido}` : '-'}`, margin, y)
+      y += 6
+      doc.text(`Correo: ${cliente?.correo || '-'}`, margin, y)
+      y += 6
+      doc.text(`Telefono: ${cliente?.telefono || '-'}`, margin, y)
+      y += 12
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Propiedad', margin, y)
+      y += 8
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`Proyecto: ${prop?.urbanizacion || '-'}`, margin, y)
+      y += 6
+      doc.text(`Tipo: ${prop?.tipo_propiedad || '-'} | Modalidad: ${prop?.modalidad || '-'}`, margin, y)
+      y += 6
+      doc.text(`Area: ${fmtNum(prop?.area_m2 || 0)} m² | Habitaciones: ${fmtNum(prop?.habitaciones || 0)} | Banos: ${fmtNum(prop?.banos || 0)}`, margin, y)
+      y += 6
+      doc.text(`Direccion: ${prop?.direccion || '-'}, ${prop?.ciudad || ''}, ${prop?.zona || ''}`, margin, y)
+      y += 6
+      if (prop?.amenidades) {
+        const lines = doc.splitTextToSize(`Amenidades: ${prop.amenidades}`, contentW)
+        doc.text(lines, margin, y)
+        y += lines.length * 4 + 6
+      }
+      y += 6
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Precio y Condiciones', margin, y)
+      y += 8
+
+      doc.setTextColor(30, 64, 175)
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${monedaSimbolo(cot.tipo_moneda)} ${fmtNum(cot.precio_ofertado, 2)}`, margin, y)
+      y += 10
+
+      doc.setTextColor(0, 0, 0)
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      if (cot.condiciones_pago) {
+        const lines = doc.splitTextToSize(`Condiciones de Pago: ${cot.condiciones_pago}`, contentW)
+        doc.text(lines, margin, y)
+        y += lines.length * 4 + 6
+      }
+      if (cot.observaciones) {
+        const lines = doc.splitTextToSize(`Observaciones: ${cot.observaciones}`, contentW)
+        doc.text(lines, margin, y)
+        y += lines.length * 4 + 6
+      }
+      if (com) {
+        doc.text(`Asesor: ${com.nombre} ${com.apellido} | ${com.correo} | ${com.movil}`, margin, y)
+      }
+
+      const blob = doc.output('blob') as Blob
+      const fileName = `Cotizacion_${cot.nro_cotizacion}.pdf`
+      setPdfBlob(blob)
+      setPdfFileName(fileName)
+      setShowPreview(true)
+    } catch (err) {
+      alert('Error al generar el PDF: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   const handleSendEmail = async (cot: Cotizacion) => {
@@ -376,6 +457,15 @@ export default function CotizacionesPage() {
             </form>
           </div>
         </div>
+      )}
+
+      {pdfBlob && (
+        <PDFPreview
+          isOpen={showPreview}
+          onClose={() => setShowPreview(false)}
+          pdfBlob={pdfBlob}
+          fileName={pdfFileName}
+        />
       )}
     </div>
   )
