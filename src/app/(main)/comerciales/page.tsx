@@ -6,6 +6,7 @@ import { useState, useRef } from 'react'
 import { useComercialesStore, type Comercial } from '@/features/comerciales/store/comerciales-store'
 import { compressImage } from '@/shared/lib/compress-image'
 import { useConfigStore, getAllZonas } from '@/features/configuracion/store/configuracion-store'
+import { useAuthStore } from '@/features/auth/store/auth-store'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
@@ -21,6 +22,7 @@ const initForm = (): Comercial => ({
 export default function ComercialesPage() {
   const { comerciales, addComercial, updateComercial, deleteComercial } = useComercialesStore()
   const config = useConfigStore()
+  const user = useAuthStore(s => s.user)
   const [form, setForm] = useState<Comercial>(initForm())
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [viewRecord, setViewRecord] = useState<Comercial | null>(null)
@@ -143,6 +145,10 @@ export default function ComercialesPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setViewRecord(null)} />
+            <div className="text-center py-2 border-b border-gray-200">
+              <p className="text-lg font-bold text-black">{user?.usuario}</p>
+              <p className="text-sm text-gray-600">{user?.rol}</p>
+            </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
@@ -174,6 +180,10 @@ export default function ComercialesPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setIsFormOpen(false)} />
+            <div className="text-center py-2 border-b border-gray-200">
+              <p className="text-lg font-bold text-black">{user?.usuario}</p>
+              <p className="text-sm text-gray-600">{user?.rol}</p>
+            </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Comercial' : 'Nuevo Comercial'}</h2>

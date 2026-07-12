@@ -9,6 +9,7 @@ import { usePropiedadesStore } from '@/features/propiedades/store/propiedades-st
 import { useComercialesStore } from '@/features/comerciales/store/comerciales-store'
 import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
 import { useEmpresaStore } from '@/features/datos-empresa/store/empresa-store'
+import { useAuthStore } from '@/features/auth/store/auth-store'
 import { formatDate, toInputDate, todayFormatted, fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
@@ -33,6 +34,7 @@ export default function ContratosPage() {
   const comerciales = useComercialesStore(s => s.comerciales)
   const config = useConfigStore()
   const empresa = useEmpresaStore(s => s.empresa)
+  const user = useAuthStore(s => s.user)
 
   const [form, setForm] = useState<Contrato>(initForm())
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -467,6 +469,10 @@ export default function ContratosPage() {
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
             <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
               <ModalHeader onClose={() => setViewRecord(null)} />
+              <div className="text-center py-2 border-b border-gray-200">
+                <p className="text-lg font-bold text-black">{user?.usuario}</p>
+                <p className="text-sm text-gray-600">{user?.rol}</p>
+              </div>
               <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-black">Contrato {viewRecord.nro_contrato}</h2>
@@ -505,6 +511,10 @@ export default function ContratosPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setIsFormOpen(false)} />
+            <div className="text-center py-2 border-b border-gray-200">
+              <p className="text-lg font-bold text-black">{user?.usuario}</p>
+              <p className="text-sm text-gray-600">{user?.rol}</p>
+            </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Contrato' : 'Nuevo Contrato'}</h2>
@@ -631,6 +641,10 @@ export default function ContratosPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setDocsRecord(null)} />
+            <div className="text-center py-2 border-b border-gray-200">
+              <p className="text-lg font-bold text-black">{user?.usuario}</p>
+              <p className="text-sm text-gray-600">{user?.rol}</p>
+            </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">Documentos - {docsRecord.nro_contrato}</h2>
