@@ -10,7 +10,7 @@ export const supabase: ReturnType<typeof createClient> = new Proxy(
       if (!supabaseInstance) {
         // Initialize only on first access
         const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SU_BASE_ANON_KEY
 
         if (!url || !key) {
           console.warn(
