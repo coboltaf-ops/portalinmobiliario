@@ -47,7 +47,7 @@ export default function CatalogoPage() {
             <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-white">PORTAL INMOBILIARIO</h1>
+        <h1 className="text-2xl font-bold" style={{color: '#ffffff', margin: 0}}>PORTAL INMOBILIARIO</h1>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-10">

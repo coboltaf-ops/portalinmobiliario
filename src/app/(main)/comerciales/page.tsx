@@ -94,7 +94,7 @@ export default function ComercialesPage() {
             <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-white">PORTAL INMOBILIARIO</h1>
+        <h1 className="text-2xl font-bold" style={{color: '#ffffff', margin: 0}}>PORTAL INMOBILIARIO</h1>
       </div>
 
       <div className="space-y-6">
