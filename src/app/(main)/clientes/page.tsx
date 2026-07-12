@@ -149,14 +149,14 @@ export default function ClientesPage() {
       {/* View Modal */}
       {viewRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
-              <button onClick={() => setViewRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
+              <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
             {viewRecord.imagen && (
               <div className="flex justify-center mb-4">
-                <img src={viewRecord.imagen} alt="Foto" className="max-h-40 rounded-xl object-contain" style={{ border: '1px solid rgba(255,255,255,0.15)' }} />
+                <img src={viewRecord.imagen} alt="Foto" className="max-h-40 rounded-xl object-contain" style={{ border: '1px solid #d1d5db' }} />
               </div>
             )}
             <div className="grid grid-cols-2 gap-3">
@@ -174,10 +174,10 @@ export default function ClientesPage() {
                 { label: 'Asesor', value: (() => { const a = comerciales.find(x => x.id === viewRecord.asesor_asignado); return a ? `${a.nombre} ${a.apellido}` : '-' })() },
                 { label: 'Situacion', value: viewRecord.situacion },
               ].map(f => (
-                <div key={f.label}><p className="text-xs text-white/40">{f.label}</p><p className="text-sm text-white">{f.value || '-'}</p></div>
+                <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
               ))}
             </div>
-            {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-white/40">Observaciones</p><p className="text-sm text-white">{viewRecord.observaciones}</p></div>}
+            {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
           </div>
         </div>
       )}
@@ -185,92 +185,92 @@ export default function ClientesPage() {
       {/* Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{form.id ? 'Editar' : 'Nuevo'} Cliente/Prospecto</h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar' : 'Nuevo'} Cliente/Prospecto</h2>
+              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
-            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>{formError}</div>}
+            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: '#ffebee', border: '1px solid #ef5350', color: '#c62828' }}>{formError}</div>}
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Nombre *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Nombre *</label>
                   <input value={form.nombre} onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Apellido *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Apellido *</label>
                   <input value={form.apellido} onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Correo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Correo</label>
                   <input type="email" value={form.correo} onChange={e => setForm(f => ({ ...f, correo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Telefono</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Telefono</label>
                   <input value={form.telefono} onChange={e => setForm(f => ({ ...f, telefono: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Movil</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Movil</label>
                   <input value={form.movil} onChange={e => setForm(f => ({ ...f, movil: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo</label>
                   <select value={form.tipo} onChange={e => setForm(f => ({ ...f, tipo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Prospecto">Prospecto</option>
                     <option value="Cliente">Cliente</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Interes</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Interes</label>
                   <select value={form.interes} onChange={e => setForm(f => ({ ...f, interes: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Compra">Compra</option>
                     <option value="Alquiler">Alquiler</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo Moneda</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo Moneda</label>
                   <select value={form.tipo_moneda} onChange={e => setForm(f => ({ ...f, tipo_moneda: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     {config.monedas.map(m => <option key={m.id} value={m.nombre}>{m.nombre} ({m.simbolo})</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Presupuesto Minimo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Presupuesto Minimo</label>
                   <input type="number" min="0" value={form.presupuesto_min || ''} onChange={e => setForm(f => ({ ...f, presupuesto_min: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Presupuesto Maximo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Presupuesto Maximo</label>
                   <input type="number" min="0" value={form.presupuesto_max || ''} onChange={e => setForm(f => ({ ...f, presupuesto_max: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Ciudad Deseada</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Ciudad Deseada</label>
                   <select value={form.ciudad_deseada} onChange={e => setForm(f => ({ ...f, ciudad_deseada: e.target.value, zona_preferida: '' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {config.ciudades.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona Preferida</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Zona Preferida</label>
                   <select value={form.zona_preferida} onChange={e => setForm(f => ({ ...f, zona_preferida: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {(form.ciudad_deseada ? getZonasByCiudad(config.ciudades, form.ciudad_deseada) : getAllZonas(config.ciudades)).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo Propiedad Buscada</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo Propiedad Buscada</label>
                   <select value={form.tipo_propiedad_buscada} onChange={e => setForm(f => ({ ...f, tipo_propiedad_buscada: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {config.tiposPropiedad.map(t => <option key={t.id} value={t.nombre}>{t.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Asesor Asignado</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Asesor Asignado</label>
                   <select value={form.asesor_asignado} onChange={e => setForm(f => ({ ...f, asesor_asignado: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {comerciales.filter(c => c.situacion === 'Activo').map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Situacion</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Situacion</label>
                   <select value={form.situacion} onChange={e => setForm(f => ({ ...f, situacion: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
@@ -278,12 +278,12 @@ export default function ClientesPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Observaciones</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Observaciones</label>
                 <textarea value={form.observaciones} onChange={e => setForm(f => ({ ...f, observaciones: e.target.value }))} rows={3} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
               </div>
               {/* Foto / Imagen */}
               <div className="col-span-2">
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Foto / Imagen</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Foto / Imagen</label>
                 <div className="flex items-center gap-4">
                   <label className="cursor-pointer px-4 py-2 rounded-lg text-xs font-bold text-white" style={{ background: 'rgba(30,64,175,0.4)', border: '1px solid rgba(30,64,175,0.5)' }}>
                     Cargar Imagen
@@ -305,11 +305,11 @@ export default function ClientesPage() {
                         style={{ background: 'rgba(239,68,68,0.8)' }}>&#x2715;</button>
                     </div>
                   )}
-                  {!form.imagen && <span className="text-white/30 text-xs">Sin imagen (max 2 MB)</span>}
+                  {!form.imagen && <span className="text-gray-400 text-xs">Sin imagen (max 2 MB)</span>}
                 </div>
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>Cancelar</button>
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cancelar</button>
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>

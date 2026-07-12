@@ -140,12 +140,12 @@ export default function ComercialesPage() {
       {/* View Modal */}
       {viewRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
-              <button onClick={() => setViewRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
+              <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
-            {viewRecord.foto && <div className="mb-4 flex justify-center"><img src={viewRecord.foto} alt="" className="w-24 h-24 rounded-full object-cover" style={{ border: '2px solid rgba(30,64,175,0.3)' }} /></div>}
+            {viewRecord.foto && <div className="mb-4 flex justify-center"><img src={viewRecord.foto} alt="" className="w-24 h-24 rounded-full object-cover" style={{ border: '2px solid #1f2937' }} /></div>}
             <div className="grid grid-cols-2 gap-3">
               {[
                 { label: 'Nombre', value: viewRecord.nombre },
@@ -158,7 +158,7 @@ export default function ComercialesPage() {
                 { label: 'Zona Asignada', value: viewRecord.zona_asignada },
                 { label: 'Situacion', value: viewRecord.situacion },
               ].map(f => (
-                <div key={f.label}><p className="text-xs text-white/40">{f.label}</p><p className="text-sm text-white">{f.value || '-'}</p></div>
+                <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
               ))}
             </div>
           </div>
@@ -168,51 +168,51 @@ export default function ComercialesPage() {
       {/* Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{form.id ? 'Editar Comercial' : 'Nuevo Comercial'}</h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Comercial' : 'Nuevo Comercial'}</h2>
+              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
-            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>{formError}</div>}
+            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: '#ffebee', border: '1px solid #ef5350', color: '#c62828' }}>{formError}</div>}
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Nombre *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Nombre *</label>
                   <input value={form.nombre} onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Apellido *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Apellido *</label>
                   <input value={form.apellido} onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Correo *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Correo *</label>
                   <input type="email" value={form.correo} onChange={e => setForm(f => ({ ...f, correo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Telefono</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Telefono</label>
                   <input value={form.telefono} onChange={e => setForm(f => ({ ...f, telefono: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Movil *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Movil *</label>
                   <input value={form.movil} onChange={e => setForm(f => ({ ...f, movil: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Cargo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Cargo</label>
                   <input value={form.cargo} onChange={e => setForm(f => ({ ...f, cargo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Departamento</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Departamento</label>
                   <input value={form.departamento} onChange={e => setForm(f => ({ ...f, departamento: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona Asignada</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Zona Asignada</label>
                   <select value={form.zona_asignada} onChange={e => setForm(f => ({ ...f, zona_asignada: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {getAllZonas(config.ciudades).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Situacion *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Situacion *</label>
                   <select value={form.situacion} onChange={e => setForm(f => ({ ...f, situacion: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
@@ -220,12 +220,12 @@ export default function ComercialesPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Foto</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Foto</label>
                 {form.foto && <img src={form.foto} alt="" className="w-16 h-16 rounded-full object-cover mb-2" />}
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFotoUpload} className="text-sm text-white/60" />
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFotoUpload} className="text-sm text-gray-700" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>Cancelar</button>
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cancelar</button>
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>

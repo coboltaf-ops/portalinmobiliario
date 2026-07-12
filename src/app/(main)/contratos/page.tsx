@@ -464,14 +464,14 @@ export default function ContratosPage() {
         const com = comerciales.find(c => c.id === viewRecord.comercial_id)
         return (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-            <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-white">Contrato {viewRecord.nro_contrato}</h2>
-                <button onClick={() => setViewRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+                <h2 className="text-lg font-bold text-black">Contrato {viewRecord.nro_contrato}</h2>
+                <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
               </div>
               {viewRecord.imagen && (
                 <div className="flex justify-center mb-4">
-                  <img src={viewRecord.imagen} alt="Foto" className="max-h-40 rounded-xl object-contain" style={{ border: '1px solid rgba(255,255,255,0.15)' }} />
+                  <img src={viewRecord.imagen} alt="Foto" className="max-h-40 rounded-xl object-contain" style={{ border: '1px solid #d1d5db' }} />
                 </div>
               )}
               <div className="grid grid-cols-2 gap-3">
@@ -487,11 +487,11 @@ export default function ContratosPage() {
                   { label: 'Fecha Fin', value: viewRecord.fecha_fin || '-' },
                   { label: 'Situacion', value: viewRecord.situacion },
                 ].map(f => (
-                  <div key={f.label}><p className="text-xs text-white/40">{f.label}</p><p className="text-sm text-white">{f.value || '-'}</p></div>
+                  <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
                 ))}
               </div>
-              {viewRecord.condiciones && <div className="mt-3"><p className="text-xs text-white/40">Condiciones</p><p className="text-sm text-white">{viewRecord.condiciones}</p></div>}
-              {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-white/40">Observaciones</p><p className="text-sm text-white">{viewRecord.observaciones}</p></div>}
+              {viewRecord.condiciones && <div className="mt-3"><p className="text-xs text-gray-600">Condiciones</p><p className="text-sm text-black">{viewRecord.condiciones}</p></div>}
+              {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
             </div>
           </div>
         )
@@ -500,76 +500,76 @@ export default function ContratosPage() {
       {/* Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{form.id ? 'Editar Contrato' : 'Nuevo Contrato'}</h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Contrato' : 'Nuevo Contrato'}</h2>
+              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
-            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>{formError}</div>}
+            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: '#ffebee', border: '1px solid #ef5350', color: '#c62828' }}>{formError}</div>}
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Nro. Contrato</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Nro. Contrato</label>
                   <input type="text" readOnly value={form.id ? form.nro_contrato : nextCode()} className="w-full rounded-lg px-3 py-2 text-sm outline-none font-mono font-bold cursor-not-allowed" style={{ ...inputSt, opacity: 0.7 }} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Fecha</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Fecha</label>
                   <input type="date" value={toInputDate(form.fecha)} onChange={e => setForm(f => ({ ...f, fecha: formatDate(e.target.value) }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo</label>
                   <select value={form.tipo} onChange={e => setForm(f => ({ ...f, tipo: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Venta">Venta</option>
                     <option value="Arrendamiento">Arrendamiento</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Cliente *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Cliente *</label>
                   <select value={form.cliente_id} onChange={e => setForm(f => ({ ...f, cliente_id: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {clientes.map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Propiedad *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Propiedad *</label>
                   <select value={form.propiedad_id} onChange={e => setForm(f => ({ ...f, propiedad_id: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {propiedades.map(p => <option key={p.id} value={p.id}>{p.codigo} - {p.urbanizacion}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Comercial</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Comercial</label>
                   <select value={form.comercial_id} onChange={e => setForm(f => ({ ...f, comercial_id: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {comerciales.filter(c => c.situacion === 'Activo').map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo Moneda</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo Moneda</label>
                   <select value={form.tipo_moneda} onChange={e => setForm(f => ({ ...f, tipo_moneda: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     {config.monedas.map(m => <option key={m.id} value={m.nombre}>{m.nombre} ({m.simbolo})</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Monto</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Monto</label>
                   <input type="number" min="0" step="0.01" value={form.monto || ''} onChange={e => setForm(f => ({ ...f, monto: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Fecha Inicio *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Fecha Inicio *</label>
                   <input type="date" value={toInputDate(form.fecha_inicio)} onChange={e => setForm(f => ({ ...f, fecha_inicio: formatDate(e.target.value) }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Fecha Finalizacion *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Fecha Finalizacion *</label>
                   <input type="date" value={toInputDate(form.fecha_fin)} onChange={e => setForm(f => ({ ...f, fecha_fin: formatDate(e.target.value) }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 {form.tipo === 'Arrendamiento' && (
                   <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Plazo (meses)</label>
+                    <label className="block text-xs font-medium mb-1 text-gray-700">Plazo (meses)</label>
                     <input type="number" min="0" value={form.plazo || ''} onChange={e => setForm(f => ({ ...f, plazo: parseInt(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Situacion</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Situacion</label>
                   <select value={form.situacion} onChange={e => setForm(f => ({ ...f, situacion: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Borrador">Borrador</option>
                     <option value="Vigente">Vigente</option>
@@ -579,16 +579,16 @@ export default function ContratosPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Condiciones</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Condiciones</label>
                 <textarea value={form.condiciones} onChange={e => setForm(f => ({ ...f, condiciones: e.target.value }))} rows={3} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Observaciones</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Observaciones</label>
                 <textarea value={form.observaciones} onChange={e => setForm(f => ({ ...f, observaciones: e.target.value }))} rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
               </div>
               {/* Foto / Imagen */}
               <div className="col-span-2">
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Foto / Imagen</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Foto / Imagen</label>
                 <div className="flex items-center gap-4">
                   <label className="cursor-pointer px-4 py-2 rounded-lg text-xs font-bold text-white" style={{ background: 'rgba(30,64,175,0.4)', border: '1px solid rgba(30,64,175,0.5)' }}>
                     Cargar Imagen
@@ -610,11 +610,11 @@ export default function ContratosPage() {
                         style={{ background: 'rgba(239,68,68,0.8)' }}>&#x2715;</button>
                     </div>
                   )}
-                  {!form.imagen && <span className="text-white/30 text-xs">Sin imagen (max 2 MB)</span>}
+                  {!form.imagen && <span className="text-gray-400 text-xs">Sin imagen (max 2 MB)</span>}
                 </div>
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>Cancelar</button>
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cancelar</button>
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>
@@ -625,10 +625,10 @@ export default function ContratosPage() {
       {/* Documentos Modal */}
       {docsRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">Documentos - {docsRecord.nro_contrato}</h2>
-              <button onClick={() => setDocsRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">Documentos - {docsRecord.nro_contrato}</h2>
+              <button onClick={() => setDocsRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
 
             {/* Upload */}
@@ -657,25 +657,25 @@ export default function ContratosPage() {
                   if (e.target) e.target.value = ''
                 }} />
               </label>
-              <span className="text-xs text-white/40 ml-3">PDF, Word, Excel, Imagenes (max 5 MB)</span>
+              <span className="text-xs text-gray-600 ml-3">PDF, Word, Excel, Imagenes (max 5 MB)</span>
             </div>
 
             {/* Document list */}
             <div className="space-y-2">
               {(docsRecord.documentos || []).length === 0 && (
-                <p className="text-center text-white/30 py-8">No hay documentos adjuntos</p>
+                <p className="text-center text-gray-400 py-8">No hay documentos adjuntos</p>
               )}
               {(docsRecord.documentos || []).map(doc => {
                 const isImage = doc.tipo.startsWith('image/')
                 const isPdf = doc.tipo === 'application/pdf'
                 const icon = isImage ? '🖼️' : isPdf ? '📄' : doc.tipo.includes('word') ? '📝' : doc.tipo.includes('sheet') || doc.tipo.includes('excel') ? '📊' : '📎'
                 return (
-                  <div key={doc.id} className="flex items-center justify-between px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div key={doc.id} className="flex items-center justify-between px-4 py-3 rounded-xl" style={{ background: '#f3f4f6', border: '1px solid #d1d5db' }}>
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <span className="text-lg">{icon}</span>
                       <div className="min-w-0">
-                        <p className="text-sm text-white truncate">{doc.nombre}</p>
-                        <p className="text-xs text-white/40">{doc.fecha}</p>
+                        <p className="text-sm text-black truncate">{doc.nombre}</p>
+                        <p className="text-xs text-gray-600">{doc.fecha}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">

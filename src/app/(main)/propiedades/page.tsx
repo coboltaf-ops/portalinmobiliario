@@ -394,15 +394,15 @@ export default function PropiedadesPage() {
       {/* View Modal */}
       {viewRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{viewRecord.codigo} - {viewRecord.urbanizacion}</h2>
+              <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.urbanizacion}</h2>
               <div className="flex items-center gap-2">
                 <button onClick={() => generateFichaPDF(viewRecord)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-90" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                   Ficha PDF
                 </button>
-                <button onClick={() => setViewRecord(null)} className="text-white/60 hover:text-white text-xl">✕</button>
+                <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
               </div>
             </div>
             {/* Image Gallery */}
@@ -447,13 +447,13 @@ export default function PropiedadesPage() {
                 { label: 'Asesor', value: (() => { const a = comerciales.find(c => c.id === viewRecord.asesor_asignado); return a ? `${a.nombre} ${a.apellido}` : 'Sin asignar' })() },
               ].map(f => (
                 <div key={f.label}>
-                  <p className="text-xs text-white/40">{f.label}</p>
-                  <p className="text-sm text-white">{f.value || '-'}</p>
+                  <p className="text-xs text-gray-600">{f.label}</p>
+                  <p className="text-sm text-black">{f.value || '-'}</p>
                 </div>
               ))}
             </div>
-            {viewRecord.amenidades && <div className="mt-3"><p className="text-xs text-white/40">Amenidades</p><p className="text-sm text-white">{viewRecord.amenidades}</p></div>}
-            {viewRecord.descripcion && <div className="mt-3"><p className="text-xs text-white/40">Descripcion</p><p className="text-sm text-white">{viewRecord.descripcion}</p></div>}
+            {viewRecord.amenidades && <div className="mt-3"><p className="text-xs text-gray-600">Amenidades</p><p className="text-sm text-black">{viewRecord.amenidades}</p></div>}
+            {viewRecord.descripcion && <div className="mt-3"><p className="text-xs text-gray-600">Descripcion</p><p className="text-sm text-black">{viewRecord.descripcion}</p></div>}
           </div>
         </div>
       )}
@@ -461,35 +461,35 @@ export default function PropiedadesPage() {
       {/* Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">{form.id ? 'Editar Propiedad' : 'Nueva Propiedad'}</h2>
-              <button onClick={() => setIsFormOpen(false)} className="text-white/60 hover:text-white text-xl">✕</button>
+              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Propiedad' : 'Nueva Propiedad'}</h2>
+              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
             </div>
-            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>{formError}</div>}
+            {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: '#ffebee', border: '1px solid #ef5350', color: '#c62828' }}>{formError}</div>}
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Codigo</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Codigo</label>
                   <input value={form.id ? form.codigo : nextCode()} readOnly className="w-full rounded-lg px-3 py-2 text-sm outline-none cursor-not-allowed opacity-70" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Urbanizacion *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Urbanizacion *</label>
                   <input value={form.urbanizacion} onChange={e => setForm(f => ({ ...f, urbanizacion: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Nro Apto/Casa</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Nro Apto/Casa</label>
                   <input value={form.nro_apto_casa} onChange={e => setForm(f => ({ ...f, nro_apto_casa: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo Propiedad *</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo Propiedad *</label>
                   <select value={form.tipo_propiedad} onChange={e => setForm(f => ({ ...f, tipo_propiedad: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {config.tiposPropiedad.map(t => <option key={t.id} value={t.nombre}>{t.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Modalidad</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Modalidad</label>
                   <select value={form.modalidad} onChange={e => setForm(f => ({ ...f, modalidad: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="Venta">Venta</option>
                     <option value="Alquiler">Alquiler</option>
@@ -497,108 +497,108 @@ export default function PropiedadesPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Tipo Moneda</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Tipo Moneda</label>
                   <select value={form.tipo_moneda} onChange={e => setForm(f => ({ ...f, tipo_moneda: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     {config.monedas.map(m => <option key={m.id} value={m.nombre}>{m.nombre} ({m.simbolo})</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Precio Venta</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Precio Venta</label>
                   <input type="number" min="0" step="0.01" value={form.precio_venta || ''} onChange={e => setForm(f => ({ ...f, precio_venta: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Precio Alquiler</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Precio Alquiler</label>
                   <input type="number" min="0" step="0.01" value={form.precio_alquiler || ''} onChange={e => setForm(f => ({ ...f, precio_alquiler: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Area m²</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Area m²</label>
                   <input type="number" min="0" value={form.area_m2 || ''} onChange={e => setForm(f => ({ ...f, area_m2: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Habitaciones</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Habitaciones</label>
                   <input type="number" min="0" value={form.habitaciones || ''} onChange={e => setForm(f => ({ ...f, habitaciones: parseInt(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Banos</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Banos</label>
                   <input type="number" min="0" value={form.banos || ''} onChange={e => setForm(f => ({ ...f, banos: parseInt(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Estacionamientos</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Estacionamientos</label>
                   <input type="number" min="0" value={form.estacionamientos || ''} onChange={e => setForm(f => ({ ...f, estacionamientos: parseInt(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Balcones</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Balcones</label>
                   <input type="number" min="0" value={form.balcones || ''} onChange={e => setForm(f => ({ ...f, balcones: parseInt(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Cuarto de Ropas</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Cuarto de Ropas</label>
                   <select value={form.cuarto_ropas ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, cuarto_ropas: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Cuarto de Servicio</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Cuarto de Servicio</label>
                   <select value={form.cuarto_servicio ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, cuarto_servicio: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Piscina</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Piscina</label>
                   <select value={form.piscina ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, piscina: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Juegos Infantiles</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Juegos Infantiles</label>
                   <select value={form.juegos_infantiles ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, juegos_infantiles: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Gimnasio</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Gimnasio</label>
                   <select value={form.gimnasio ? 'Si' : 'No'} onChange={e => setForm(f => ({ ...f, gimnasio: e.target.value === 'Si' }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="No">No</option>
                     <option value="Si">Si</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Monto Administracion (Mes)</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Monto Administracion (Mes)</label>
                   <input type="number" min="0" step="0.01" value={form.monto_administracion_mes || ''} onChange={e => setForm(f => ({ ...f, monto_administracion_mes: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Monto Predial (Anual)</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Monto Predial (Anual)</label>
                   <input type="number" min="0" step="0.01" value={form.monto_predial_anual || ''} onChange={e => setForm(f => ({ ...f, monto_predial_anual: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Direccion</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Direccion</label>
                   <input value={form.direccion} onChange={e => setForm(f => ({ ...f, direccion: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Ciudad/Poblacion</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Ciudad/Poblacion</label>
                   <select value={form.ciudad} onChange={e => setForm(f => ({ ...f, ciudad: e.target.value, zona: '' }))}className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {config.ciudades.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Zona</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Zona</label>
                   <select value={form.zona} onChange={e => setForm(f => ({ ...f, zona: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {getZonasByCiudad(config.ciudades, form.ciudad).map(z => <option key={z.id} value={z.nombre}>{z.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Estado</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Estado</label>
                   <select value={form.estado} onChange={e => setForm(f => ({ ...f, estado: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     {config.situacionesPropiedad.map(s => <option key={s.id} value={s.nombre}>{s.nombre}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Asesor Asignado</label>
+                  <label className="block text-xs font-medium mb-1 text-gray-700">Asesor Asignado</label>
                   <select value={form.asesor_asignado} onChange={e => setForm(f => ({ ...f, asesor_asignado: e.target.value }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={selectSt}>
                     <option value="">Seleccionar...</option>
                     {comerciales.filter(c => c.situacion === 'Activo').map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
@@ -607,17 +607,17 @@ export default function PropiedadesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Amenidades</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Amenidades</label>
                 <textarea value={form.amenidades} onChange={e => setForm(f => ({ ...f, amenidades: e.target.value }))} rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
               </div>
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Descripcion</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Descripcion</label>
                 <textarea value={form.descripcion} onChange={e => setForm(f => ({ ...f, descripcion: e.target.value }))} rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none" style={inputSt} />
               </div>
 
               {/* Images */}
               <div>
-                <label className="block text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>Imagenes (max 5)</label>
+                <label className="block text-xs font-medium mb-1 text-gray-700">Imagenes (max 5)</label>
                 <div className="flex gap-2 flex-wrap mb-2">
                   {form.imagenes.map((img, i) => (
                     <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
@@ -627,12 +627,12 @@ export default function PropiedadesPage() {
                   ))}
                 </div>
                 {form.imagenes.length < 5 && (
-                  <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="text-sm text-white/60" />
+                  <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="text-sm text-gray-700" />
                 )}
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}>Cancelar</button>
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cancelar</button>
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>
