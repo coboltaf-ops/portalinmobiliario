@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { useEmpresaStore, type DatosEmpresa } from '@/features/datos-empresa/store/empresa-store'
 import { useConfigStore } from '@/features/configuracion/store/configuracion-store'
+import { useAuthStore } from '@/features/auth/store/auth-store'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import { compressImage } from '@/shared/lib/compress-image'
 
@@ -17,6 +18,7 @@ const initForm = (): DatosEmpresa => ({
 export default function DatosEmpresaPage() {
   const { empresa, setEmpresa } = useEmpresaStore()
   const config = useConfigStore()
+  const user = useAuthStore(s => s.user)
   const [form, setForm] = useState<DatosEmpresa>(empresa ? { ...empresa } : initForm())
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [formError, setFormError] = useState('')
@@ -66,14 +68,20 @@ export default function DatosEmpresaPage() {
   return (
     <>
       {/* Header with Logo and Title */}
-      <div className="flex items-center gap-4 px-8 py-4" style={{ background: '#001e4d' }}>
-        <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#2563eb' }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
+      <div className="flex items-center justify-between px-8 py-4" style={{ background: '#001e4d' }}>
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#2563eb' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold" style={{color: '#ffffff', margin: 0}}>PORTAL INMOBILIARIO</h1>
         </div>
-        <h1 className="text-2xl font-bold" style={{color: '#ffffff', margin: 0}}>PORTAL INMOBILIARIO</h1>
+        <div className="text-right">
+          <p className="text-lg font-bold" style={{ color: '#ffffff', margin: 0 }}>{user?.usuario}</p>
+          <p className="text-sm" style={{ color: '#ffffff', margin: 0 }}>{user?.rol}</p>
+        </div>
       </div>
 
       <div className="space-y-6">
