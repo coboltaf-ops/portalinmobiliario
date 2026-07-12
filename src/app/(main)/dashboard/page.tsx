@@ -92,8 +92,8 @@ export default function DashboardPage() {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
               <div className="w-2 h-2 rounded-full" style={{ background: c.color }} />
             </div>
-            <p className="text-2xl font-bold text-white">{fmtNum(c.value)}</p>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.label}</p>
+            <p className="text-2xl font-bold" style={{ color: '#000000' }}>{fmtNum(c.value)}</p>
+            <p className="text-sm mt-1" style={{ color: '#000000' }}>{c.label}</p>
           </Link>
         ))}
       </div>
@@ -102,8 +102,8 @@ export default function DashboardPage() {
         {cards.slice(4).map(c => (
           <Link key={c.label} href={c.href} className="rounded-xl p-4 text-center hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <svg className="mx-auto" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
-            <p className="text-xl font-bold text-white mt-2">{fmtNum(c.value)}</p>
-            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{c.label}</p>
+            <p className="text-xl font-bold mt-2" style={{ color: '#000000' }}>{fmtNum(c.value)}</p>
+            <p className="text-xs mt-1" style={{ color: '#000000' }}>{c.label}</p>
           </Link>
         ))}
       </div>
