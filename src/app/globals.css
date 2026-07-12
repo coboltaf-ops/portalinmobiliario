@@ -71,3 +71,30 @@ select option {
   color: #000000 !important;
   background-color: #ffffff !important;
 }
+
+/* Modales, desplegables y overlays - fondo BLANCO */
+[role="dialog"],
+[class*="modal"],
+[class*="dropdown"],
+[class*="popover"],
+[class*="menu"],
+.fixed,
+.absolute {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Diálogos y formularios */
+dialog,
+form {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Panels y cards */
+[class*="panel"],
+[class*="card"],
+[class*="sheet"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
