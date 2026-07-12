@@ -25,15 +25,15 @@ export const useCorreosStore = create<CorreosState>()((set, get) => ({
   loaded: false,
   fetchCorreos: async () => {
 
-    const { data } = await supabase.from('correos_enviados').select('*').order('fecha', { ascending: false })
+    const { data } = await (supabase as any).from('correos_enviados').select('*').order('fecha', { ascending: false })
     if (data) set({ correos: data, loaded: true })
   },
   addCorreo: async (c) => {
     set((s) => ({ correos: [c, ...s.correos] }))
-    await supabase.from('correos_enviados').insert(c)
+    await (supabase as any).from('correos_enviados').insert(c)
   },
   deleteCorreo: async (id) => {
     set((s) => ({ correos: s.correos.filter((c) => c.id !== id) }))
-    await supabase.from('correos_enviados').delete().eq('id', id)
+    await (supabase as any).from('correos_enviados').delete().eq('id', id)
   },
 }))

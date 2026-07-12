@@ -30,19 +30,19 @@ export const useCotizacionesStore = create<CotizacionesState>()((set, get) => ({
   loaded: false,
   fetchCotizaciones: async () => {
 
-    const { data } = await supabase.from('cotizaciones').select('*')
+    const { data } = await (supabase as any).from('cotizaciones').select('*')
     if (data) set({ cotizaciones: data, loaded: true })
   },
   addCotizacion: async (c) => {
     set((s) => ({ cotizaciones: [...s.cotizaciones, c] }))
-    await supabase.from('cotizaciones').insert(c)
+    await (supabase as any).from('cotizaciones').insert(c)
   },
   updateCotizacion: async (id, c) => {
     set((s) => ({ cotizaciones: s.cotizaciones.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await supabase.from('cotizaciones').update(c).eq('id', id)
+    await (supabase as any).from('cotizaciones').update(c).eq('id', id)
   },
   deleteCotizacion: async (id) => {
     set((s) => ({ cotizaciones: s.cotizaciones.filter((r) => r.id !== id) }))
-    await supabase.from('cotizaciones').delete().eq('id', id)
+    await (supabase as any).from('cotizaciones').delete().eq('id', id)
   },
 }))

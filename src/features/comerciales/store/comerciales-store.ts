@@ -30,19 +30,19 @@ export const useComercialesStore = create<ComercialesState>()((set, get) => ({
   loaded: false,
   fetchComerciales: async () => {
 
-    const { data } = await supabase.from('comerciales').select('*')
+    const { data } = await (supabase as any).from('comerciales').select('*')
     if (data) set({ comerciales: data, loaded: true })
   },
   addComercial: async (c) => {
     set((s) => ({ comerciales: [...s.comerciales, c] }))
-    await supabase.from('comerciales').insert(c)
+    await (supabase as any).from('comerciales').insert(c)
   },
   updateComercial: async (id, c) => {
     set((s) => ({ comerciales: s.comerciales.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await supabase.from('comerciales').update(c).eq('id', id)
+    await (supabase as any).from('comerciales').update(c).eq('id', id)
   },
   deleteComercial: async (id) => {
     set((s) => ({ comerciales: s.comerciales.filter((r) => r.id !== id) }))
-    await supabase.from('comerciales').delete().eq('id', id)
+    await (supabase as any).from('comerciales').delete().eq('id', id)
   },
 }))

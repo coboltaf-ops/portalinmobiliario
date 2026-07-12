@@ -24,7 +24,7 @@ export const useModulosStore = create<ModulosState>()((set, get) => ({
   fetchModulos: async () => {
     set({ loading: true })
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('modulos')
         .select('*')
         .order('orden', { ascending: true })
@@ -41,7 +41,7 @@ export const useModulosStore = create<ModulosState>()((set, get) => ({
     if (!modulo) return
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('modulos')
         .update({ activo: !modulo.activo })
         .eq('id', id)

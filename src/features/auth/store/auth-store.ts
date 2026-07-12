@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   loaded: false,
   fetchUsers: async () => {
 
-    const { data } = await supabase.from('usuarios').select('*')
+    const { data } = await (supabase as any).from('usuarios').select('*')
     if (data) set({ users: data, loaded: true })
   },
   setUser: (u) => set({ user: u }),

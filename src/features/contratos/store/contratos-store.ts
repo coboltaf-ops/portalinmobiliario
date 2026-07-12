@@ -43,7 +43,7 @@ export const useContratosStore = create<ContratosState>()((set, get) => ({
   loaded: false,
   fetchContratos: async () => {
 
-    const { data } = await supabase.from('contratos').select('*')
+    const { data } = await (supabase as any).from('contratos').select('*')
     if (data) {
       const contratos = data.map((c: Record<string, unknown>) => ({
         ...c,
@@ -54,14 +54,14 @@ export const useContratosStore = create<ContratosState>()((set, get) => ({
   },
   addContrato: async (c) => {
     set((s) => ({ contratos: [...s.contratos, c] }))
-    await supabase.from('contratos').insert(c)
+    await (supabase as any).from('contratos').insert(c)
   },
   updateContrato: async (id, c) => {
     set((s) => ({ contratos: s.contratos.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await supabase.from('contratos').update(c).eq('id', id)
+    await (supabase as any).from('contratos').update(c).eq('id', id)
   },
   deleteContrato: async (id) => {
     set((s) => ({ contratos: s.contratos.filter((r) => r.id !== id) }))
-    await supabase.from('contratos').delete().eq('id', id)
+    await (supabase as any).from('contratos').delete().eq('id', id)
   },
 }))

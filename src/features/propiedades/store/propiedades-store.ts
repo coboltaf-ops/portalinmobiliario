@@ -48,19 +48,19 @@ export const usePropiedadesStore = create<PropiedadesState>()((set, get) => ({
   loaded: false,
   fetchPropiedades: async () => {
 
-    const { data } = await supabase.from('propiedades').select('*')
+    const { data } = await (supabase as any).from('propiedades').select('*')
     if (data) set({ propiedades: data, loaded: true })
   },
   addPropiedad: async (p) => {
     set((s) => ({ propiedades: [...s.propiedades, p] }))
-    await supabase.from('propiedades').insert(p)
+    await (supabase as any).from('propiedades').insert(p)
   },
   updatePropiedad: async (id, p) => {
     set((s) => ({ propiedades: s.propiedades.map((r) => r.id === id ? { ...r, ...p } : r) }))
-    await supabase.from('propiedades').update(p).eq('id', id)
+    await (supabase as any).from('propiedades').update(p).eq('id', id)
   },
   deletePropiedad: async (id) => {
     set((s) => ({ propiedades: s.propiedades.filter((r) => r.id !== id) }))
-    await supabase.from('propiedades').delete().eq('id', id)
+    await (supabase as any).from('propiedades').delete().eq('id', id)
   },
 }))

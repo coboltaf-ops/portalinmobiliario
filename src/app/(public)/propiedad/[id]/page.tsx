@@ -36,8 +36,8 @@ export default function PropiedadDetallePage() {
   }
 
   const nextCode = async () => {
-    const { data } = await supabase.from('solicitudes').select('codigo').order('codigo', { ascending: false }).limit(1)
-    const maxCode = data && data.length > 0 ? data[0].codigo : 'SOL-00000'
+    const { data } = await (supabase as any).from('solicitudes').select('codigo').order('codigo', { ascending: false }).limit(1)
+    const maxCode = data && data.length > 0 ? (data[0] as any).codigo : 'SOL-00000'
     const max = parseInt(String(maxCode).replace('SOL-', '')) || 0
     return `SOL-${String(max + 1).padStart(5, '0')}`
   }

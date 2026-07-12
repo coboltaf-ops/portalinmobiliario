@@ -50,7 +50,7 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
 
   fetchConfig: async () => {
 
-    const { data } = await supabase.from('configuracion').select('*')
+    const { data } = await (supabase as any).from('configuracion').select('*')
     if (!data) return
     const grouped: Record<string, unknown[]> = {}
     for (const row of data) {
@@ -80,7 +80,7 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
     set((s) => ({ [table]: [...getTable(s, table), item] } as unknown as Partial<ConfigState>))
     const row: Record<string, unknown> = { id: item.id, nombre: item.nombre, tabla: table }
     if ('simbolo' in item) row.simbolo = item.simbolo
-    await supabase.from('configuracion').insert(row)
+    await (supabase as any).from('configuracion').insert(row)
   },
 
   updateItem: async (table, id, item) => {
@@ -88,48 +88,48 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
     const row: Record<string, unknown> = {}
     if ('nombre' in item) row.nombre = item.nombre
     if ('simbolo' in item) row.simbolo = (item as MonedaItem).simbolo
-    await supabase.from('configuracion').update(row).eq('id', id)
+    await (supabase as any).from('configuracion').update(row).eq('id', id)
   },
 
   deleteItem: async (table, id) => {
     set((s) => ({ [table]: getTable(s, table).filter((r) => r.id !== id) } as unknown as Partial<ConfigState>))
-    await supabase.from('configuracion').delete().eq('id', id)
+    await (supabase as any).from('configuracion').delete().eq('id', id)
   },
 
   addCiudad: async (ciudad) => {
     set((s) => ({ ciudades: [...s.ciudades, ciudad] }))
-    await supabase.from('configuracion').insert({ id: ciudad.id, nombre: ciudad.nombre, tabla: 'ciudades', zonas: ciudad.zonas })
+    await (supabase as any).from('configuracion').insert({ id: ciudad.id, nombre: ciudad.nombre, tabla: 'ciudades', zonas: ciudad.zonas })
   },
 
   updateCiudad: async (id, nombre) => {
     set((s) => ({ ciudades: s.ciudades.map(c => c.id === id ? { ...c, nombre } : c) }))
-    await supabase.from('configuracion').update({ nombre }).eq('id', id)
+    await (supabase as any).from('configuracion').update({ nombre }).eq('id', id)
   },
 
   deleteCiudad: async (id) => {
     set((s) => ({ ciudades: s.ciudades.filter(c => c.id !== id) }))
-    await supabase.from('configuracion').delete().eq('id', id)
+    await (supabase as any).from('configuracion').delete().eq('id', id)
   },
 
   addZonaToCiudad: async (ciudadId, zona) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: [...c.zonas, zona] } : c)
     set({ ciudades: newCiudades })
     const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await supabase.from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
   },
 
   updateZonaInCiudad: async (ciudadId, zonaId, nombre) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: c.zonas.map(z => z.id === zonaId ? { ...z, nombre } : z) } : c)
     set({ ciudades: newCiudades })
     const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await supabase.from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
   },
 
   deleteZonaFromCiudad: async (ciudadId, zonaId) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: c.zonas.filter(z => z.id !== zonaId) } : c)
     set({ ciudades: newCiudades })
     const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await supabase.from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
   },
 }))
 

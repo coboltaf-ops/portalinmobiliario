@@ -31,20 +31,20 @@ export const useSolicitudesStore = create<SolicitudesState>()((set, get) => ({
   loaded: false,
   fetchSolicitudes: async () => {
 
-    const { data } = await supabase.from('solicitudes').select('*')
+    const { data } = await (supabase as any).from('solicitudes').select('*')
     if (data) set({ solicitudes: data, loaded: true })
   },
   addSolicitud: async (s) => {
-    const { error } = await supabase.from('solicitudes').insert(s)
+    const { error } = await (supabase as any).from('solicitudes').insert(s)
     if (error) throw new Error(error.message)
     set((st) => ({ solicitudes: [...st.solicitudes, s] }))
   },
   updateSolicitud: async (id, s) => {
     set((st) => ({ solicitudes: st.solicitudes.map((r) => r.id === id ? { ...r, ...s } : r) }))
-    await supabase.from('solicitudes').update(s).eq('id', id)
+    await (supabase as any).from('solicitudes').update(s).eq('id', id)
   },
   deleteSolicitud: async (id) => {
     set((st) => ({ solicitudes: st.solicitudes.filter((r) => r.id !== id) }))
-    await supabase.from('solicitudes').delete().eq('id', id)
+    await (supabase as any).from('solicitudes').delete().eq('id', id)
   },
 }))

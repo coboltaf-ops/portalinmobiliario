@@ -37,19 +37,19 @@ export const useClientesStore = create<ClientesState>()((set, get) => ({
   loaded: false,
   fetchClientes: async () => {
 
-    const { data } = await supabase.from('clientes').select('*')
+    const { data } = await (supabase as any).from('clientes').select('*')
     if (data) set({ clientes: data, loaded: true })
   },
   addCliente: async (c) => {
     set((s) => ({ clientes: [...s.clientes, c] }))
-    await supabase.from('clientes').insert(c)
+    await (supabase as any).from('clientes').insert(c)
   },
   updateCliente: async (id, c) => {
     set((s) => ({ clientes: s.clientes.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await supabase.from('clientes').update(c).eq('id', id)
+    await (supabase as any).from('clientes').update(c).eq('id', id)
   },
   deleteCliente: async (id) => {
     set((s) => ({ clientes: s.clientes.filter((r) => r.id !== id) }))
-    await supabase.from('clientes').delete().eq('id', id)
+    await (supabase as any).from('clientes').delete().eq('id', id)
   },
 }))

@@ -28,16 +28,16 @@ export const useEmpresaStore = create<EmpresaState>()((set, get) => ({
   loaded: false,
   fetchEmpresa: async () => {
 
-    const { data } = await supabase.from('empresa').select('*').limit(1).single()
+    const { data } = await (supabase as any).from('empresa').select('*').limit(1).single()
     set({ empresa: data ?? null, loaded: true })
   },
   setEmpresa: async (e) => {
     set({ empresa: e })
-    const { data: existing } = await supabase.from('empresa').select('id').limit(1).single()
+    const { data: existing } = await (supabase as any).from('empresa').select('id').limit(1).single()
     if (existing) {
-      await supabase.from('empresa').update(e).eq('id', existing.id)
+      await (supabase as any).from('empresa').update(e).eq('id', existing.id)
     } else {
-      await supabase.from('empresa').insert(e)
+      await (supabase as any).from('empresa').insert(e)
     }
   },
 }))
