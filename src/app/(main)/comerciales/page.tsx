@@ -158,7 +158,7 @@ export default function ComercialesPage() {
                 { label: 'Zona Asignada', value: viewRecord.zona_asignada },
                 { label: 'Situacion', value: viewRecord.situacion },
               ].map(f => (
-                <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
+                <div key={f.label} style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem' }}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
               ))}
             </div>
           </div>

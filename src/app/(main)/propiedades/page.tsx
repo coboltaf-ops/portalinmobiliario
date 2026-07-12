@@ -446,14 +446,14 @@ export default function PropiedadesPage() {
                 { label: 'Estado', value: viewRecord.estado },
                 { label: 'Asesor', value: (() => { const a = comerciales.find(c => c.id === viewRecord.asesor_asignado); return a ? `${a.nombre} ${a.apellido}` : 'Sin asignar' })() },
               ].map(f => (
-                <div key={f.label}>
+                <div key={f.label} style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem' }}>
                   <p className="text-xs text-gray-600">{f.label}</p>
                   <p className="text-sm text-black">{f.value || '-'}</p>
                 </div>
               ))}
             </div>
-            {viewRecord.amenidades && <div className="mt-3"><p className="text-xs text-gray-600">Amenidades</p><p className="text-sm text-black">{viewRecord.amenidades}</p></div>}
-            {viewRecord.descripcion && <div className="mt-3"><p className="text-xs text-gray-600">Descripcion</p><p className="text-sm text-black">{viewRecord.descripcion}</p></div>}
+            {viewRecord.amenidades && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Amenidades</p><p className="text-sm text-black">{viewRecord.amenidades}</p></div>}
+            {viewRecord.descripcion && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Descripcion</p><p className="text-sm text-black">{viewRecord.descripcion}</p></div>}
           </div>
         </div>
       )}

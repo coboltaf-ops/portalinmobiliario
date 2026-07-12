@@ -487,11 +487,11 @@ export default function ContratosPage() {
                   { label: 'Fecha Fin', value: viewRecord.fecha_fin || '-' },
                   { label: 'Situacion', value: viewRecord.situacion },
                 ].map(f => (
-                  <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
+                  <div key={f.label} style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem' }}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
                 ))}
               </div>
-              {viewRecord.condiciones && <div className="mt-3"><p className="text-xs text-gray-600">Condiciones</p><p className="text-sm text-black">{viewRecord.condiciones}</p></div>}
-              {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
+              {viewRecord.condiciones && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Condiciones</p><p className="text-sm text-black">{viewRecord.condiciones}</p></div>}
+              {viewRecord.observaciones && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
             </div>
           </div>
         )

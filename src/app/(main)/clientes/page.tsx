@@ -174,10 +174,10 @@ export default function ClientesPage() {
                 { label: 'Asesor', value: (() => { const a = comerciales.find(x => x.id === viewRecord.asesor_asignado); return a ? `${a.nombre} ${a.apellido}` : '-' })() },
                 { label: 'Situacion', value: viewRecord.situacion },
               ].map(f => (
-                <div key={f.label}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
+                <div key={f.label} style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem' }}><p className="text-xs text-gray-600">{f.label}</p><p className="text-sm text-black">{f.value || '-'}</p></div>
               ))}
             </div>
-            {viewRecord.observaciones && <div className="mt-3"><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
+            {viewRecord.observaciones && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
           </div>
         </div>
       )}

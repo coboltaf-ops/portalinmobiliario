@@ -237,14 +237,14 @@ export default function SolicitudesPage() {
                   { label: 'Propiedad', value: prop ? `${prop.codigo} - ${prop.urbanizacion}` : '-' },
                   { label: 'Comercial Asignado', value: com ? `${com.nombre} ${com.apellido}` : 'Sin asignar' },
                 ].map(f => (
-                  <div key={f.label}>
+                  <div key={f.label} style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem' }}>
                     <p className="text-xs text-gray-600">{f.label}</p>
                     <p className="text-sm text-black">{f.value || '-'}</p>
                   </div>
                 ))}
               </div>
-              {viewRecord.mensaje && <div className="mt-3"><p className="text-xs text-gray-600">Mensaje del Prospecto</p><p className="text-sm text-black">{viewRecord.mensaje}</p></div>}
-              {viewRecord.notas && <div className="mt-3"><p className="text-xs text-gray-600">Notas del Comercial</p><p className="text-sm text-black">{viewRecord.notas}</p></div>}
+              {viewRecord.mensaje && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Mensaje del Prospecto</p><p className="text-sm text-black">{viewRecord.mensaje}</p></div>}
+              {viewRecord.notas && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Notas del Comercial</p><p className="text-sm text-black">{viewRecord.notas}</p></div>}
               {/* Property preview */}
               {prop && prop.imagenes && prop.imagenes.length > 0 && (
                 <div className="mt-4">
