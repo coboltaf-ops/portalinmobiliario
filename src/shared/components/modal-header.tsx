@@ -1,8 +1,10 @@
 interface ModalHeaderProps {
   onClose: () => void
+  userName?: string
+  userRole?: string
 }
 
-export function ModalHeader({ onClose }: ModalHeaderProps) {
+export function ModalHeader({ onClose, userName, userRole }: ModalHeaderProps) {
   return (
     <div className="flex items-center justify-between px-8 py-4" style={{ backgroundColor: '#1e3a8a', borderBottom: '1px solid rgba(0,30,77,0.2)' }}>
       {/* Left: Logo + Text */}
@@ -17,14 +19,25 @@ export function ModalHeader({ onClose }: ModalHeaderProps) {
         {/* Text */}
         <span className="text-2xl font-bold" style={{ color: '#001e4d' }}>PORTAL INMOBILIARIO</span>
       </div>
-      {/* Right: Exit Button */}
-      <button
-        onClick={onClose}
-        className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
-        style={{ background: '#ef4444', border: '1px solid #dc2626' }}
-      >
-        SALIR
-      </button>
+
+      {/* Center/Right: User Info + Exit Button */}
+      <div className="flex items-center gap-6">
+        {/* User Info */}
+        {(userName || userRole) && (
+          <div style={{ textAlign: 'right' }}>
+            <p className="text-sm font-semibold" style={{ color: '#001e4d', margin: 0 }}>{userName}</p>
+            <p className="text-xs" style={{ color: '#001e4d', margin: 0 }}>{userRole}</p>
+          </div>
+        )}
+        {/* Exit Button */}
+        <button
+          onClick={onClose}
+          className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90"
+          style={{ background: '#ef4444', border: '1px solid #dc2626' }}
+        >
+          SALIR
+        </button>
+      </div>
     </div>
   )
 }

@@ -486,7 +486,7 @@ export default function ContratosPage() {
         return (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
             <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-              <ModalHeader onClose={() => setViewRecord(null)} />
+              <ModalHeader onClose={() => setViewRecord(null)} userName={user?.usuario} userRole={user?.rol} />
               <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
                 <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
                 <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
@@ -528,7 +528,7 @@ export default function ContratosPage() {
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <ModalHeader onClose={() => setIsFormOpen(false)} />
+            <ModalHeader onClose={() => setIsFormOpen(false)} userName={user?.usuario} userRole={user?.rol} />
             <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
               <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
               <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
@@ -658,7 +658,7 @@ export default function ContratosPage() {
       {docsRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <ModalHeader onClose={() => setDocsRecord(null)} />
+            <ModalHeader onClose={() => setDocsRecord(null)} userName={user?.usuario} userRole={user?.rol} />
             <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
               <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
               <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
