@@ -8,18 +8,32 @@ import { useAuthStore } from '@/features/auth/store/auth-store'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { setUser, users, logout, fetchUsers } = useAuthStore()
+  const { setUser, users, logout, fetchUsers, loaded, loading: usersLoading, error: storeError } = useAuthStore()
 
   const [usuario, setUsuario] = useState('')
   const [clave, setClave] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => { logout(); fetchUsers() }, [logout, fetchUsers])
+  useEffect(() => {
+    logout()
+    fetchUsers()
+  }, [])
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (!loaded) {
+      setError('Cargando usuarios... intenta de nuevo en un momento')
+      return
+    }
+
+    if (users.length === 0) {
+      setError('No hay usuarios disponibles. Contacta al administrador.')
+      return
+    }
+
     setLoading(true)
 
     const found = users.find(
@@ -58,19 +72,25 @@ export default function LoginPage() {
 
         <div className="text-center mb-6 flex flex-col items-center">
           <div className="w-16 h-16 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(30,64,175,0.2)', border: '1px solid rgba(30,64,175,0.3)' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
+            {usersLoading ? (
+              <div className="animate-spin" style={{ width: '32px', height: '32px', border: '2px solid rgba(59,130,246,0.3)', borderTop: '2px solid #3b82f6', borderRadius: '50%' }} />
+            ) : (
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            )}
           </div>
           <h1 className="text-xl font-bold tracking-tight text-white">Portal Inmobiliario</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Inicia sesion en tu cuenta</p>
+          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            {usersLoading ? 'Cargando...' : 'Inicia sesion en tu cuenta'}
+          </p>
         </div>
 
-        {error && (
+        {(error || storeError) && (
           <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium text-center"
             style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>
-            {error}
+            {error || storeError}
           </div>
         )}
 
@@ -101,7 +121,7 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || usersLoading || !loaded}
             className="w-full rounded-lg px-6 py-2.5 text-sm font-semibold transition-all duration-300 mt-2 disabled:opacity-50"
             style={{
               background: 'linear-gradient(135deg, rgba(30,64,175,0.8) 0%, rgba(59,130,246,0.6) 100%)',
@@ -110,7 +130,7 @@ export default function LoginPage() {
               boxShadow: '0 0 20px rgba(30,64,175,0.3)',
             }}
           >
-            {loading ? 'Validando...' : 'Ingresar al Sistema'}
+            {usersLoading ? 'Cargando usuarios...' : loading ? 'Validando...' : 'Ingresar al Sistema'}
           </button>
         </form>
       </div>
