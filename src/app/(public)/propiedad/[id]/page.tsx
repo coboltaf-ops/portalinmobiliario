@@ -265,6 +265,7 @@ export default function PropiedadDetallePage() {
           </div>
         </div>
       </div>
+      </div>
     </div>
   )
 }

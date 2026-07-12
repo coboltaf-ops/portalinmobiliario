@@ -182,7 +182,6 @@ export default function ComercialesPage() {
               ))}
             </div>
             </div>
-            </div>
           </div>
         </div>
       )}

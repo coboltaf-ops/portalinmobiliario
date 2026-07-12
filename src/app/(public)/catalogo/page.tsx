@@ -138,6 +138,7 @@ export default function CatalogoPage() {
           <p className="text-white/30 text-lg">No se encontraron propiedades con los filtros seleccionados</p>
         </div>
       )}
+      </div>
     </div>
   )
 }
