@@ -145,9 +145,9 @@ export default function ComercialesPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setViewRecord(null)} />
-            <div className="text-center py-2 border-b border-gray-200">
-              <p className="text-lg font-bold text-black">{user?.usuario}</p>
-              <p className="text-sm text-gray-600">{user?.rol}</p>
+            <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+              <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
+              <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
@@ -180,9 +180,9 @@ export default function ComercialesPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setIsFormOpen(false)} />
-            <div className="text-center py-2 border-b border-gray-200">
-              <p className="text-lg font-bold text-black">{user?.usuario}</p>
-              <p className="text-sm text-gray-600">{user?.rol}</p>
+            <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+              <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
+              <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
