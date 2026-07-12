@@ -6,7 +6,7 @@ interface ModalHeaderProps {
 
 export function ModalHeader({ onClose, userName, userRole }: ModalHeaderProps) {
   return (
-    <div className="flex items-center justify-between px-8 py-4" style={{ backgroundColor: '#1e3a8a', borderBottom: '1px solid rgba(0,30,77,0.2)' }}>
+    <div className="flex items-center justify-between px-8 py-4" style={{ backgroundColor: '#1e3a8a' }}>
       {/* Left: Logo + Text */}
       <div className="flex items-center gap-4">
         {/* Logo */}
