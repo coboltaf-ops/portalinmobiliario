@@ -54,15 +54,15 @@ export default function LoginPage() {
     <div className="login-screen" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e3a8a', padding: '32px 16px' }}>
       {/* LOGIN CARD - Logo y Portal Inmobiliario DENTRO */}
       <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
-        {/* Logo y Título DENTRO de la tarjeta */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 8, background: '#001e4d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Logo y Título DENTRO de la tarjeta - Vertical */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
+          <div style={{ width: 56, height: 56, borderRadius: 8, background: '#001e4d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
               <polyline points="9 22 9 12 15 12 15 22" />
             </svg>
           </div>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: '#001e4d', margin: 0 }}>PORTAL INMOBILIARIO</h1>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#001e4d', margin: 0, textAlign: 'center' }}>PORTAL INMOBILIARIO</h1>
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
