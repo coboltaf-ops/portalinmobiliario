@@ -30,3 +30,24 @@ select:focus {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+/* Display text - negro intenso */
+h1, h2, h3, h4, h5, h6 {
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+/* Texto en tarjetas y elementos principales */
+.font-bold, .font-semibold, .font-extrabold {
+  color: #000000 !important;
+}
+
+/* Etiquetas y títulos */
+label {
+  color: #000000 !important;
+}
+
+/* Títulos de secciones */
+[class*="title"], [class*="heading"] {
+  color: #000000 !important;
+}
