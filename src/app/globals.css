@@ -72,14 +72,14 @@ select option {
   background-color: #ffffff !important;
 }
 
-/* Modales, desplegables y overlays - fondo BLANCO */
+/* Modales, desplegables y overlays - fondo BLANCO (EXCEPTO aside) */
 [role="dialog"],
 [class*="modal"],
 [class*="dropdown"],
 [class*="popover"],
 [class*="menu"],
-.fixed,
-.absolute {
+.fixed:not(aside),
+.absolute:not(aside) {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
