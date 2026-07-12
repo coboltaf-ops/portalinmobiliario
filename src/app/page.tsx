@@ -70,13 +70,13 @@ export default function LoginPage() {
         <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <h2 style={{ fontSize: 20, fontWeight: 800, color: '#ffffff', marginBottom: 4 }}>Inicia Sesión</h2>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>
+            <p style={{ color: '#ffffff', fontSize: 14 }}>
               {usersLoading ? 'Cargando usuarios...' : 'Inicia sesión en tu cuenta'}
             </p>
           </div>
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginBottom: 4, display: 'block' }}>Usuario</label>
+            <label style={{ color: '#ffffff', fontSize: 12, marginBottom: 4, display: 'block' }}>Usuario</label>
             <input
               type="text"
               required
@@ -87,7 +87,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginBottom: 4, display: 'block' }}>Clave</label>
+            <label style={{ color: '#ffffff', fontSize: 12, marginBottom: 4, display: 'block' }}>Clave</label>
             <input
               type="password"
               required
@@ -97,7 +97,7 @@ export default function LoginPage() {
               style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#ffffff', fontSize: 14, outline: 'none' }}
             />
           </div>
-          {(error || storeError) && <p style={{ color: '#dc2626', fontSize: 13, textAlign: 'center' }}>{error || storeError}</p>}
+          {(error || storeError) && <p style={{ color: '#ff6b6b', fontSize: 13, textAlign: 'center' }}>{error || storeError}</p>}
           <button
             type="submit"
             disabled={loading || usersLoading || !loaded}
