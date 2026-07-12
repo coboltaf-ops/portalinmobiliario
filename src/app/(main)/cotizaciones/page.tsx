@@ -354,10 +354,6 @@ export default function CotizacionesPage() {
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
             <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
               <ModalHeader onClose={() => setViewRecord(null)} userName={user?.usuario} userRole={user?.rol} />
-              <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
-                <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
-                <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
-              </div>
               <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-black">Cotizacion {viewRecord.nro_cotizacion}</h2>
@@ -392,10 +388,6 @@ export default function CotizacionesPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
             <ModalHeader onClose={() => setIsFormOpen(false)} userName={user?.usuario} userRole={user?.rol} />
-            <div className="text-center py-4" style={{ background: '#001e4d', borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
-              <p className="text-lg font-bold" style={{ color: '#ffffff' }}>{user?.usuario}</p>
-              <p className="text-sm" style={{ color: '#ffffff' }}>{user?.rol}</p>
-            </div>
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Cotizacion' : 'Nueva Cotizacion'}</h2>
