@@ -98,3 +98,53 @@ form {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
+
+/* BOTONES DE ACCIONES ESTANDARIZADOS */
+/* VER - Naranja */
+[class*="btn-ver"],
+button[title*="Ver"],
+button[aria-label*="Ver"] {
+  background-color: #ff9800 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[class*="btn-ver"]:hover,
+button[title*="Ver"]:hover,
+button[aria-label*="Ver"]:hover {
+  background-color: #f57c00 !important;
+}
+
+/* EDITAR - Verde */
+[class*="btn-edit"],
+[class*="btn-editar"],
+button[title*="Editar"],
+button[aria-label*="Editar"] {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[class*="btn-edit"]:hover,
+[class*="btn-editar"]:hover,
+button[title*="Editar"]:hover,
+button[aria-label*="Editar"]:hover {
+  background-color: #059669 !important;
+}
+
+/* ELIMINAR - Rojo */
+[class*="btn-delete"],
+[class*="btn-eliminar"],
+button[title*="Eliminar"],
+button[aria-label*="Eliminar"] {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+[class*="btn-delete"]:hover,
+[class*="btn-eliminar"]:hover,
+button[title*="Eliminar"]:hover,
+button[aria-label*="Eliminar"]:hover {
+  background-color: #dc2626 !important;
+}
