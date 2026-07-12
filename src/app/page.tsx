@@ -51,84 +51,55 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'linear-gradient(135deg, #030712 0%, #0c1a3d 35%, #030712 65%, #091428 100%)' }}
-    >
-      <div className="fixed top-20 left-20 w-96 h-96 rounded-full blur-[128px] opacity-30 pointer-events-none" style={{ background: '#3b82f6' }} />
-      <div className="fixed top-40 right-32 w-80 h-80 rounded-full blur-[128px] opacity-20 pointer-events-none" style={{ background: '#1d4ed8' }} />
-      <div className="fixed bottom-20 left-1/2 w-72 h-72 rounded-full blur-[128px] opacity-25 pointer-events-none" style={{ background: '#38bdf8' }} />
-
-      <div
-        className="w-full max-w-sm rounded-2xl shadow-2xl p-8 relative overflow-hidden"
-        style={{
-          background: 'rgba(255,255,255,0.08)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255,255,255,0.15)',
-        }}
-      >
-        <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)' }} />
-
-        <div className="text-center mb-6 flex flex-col items-center">
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(30,64,175,0.2)', border: '1px solid rgba(30,64,175,0.3)' }}>
-            {usersLoading ? (
-              <div className="animate-spin" style={{ width: '32px', height: '32px', border: '2px solid rgba(59,130,246,0.3)', borderTop: '2px solid #3b82f6', borderRadius: '50%' }} />
-            ) : (
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            )}
+    <div className="login-screen" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e3a8a' }}>
+      <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          {/* Logo Portal */}
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ width: 140, height: 140, borderRadius: 16, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6', fontSize: 48, fontWeight: 700, margin: '0 auto' }}>
+              {usersLoading ? (
+                <div className="animate-spin" style={{ width: '48px', height: '48px', border: '3px solid rgba(59,130,246,0.3)', borderTop: '3px solid #3b82f6', borderRadius: '50%' }} />
+              ) : (
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              )}
+            </div>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-white">Portal Inmobiliario</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            {usersLoading ? 'Cargando...' : 'Inicia sesion en tu cuenta'}
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#ffffff', marginBottom: 4 }}>Portal Inmobiliario</h1>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>
+            {usersLoading ? 'Cargando usuarios...' : 'Inicia sesión en tu cuenta'}
           </p>
         </div>
-
-        {(error || storeError) && (
-          <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium text-center"
-            style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}>
-            {error || storeError}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.8)' }}>Usuario</label>
+            <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginBottom: 4, display: 'block' }}>Usuario</label>
             <input
               type="text"
               required
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
-              className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-              style={{ background: '#ffffff', border: '2px solid #000000', color: '#000000' }}
               placeholder="admin"
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#ffffff', fontSize: 14, outline: 'none' }}
             />
           </div>
           <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.8)' }}>Clave</label>
+            <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginBottom: 4, display: 'block' }}>Clave</label>
             <input
               type="password"
               required
               value={clave}
               onChange={(e) => setClave(e.target.value)}
-              className="w-full rounded-lg px-3 py-2 text-sm outline-none"
-              style={{ background: '#ffffff', border: '2px solid #000000', color: '#000000' }}
               placeholder="••••••••"
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#ffffff', fontSize: 14, outline: 'none' }}
             />
           </div>
+          {(error || storeError) && <p style={{ color: '#dc2626', fontSize: 13, textAlign: 'center' }}>{error || storeError}</p>}
           <button
             type="submit"
             disabled={loading || usersLoading || !loaded}
-            className="w-full rounded-lg px-6 py-2.5 text-sm font-semibold transition-all duration-300 mt-2 disabled:opacity-50"
-            style={{
-              background: 'linear-gradient(135deg, rgba(30,64,175,0.8) 0%, rgba(59,130,246,0.6) 100%)',
-              border: '1px solid rgba(30,64,175,0.5)',
-              color: '#fff',
-              boxShadow: '0 0 20px rgba(30,64,175,0.3)',
-            }}
+            style={{ padding: '12px', borderRadius: 10, background: '#1e3a8a', color: '#ffffff', fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer', marginTop: 8, opacity: loading || usersLoading || !loaded ? 0.5 : 1, transition: 'opacity 0.3s' }}
           >
             {usersLoading ? 'Cargando usuarios...' : loading ? 'Validando...' : 'Ingresar al Sistema'}
           </button>
