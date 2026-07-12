@@ -59,7 +59,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <nav className="flex items-center gap-6">
             <Link href="/inicio" className={`text-sm font-medium transition-colors ${pathname === '/inicio' ? 'text-white' : 'text-white/60 hover:text-white'}`}>Inicio</Link>
             <Link href="/catalogo" className={`text-sm font-medium transition-colors ${pathname === '/catalogo' ? 'text-white' : 'text-white/60 hover:text-white'}`}>Propiedades</Link>
-            <Link href="/" className="px-4 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:opacity-90" style={{ background: 'rgba(30,64,175,0.8)', border: '1px solid rgba(30,64,175,0.5)' }}>Acceso Administrativo</Link>
+            {user && user.rol === 'Admin' && (
+              <Link href="/dashboard" className="px-4 py-2 rounded-lg text-xs font-semibold transition-all hover:opacity-90" style={{ background: 'rgba(30,64,175,0.8)', border: '1px solid rgba(30,64,175,0.5)', color: '#ffffff' }}>Regresar al Acceso Administrativo</Link>
+            )}
             <button onClick={handleSalir} className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90" style={{ background: 'rgba(200,0,0,0.9)', border: '1px solid rgba(200,0,0,1)' }}>Salir</button>
           </nav>
         </div>
