@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { supabase } from '@/shared/lib/supabase'
 
 export type AuthUser = {
   usuario: string
@@ -29,6 +28,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   fetchUsers: async () => {
     set({ loading: true, error: null })
     try {
+      const { supabase } = await import('@/shared/lib/supabase')
       const { data, error: supabaseError } = await (supabase as any).from('usuarios').select('*')
 
       if (supabaseError) {
