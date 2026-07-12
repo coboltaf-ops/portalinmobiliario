@@ -10,13 +10,14 @@ body {
   min-height: 100vh;
 }
 
-/* Input, textarea y select estilos globales */
+/* Input, textarea y select - NEGRO INTENSO en módulos */
 input,
 textarea,
 select {
   border: 2px solid #000000 !important;
   border-radius: 0.5rem;
   color: #000000 !important;
+  background-color: #ffffff !important;
 }
 
 input:focus,
@@ -32,7 +33,7 @@ select:focus {
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
-/* Textos en tablas - negro para mejor contraste con fondo blanco */
+/* Textos en tablas - negro intenso */
 table {
   color: #000000;
 }
@@ -42,42 +43,31 @@ td, th {
   background-color: #ffffff !important;
 }
 
-/* Títulos y encabezados - negro intenso excepto si tienen clase text-white */
-h1:not([class*="text-white"]),
-h2:not([class*="text-white"]),
-h3:not([class*="text-white"]),
-h4:not([class*="text-white"]),
-h5:not([class*="text-white"]),
-h6:not([class*="text-white"]) {
-  color: #000000 !important;
+/* Todos los textos por defecto - negro intenso */
+h1, h2, h3, h4, h5, h6,
+p, span, div, li, a {
+  color: #000000;
 }
 
-/* Preservar colores explícitos de Tailwind */
-.text-white {
+/* EXCEPTO en el menú lateral - esos sí deben ser blancos */
+aside {
   color: #ffffff !important;
 }
 
-.text-white\/50 {
-  color: rgba(255, 255, 255, 0.5) !important;
+aside * {
+  color: #ffffff !important;
 }
 
-.text-white\/70 {
-  color: rgba(255, 255, 255, 0.7) !important;
+aside .text-white {
+  color: #ffffff !important;
 }
 
-.text-white\/30 {
-  color: rgba(255, 255, 255, 0.3) !important;
+aside a {
+  color: #ffffff !important;
 }
 
-.text-white\/40 {
-  color: rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Buttons y enlaces */
-a:not([class*="text-white"]) {
-  color: #0066cc;
-}
-
-a:hover:not([class*="text-white"]) {
-  color: #0052a3;
+/* Opciones de select - siempre negro */
+select option {
+  color: #000000 !important;
+  background-color: #ffffff !important;
 }
