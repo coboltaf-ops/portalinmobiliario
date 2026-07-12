@@ -51,27 +51,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-screen" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e3a8a' }}>
-      <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          {/* Logo Portal */}
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ width: 140, height: 140, borderRadius: 16, background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3b82f6', fontSize: 48, fontWeight: 700, margin: '0 auto' }}>
-              {usersLoading ? (
-                <div className="animate-spin" style={{ width: '48px', height: '48px', border: '3px solid rgba(59,130,246,0.3)', borderTop: '3px solid #3b82f6', borderRadius: '50%' }} />
-              ) : (
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-              )}
-            </div>
-          </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#ffffff', marginBottom: 4 }}>Portal Inmobiliario</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>
-            {usersLoading ? 'Cargando usuarios...' : 'Inicia sesión en tu cuenta'}
-          </p>
+    <div className="login-screen" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#1e3a8a' }}>
+      {/* HEADER - Azul oscuro con logo y título */}
+      <div style={{ background: '#001e4d', padding: '16px 32px', borderBottom: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Logo - Casa blanca sobre fondo azul */}
+        <div style={{ width: 64, height: 64, borderRadius: 8, background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
         </div>
+        {/* Título */}
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#ffffff', margin: 0 }}>PORTAL INMOBILIARIO</h1>
+      </div>
+
+      {/* LOGIN CARD - Centrada debajo del header */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 16px' }}>
+        <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#ffffff', marginBottom: 4 }}>Inicia Sesión</h2>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>
+              {usersLoading ? 'Cargando usuarios...' : 'Inicia sesión en tu cuenta'}
+            </p>
+          </div>
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginBottom: 4, display: 'block' }}>Usuario</label>
@@ -104,6 +106,7 @@ export default function LoginPage() {
             {usersLoading ? 'Cargando usuarios...' : loading ? 'Validando...' : 'Ingresar al Sistema'}
           </button>
         </form>
+        </div>
       </div>
     </div>
   )
