@@ -53,16 +53,16 @@ export default function LoginPage() {
   return (
     <div className="login-screen" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#1e3a8a' }}>
       {/* HEADER - Azul oscuro con logo y título */}
-      <div style={{ background: '#001e4d', padding: '16px 32px', borderBottom: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Logo - Casa blanca sobre fondo azul */}
-        <div style={{ width: 64, height: 64, borderRadius: 8, background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <div style={{ background: '#1e3a8a', padding: '16px 32px', borderBottom: '1px solid rgba(0,30,77,0.2)', display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Logo - Azul oscuro */}
+        <div style={{ width: 64, height: 64, borderRadius: 8, background: '#001e4d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#001e4d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
         </div>
         {/* Título */}
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#ffffff', margin: 0 }}>PORTAL INMOBILIARIO</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#001e4d', margin: 0 }}>PORTAL INMOBILIARIO</h1>
       </div>
 
       {/* LOGIN CARD - Centrada debajo del header */}
