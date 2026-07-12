@@ -5,7 +5,7 @@ html {
 }
 
 body {
-  color: #1a1a1a;
+  color: #000000;
   background-color: #ffffff;
   min-height: 100vh;
 }
@@ -16,6 +16,7 @@ textarea,
 select {
   border: 2px solid #000000 !important;
   border-radius: 0.5rem;
+  color: #000000 !important;
 }
 
 input:focus,
@@ -34,55 +35,28 @@ select:focus {
 /* Display text - negro intenso */
 h1, h2, h3, h4, h5, h6 {
   color: #000000 !important;
-  font-weight: 600;
 }
 
-/* Texto en tarjetas y elementos principales */
-.font-bold, .font-semibold, .font-extrabold {
-  color: #000000 !important;
-}
-
-/* Etiquetas y títulos */
-label {
-  color: #000000 !important;
-}
-
-/* Títulos de secciones */
-[class*="title"], [class*="heading"] {
-  color: #000000 !important;
-}
-
-/* TODOS los textos generales - negro intenso */
-* {
+/* Textos en tablas */
+table {
   color: #000000;
 }
 
-/* Override para elementos que necesitan colores específicos */
-body {
+td, th {
   color: #000000 !important;
+  background-color: #ffffff !important;
 }
 
-/* Textos en tablas, listas y dropdowns */
-td, th, tr, li, option {
-  color: #000000 !important;
+/* Textos generales */
+p, span, div, li {
+  color: #000000;
 }
 
-/* Textos en select/dropdown */
-select {
-  color: #000000 !important;
+/* Buttons y enlaces */
+a {
+  color: #0066cc;
 }
 
-select option {
-  color: #000000 !important;
-  background-color: #ffffff;
-}
-
-/* Badges y tags */
-[class*="badge"], [class*="tag"], [class*="pill"] {
-  color: #000000 !important;
-}
-
-/* Textos en contenedores generales */
-div, span, p, a {
-  color: #000000 !important;
+a:hover {
+  color: #0052a3;
 }
