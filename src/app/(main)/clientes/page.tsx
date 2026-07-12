@@ -149,10 +149,14 @@ export default function ClientesPage() {
       {/* View Modal */}
       {viewRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
+          <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #e5e7eb' }}>
+              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
               <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
             </div>
             {viewRecord.imagen && (
               <div className="flex justify-center mb-4">
@@ -178,6 +182,10 @@ export default function ClientesPage() {
               ))}
             </div>
             {viewRecord.observaciones && <div style={{ border: '2px solid #000000', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.75rem' }}><p className="text-xs text-gray-600">Observaciones</p><p className="text-sm text-black">{viewRecord.observaciones}</p></div>}
+            </div>
+            <div className="flex justify-end gap-3 px-6 py-4" style={{ borderTop: '1px solid #e5e7eb', background: '#f9fafb' }}>
+              <button type="button" onClick={() => setViewRecord(null)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cerrar</button>
+            </div>
           </div>
         </div>
       )}
@@ -185,10 +193,14 @@ export default function ClientesPage() {
       {/* Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar' : 'Nuevo'} Cliente/Prospecto</h2>
+          <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #e5e7eb' }}>
+              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
               <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-black">{form.id ? 'Editar' : 'Nuevo'} Cliente/Prospecto</h2>
             </div>
             {formError && <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: '#ffebee', border: '1px solid #ef5350', color: '#c62828' }}>{formError}</div>}
             <form onSubmit={handleSave} className="space-y-4">
@@ -313,6 +325,7 @@ export default function ClientesPage() {
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}
