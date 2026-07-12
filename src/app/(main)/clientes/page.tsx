@@ -10,6 +10,7 @@ import { fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import { compressImage } from '@/shared/lib/compress-image'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
+import { ModalHeader } from '@/shared/components/modal-header'
 
 const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 const selectSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
@@ -150,10 +151,7 @@ export default function ClientesPage() {
       {viewRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '2px solid #000000' }}>
-              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
-              <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
-            </div>
+            <ModalHeader onClose={() => setViewRecord(null)} />
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{viewRecord.codigo} - {viewRecord.nombre} {viewRecord.apellido}</h2>
@@ -194,10 +192,7 @@ export default function ClientesPage() {
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '2px solid #000000' }}>
-              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
-              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
-            </div>
+            <ModalHeader onClose={() => setIsFormOpen(false)} />
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{form.id ? 'Editar' : 'Nuevo'} Cliente/Prospecto</h2>

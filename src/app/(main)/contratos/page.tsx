@@ -12,6 +12,7 @@ import { useEmpresaStore } from '@/features/datos-empresa/store/empresa-store'
 import { formatDate, toInputDate, todayFormatted, fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
+import { ModalHeader } from '@/shared/components/modal-header'
 import { compressImage } from '@/shared/lib/compress-image'
 import jsPDF from 'jspdf'
 import { PDFPreview } from '@/shared/components/pdf-preview'
@@ -465,10 +466,7 @@ export default function ContratosPage() {
         return (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
             <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-              <div className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '2px solid #000000' }}>
-                <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
-                <button onClick={() => setViewRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
-              </div>
+              <ModalHeader onClose={() => setViewRecord(null)} />
               <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-black">Contrato {viewRecord.nro_contrato}</h2>
@@ -509,10 +507,7 @@ export default function ContratosPage() {
       {isFormOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '2px solid #000000' }}>
-              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
-              <button onClick={() => setIsFormOpen(false)} className="text-black/60 hover:text-black text-xl">✕</button>
-            </div>
+            <ModalHeader onClose={() => setIsFormOpen(false)} />
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">{form.id ? 'Editar Contrato' : 'Nuevo Contrato'}</h2>
@@ -639,10 +634,7 @@ export default function ContratosPage() {
       {docsRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
           <div className="w-full max-w-6xl h-screen flex flex-col rounded-2xl" style={{ background: '#ffffff', border: '2px solid #000000' }}>
-            <div className="flex items-center justify-between px-6 py-4" style={{ backgroundColor: '#ffffff', borderBottom: '2px solid #000000' }}>
-              <h1 className="text-2xl font-bold text-black">Portal Inmobiliario</h1>
-              <button onClick={() => setDocsRecord(null)} className="text-black/60 hover:text-black text-xl">✕</button>
-            </div>
+            <ModalHeader onClose={() => setDocsRecord(null)} />
             <div className="flex-1 overflow-y-auto px-6 py-6">
             <div className="mb-6">
               <h2 className="text-lg font-bold text-black">Documentos - {docsRecord.nro_contrato}</h2>
