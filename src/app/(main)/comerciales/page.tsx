@@ -164,8 +164,6 @@ export default function ComercialesPage() {
               ))}
             </div>
             </div>
-            <div className="flex justify-end gap-3 px-6 py-4" style={{ borderTop: '1px solid #e5e7eb', background: '#f9fafb' }}>
-              <button type="button" onClick={() => setViewRecord(null)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cerrar</button>
             </div>
           </div>
         </div>
@@ -232,7 +230,6 @@ export default function ComercialesPage() {
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFotoUpload} className="text-sm text-gray-700" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setIsFormOpen(false)} className="px-4 py-2 rounded-lg text-sm" style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151' }}>Cancelar</button>
                 <button type="submit" className="px-6 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>Guardar</button>
               </div>
             </form>
