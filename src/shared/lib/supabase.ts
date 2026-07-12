@@ -9,8 +9,16 @@ export const supabase: ReturnType<typeof createClient> = new Proxy(
     get(target, prop) {
       if (!supabaseInstance) {
         // Initialize only on first access
-        const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uogxmoocqskwplfcjfxo.supabase.co'
-        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SU_BASE_ANON_KEY || 'sb_publishable_KDVVzNrSsR-KpUNV1b7_Kg_fE8Zc2sJ'
+        let url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
+        let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || process.env.NEXT_PUBLIC_SU_BASE_ANON_KEY?.trim()
+
+        // Fallback to hardcoded values if env vars are not valid
+        if (!url || !url.startsWith('https://')) {
+          url = 'https://uogxmoocqskwplfcjfxo.supabase.co'
+        }
+        if (!key) {
+          key = 'sb_publishable_KDVVzNrSsR-KpUNV1b7_Kg_fE8Zc2sJ'
+        }
 
         supabaseInstance = createClient(url, key)
       }
