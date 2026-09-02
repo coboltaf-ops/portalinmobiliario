@@ -20,6 +20,7 @@ export async function readCollection<T = unknown>(collection: string): Promise<T
       (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
     )[0]
     const res = await get(latest.pathname, { access: 'private', useCache: false })
+    if (!res) return null
     const text = await new Response(res.stream).text()
     return JSON.parse(text) as T
   } catch (err) {

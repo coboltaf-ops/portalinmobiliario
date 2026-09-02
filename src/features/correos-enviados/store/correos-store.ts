@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 
 export type CorreoEnviado = {
   id: string
@@ -25,18 +25,18 @@ export const useCorreosStore = create<CorreosState>()(persist((set, get) => ({
   correos: [],
   loaded: false,
   fetchCorreos: async () => {
-    try {
-      const { data } = await (supabase as any).from('correos_enviados').select('*').order('fecha', { ascending: false })
-      if (data && data.length > 0) { set({ correos: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<CorreoEnviado[]>('correos')
+    if (Array.isArray(data) && data.length > 0) { set({ correos: data, loaded: true }); return }
     set({ loaded: true })
   },
   addCorreo: async (c) => {
-    set((s) => ({ correos: [c, ...s.correos] }))
-    await (supabase as any).from('correos_enviados').insert(c)
+    const arr = [c, ...get().correos]
+    set({ correos: arr })
+    await saveCol('correos', arr)
   },
   deleteCorreo: async (id) => {
-    set((s) => ({ correos: s.correos.filter((c) => c.id !== id) }))
-    await (supabase as any).from('correos_enviados').delete().eq('id', id)
+    const arr = get().correos.filter((c) => c.id !== id)
+    set({ correos: arr })
+    await saveCol('correos', arr)
   },
 }), { name: 'portal-correos-storage', storage: createJSONStorage(() => localStorage) }))

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 import { demoPropiedades } from '../demo-propiedades'
 
 export type Propiedad = {
@@ -49,25 +49,26 @@ export const usePropiedadesStore = create<PropiedadesState>()(persist((set, get)
   propiedades: [],
   loaded: false,
   fetchPropiedades: async () => {
-    try {
-      const { data } = await (supabase as any).from('propiedades').select('*')
-      if (data && data.length > 0) { set({ propiedades: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
-    // Respaldo DEMO: si no hay backend, sembramos el catálogo solo si está vacío;
+    const data = await getCol<Propiedad[]>('propiedades')
+    if (Array.isArray(data) && data.length > 0) { set({ propiedades: data, loaded: true }); return }
+    // Respaldo DEMO: si no hay nube, sembramos el catálogo solo si está vacío;
     // de lo contrario conservamos lo que el usuario creó (persistido en localStorage).
     if (get().propiedades.length === 0) set({ propiedades: demoPropiedades, loaded: true })
     else set({ loaded: true })
   },
   addPropiedad: async (p) => {
-    set((s) => ({ propiedades: [...s.propiedades, p] }))
-    await (supabase as any).from('propiedades').insert(p)
+    const arr = [...get().propiedades, p]
+    set({ propiedades: arr })
+    await saveCol('propiedades', arr)
   },
   updatePropiedad: async (id, p) => {
-    set((s) => ({ propiedades: s.propiedades.map((r) => r.id === id ? { ...r, ...p } : r) }))
-    await (supabase as any).from('propiedades').update(p).eq('id', id)
+    const arr = get().propiedades.map((r) => r.id === id ? { ...r, ...p } : r)
+    set({ propiedades: arr })
+    await saveCol('propiedades', arr)
   },
   deletePropiedad: async (id) => {
-    set((s) => ({ propiedades: s.propiedades.filter((r) => r.id !== id) }))
-    await (supabase as any).from('propiedades').delete().eq('id', id)
+    const arr = get().propiedades.filter((r) => r.id !== id)
+    set({ propiedades: arr })
+    await saveCol('propiedades', arr)
   },
 }), { name: 'portal-propiedades-storage', storage: createJSONStorage(() => localStorage) }))

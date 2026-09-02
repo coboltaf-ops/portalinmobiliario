@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 
 export type Rol = {
   id: string
@@ -29,44 +29,27 @@ export const useRolesStore = create<RolesState>()(persist((set, get) => ({
 
   fetchRoles: async () => {
     set({ loading: true, error: null })
-    try {
-      const { data } = await (supabase as any)
-        .from('roles')
-        .select('id, nombre, descripcion, created_at')
-        .order('created_at', { ascending: false })
-
-      if (data && data.length > 0) {
-        set({ roles: data, loaded: true, loading: false })
-        return
-      }
-    } catch { /* sin backend disponible */ }
-    // Conserva lo persistido en localStorage cuando no hay backend
+    const data = await getCol<Rol[]>('roles')
+    if (Array.isArray(data) && data.length > 0) {
+      set({ roles: data, loaded: true, loading: false })
+      return
+    }
+    // Conserva lo persistido en localStorage cuando no hay nube
     set({ loaded: true, loading: false })
   },
 
   addRol: async (r) => {
     set({ error: null })
     try {
-      const { error: supabaseError } = await (supabase as any)
-        .from('roles')
-        .insert({
-          id: r.id,
-          nombre: r.nombre,
-          descripcion: r.descripcion,
-        })
-
-      if (supabaseError) {
-        set({ error: `Error al crear rol: ${supabaseError.message}` })
-        return
-      }
-
       const newRol: Rol = {
         id: r.id,
         nombre: r.nombre,
         descripcion: r.descripcion,
         created_at: new Date().toISOString(),
       }
-      set((s) => ({ roles: [newRol, ...s.roles] }))
+      const arr = [newRol, ...get().roles]
+      set({ roles: arr })
+      await saveCol('roles', arr)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       set({ error: `Error: ${message}` })
@@ -76,21 +59,11 @@ export const useRolesStore = create<RolesState>()(persist((set, get) => ({
   updateRol: async (id, r) => {
     set({ error: null })
     try {
-      const { error: supabaseError } = await (supabase as any)
-        .from('roles')
-        .update(r)
-        .eq('id', id)
-
-      if (supabaseError) {
-        set({ error: `Error al actualizar rol: ${supabaseError.message}` })
-        return
-      }
-
-      set((s) => ({
-        roles: s.roles.map((rol) =>
-          rol.id === id ? { ...rol, ...r } : rol
-        ),
-      }))
+      const arr = get().roles.map((rol) =>
+        rol.id === id ? { ...rol, ...r } : rol
+      )
+      set({ roles: arr })
+      await saveCol('roles', arr)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       set({ error: `Error: ${message}` })
@@ -100,19 +73,9 @@ export const useRolesStore = create<RolesState>()(persist((set, get) => ({
   deleteRol: async (id) => {
     set({ error: null })
     try {
-      const { error: supabaseError } = await (supabase as any)
-        .from('roles')
-        .delete()
-        .eq('id', id)
-
-      if (supabaseError) {
-        set({ error: `Error al eliminar rol: ${supabaseError.message}` })
-        return
-      }
-
-      set((s) => ({
-        roles: s.roles.filter((rol) => rol.id !== id),
-      }))
+      const arr = get().roles.filter((rol) => rol.id !== id)
+      set({ roles: arr })
+      await saveCol('roles', arr)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       set({ error: `Error: ${message}` })

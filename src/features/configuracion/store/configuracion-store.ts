@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 
 export type RefItem = { id: string; nombre: string }
 export type MonedaItem = { id: string; nombre: string; simbolo: string }
@@ -39,6 +39,17 @@ const getTable = (state: ConfigState, table: string): (RefItem | MonedaItem)[] =
   }
 }
 
+// Reúne todas las listas de configuración del estado en un solo objeto para persistir en la nube.
+const collectConfig = (state: ConfigState) => ({
+  tiposPropiedad: state.tiposPropiedad,
+  monedas: state.monedas,
+  ciudades: state.ciudades,
+  paises: state.paises,
+  situacionesPropiedad: state.situacionesPropiedad,
+  tiposIdentificacion: state.tiposIdentificacion,
+  origenesSolicitud: state.origenesSolicitud,
+})
+
 export const useConfigStore = create<ConfigState>()(persist((set, get) => ({
   tiposPropiedad: [],
   monedas: [],
@@ -50,91 +61,67 @@ export const useConfigStore = create<ConfigState>()(persist((set, get) => ({
   loaded: false,
 
   fetchConfig: async () => {
-    let data: Record<string, unknown>[] | null = null
-    try {
-      const res = await (supabase as any).from('configuracion').select('*')
-      data = res.data
-    } catch { /* sin backend disponible */ }
-    // Conserva la configuración persistida en localStorage cuando no hay backend
-    if (!data || data.length === 0) { set({ loaded: true }); return }
-    const grouped: Record<string, unknown[]> = {}
-    for (const row of data) {
-      const tabla = row.tabla as string
-      if (!grouped[tabla]) grouped[tabla] = []
-      if (tabla === 'monedas') {
-        grouped[tabla].push({ id: row.id, nombre: row.nombre, simbolo: row.simbolo || '$' })
-      } else if (tabla === 'ciudades') {
-        grouped[tabla].push({ id: row.id, nombre: row.nombre, zonas: row.zonas || [] })
-      } else {
-        grouped[tabla].push({ id: row.id, nombre: row.nombre })
-      }
-    }
+    const data = await getCol<Record<string, unknown>>('configuracion')
+    // Conserva la configuración persistida en localStorage cuando no hay nube
+    if (!data || typeof data !== 'object' || Array.isArray(data)) { set({ loaded: true }); return }
     set({
-      tiposPropiedad: (grouped['tiposPropiedad'] ?? []) as RefItem[],
-      monedas: (grouped['monedas'] ?? []) as MonedaItem[],
-      ciudades: (grouped['ciudades'] ?? []) as CiudadItem[],
-      paises: (grouped['paises'] ?? []) as RefItem[],
-      situacionesPropiedad: (grouped['situacionesPropiedad'] ?? []) as RefItem[],
-      tiposIdentificacion: (grouped['tiposIdentificacion'] ?? []) as RefItem[],
-      origenesSolicitud: (grouped['origenesSolicitud'] ?? []) as RefItem[],
+      tiposPropiedad: (data.tiposPropiedad ?? get().tiposPropiedad) as RefItem[],
+      monedas: (data.monedas ?? get().monedas) as MonedaItem[],
+      ciudades: (data.ciudades ?? get().ciudades) as CiudadItem[],
+      paises: (data.paises ?? get().paises) as RefItem[],
+      situacionesPropiedad: (data.situacionesPropiedad ?? get().situacionesPropiedad) as RefItem[],
+      tiposIdentificacion: (data.tiposIdentificacion ?? get().tiposIdentificacion) as RefItem[],
+      origenesSolicitud: (data.origenesSolicitud ?? get().origenesSolicitud) as RefItem[],
       loaded: true,
     })
   },
 
   addItem: async (table, item) => {
     set((s) => ({ [table]: [...getTable(s, table), item] } as unknown as Partial<ConfigState>))
-    const row: Record<string, unknown> = { id: item.id, nombre: item.nombre, tabla: table }
-    if ('simbolo' in item) row.simbolo = item.simbolo
-    await (supabase as any).from('configuracion').insert(row)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   updateItem: async (table, id, item) => {
     set((s) => ({ [table]: getTable(s, table).map((r) => r.id === id ? { ...r, ...item } : r) } as unknown as Partial<ConfigState>))
-    const row: Record<string, unknown> = {}
-    if ('nombre' in item) row.nombre = item.nombre
-    if ('simbolo' in item) row.simbolo = (item as MonedaItem).simbolo
-    await (supabase as any).from('configuracion').update(row).eq('id', id)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   deleteItem: async (table, id) => {
     set((s) => ({ [table]: getTable(s, table).filter((r) => r.id !== id) } as unknown as Partial<ConfigState>))
-    await (supabase as any).from('configuracion').delete().eq('id', id)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   addCiudad: async (ciudad) => {
     set((s) => ({ ciudades: [...s.ciudades, ciudad] }))
-    await (supabase as any).from('configuracion').insert({ id: ciudad.id, nombre: ciudad.nombre, tabla: 'ciudades', zonas: ciudad.zonas })
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   updateCiudad: async (id, nombre) => {
     set((s) => ({ ciudades: s.ciudades.map(c => c.id === id ? { ...c, nombre } : c) }))
-    await (supabase as any).from('configuracion').update({ nombre }).eq('id', id)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   deleteCiudad: async (id) => {
     set((s) => ({ ciudades: s.ciudades.filter(c => c.id !== id) }))
-    await (supabase as any).from('configuracion').delete().eq('id', id)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   addZonaToCiudad: async (ciudadId, zona) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: [...c.zonas, zona] } : c)
     set({ ciudades: newCiudades })
-    const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   updateZonaInCiudad: async (ciudadId, zonaId, nombre) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: c.zonas.map(z => z.id === zonaId ? { ...z, nombre } : z) } : c)
     set({ ciudades: newCiudades })
-    const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    await saveCol('configuracion', collectConfig(get()))
   },
 
   deleteZonaFromCiudad: async (ciudadId, zonaId) => {
     const newCiudades = get().ciudades.map(c => c.id === ciudadId ? { ...c, zonas: c.zonas.filter(z => z.id !== zonaId) } : c)
     set({ ciudades: newCiudades })
-    const ciudad = newCiudades.find(c => c.id === ciudadId)
-    if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
+    await saveCol('configuracion', collectConfig(get()))
   },
 }), { name: 'portal-configuracion-storage', storage: createJSONStorage(() => localStorage) }))
 

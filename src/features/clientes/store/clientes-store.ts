@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 import { demoClientes } from '../demo-clientes'
 
 export type Cliente = {
@@ -38,23 +38,24 @@ export const useClientesStore = create<ClientesState>()(persist((set, get) => ({
   clientes: [],
   loaded: false,
   fetchClientes: async () => {
-    try {
-      const { data } = await (supabase as any).from('clientes').select('*')
-      if (data && data.length > 0) { set({ clientes: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<Cliente[]>('clientes')
+    if (Array.isArray(data) && data.length > 0) { set({ clientes: data, loaded: true }); return }
     if (get().clientes.length === 0) set({ clientes: demoClientes, loaded: true })
     else set({ loaded: true })
   },
   addCliente: async (c) => {
-    set((s) => ({ clientes: [...s.clientes, c] }))
-    await (supabase as any).from('clientes').insert(c)
+    const arr = [...get().clientes, c]
+    set({ clientes: arr })
+    await saveCol('clientes', arr)
   },
   updateCliente: async (id, c) => {
-    set((s) => ({ clientes: s.clientes.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await (supabase as any).from('clientes').update(c).eq('id', id)
+    const arr = get().clientes.map((r) => r.id === id ? { ...r, ...c } : r)
+    set({ clientes: arr })
+    await saveCol('clientes', arr)
   },
   deleteCliente: async (id) => {
-    set((s) => ({ clientes: s.clientes.filter((r) => r.id !== id) }))
-    await (supabase as any).from('clientes').delete().eq('id', id)
+    const arr = get().clientes.filter((r) => r.id !== id)
+    set({ clientes: arr })
+    await saveCol('clientes', arr)
   },
 }), { name: 'portal-clientes-storage', storage: createJSONStorage(() => localStorage) }))

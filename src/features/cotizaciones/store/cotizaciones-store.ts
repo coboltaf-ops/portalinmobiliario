@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 import { demoCotizaciones } from '../demo-cotizaciones'
 
 export type Cotizacion = {
@@ -31,23 +31,24 @@ export const useCotizacionesStore = create<CotizacionesState>()(persist((set, ge
   cotizaciones: [],
   loaded: false,
   fetchCotizaciones: async () => {
-    try {
-      const { data } = await (supabase as any).from('cotizaciones').select('*')
-      if (data && data.length > 0) { set({ cotizaciones: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<Cotizacion[]>('cotizaciones')
+    if (Array.isArray(data) && data.length > 0) { set({ cotizaciones: data, loaded: true }); return }
     if (get().cotizaciones.length === 0) set({ cotizaciones: demoCotizaciones, loaded: true })
     else set({ loaded: true })
   },
   addCotizacion: async (c) => {
-    set((s) => ({ cotizaciones: [...s.cotizaciones, c] }))
-    await (supabase as any).from('cotizaciones').insert(c)
+    const arr = [...get().cotizaciones, c]
+    set({ cotizaciones: arr })
+    await saveCol('cotizaciones', arr)
   },
   updateCotizacion: async (id, c) => {
-    set((s) => ({ cotizaciones: s.cotizaciones.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await (supabase as any).from('cotizaciones').update(c).eq('id', id)
+    const arr = get().cotizaciones.map((r) => r.id === id ? { ...r, ...c } : r)
+    set({ cotizaciones: arr })
+    await saveCol('cotizaciones', arr)
   },
   deleteCotizacion: async (id) => {
-    set((s) => ({ cotizaciones: s.cotizaciones.filter((r) => r.id !== id) }))
-    await (supabase as any).from('cotizaciones').delete().eq('id', id)
+    const arr = get().cotizaciones.filter((r) => r.id !== id)
+    set({ cotizaciones: arr })
+    await saveCol('cotizaciones', arr)
   },
 }), { name: 'portal-cotizaciones-storage', storage: createJSONStorage(() => localStorage) }))

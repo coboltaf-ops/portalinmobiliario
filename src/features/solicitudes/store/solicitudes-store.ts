@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 import { demoSolicitudes } from '../demo-solicitudes'
 
 export type Solicitud = {
@@ -32,24 +32,24 @@ export const useSolicitudesStore = create<SolicitudesState>()(persist((set, get)
   solicitudes: [],
   loaded: false,
   fetchSolicitudes: async () => {
-    try {
-      const { data } = await (supabase as any).from('solicitudes').select('*')
-      if (data && data.length > 0) { set({ solicitudes: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<Solicitud[]>('solicitudes')
+    if (Array.isArray(data) && data.length > 0) { set({ solicitudes: data, loaded: true }); return }
     if (get().solicitudes.length === 0) set({ solicitudes: demoSolicitudes, loaded: true })
     else set({ loaded: true })
   },
   addSolicitud: async (s) => {
-    const { error } = await (supabase as any).from('solicitudes').insert(s)
-    if (error) throw new Error(error.message)
-    set((st) => ({ solicitudes: [...st.solicitudes, s] }))
+    const arr = [...get().solicitudes, s]
+    set({ solicitudes: arr })
+    await saveCol('solicitudes', arr)
   },
   updateSolicitud: async (id, s) => {
-    set((st) => ({ solicitudes: st.solicitudes.map((r) => r.id === id ? { ...r, ...s } : r) }))
-    await (supabase as any).from('solicitudes').update(s).eq('id', id)
+    const arr = get().solicitudes.map((r) => r.id === id ? { ...r, ...s } : r)
+    set({ solicitudes: arr })
+    await saveCol('solicitudes', arr)
   },
   deleteSolicitud: async (id) => {
-    set((st) => ({ solicitudes: st.solicitudes.filter((r) => r.id !== id) }))
-    await (supabase as any).from('solicitudes').delete().eq('id', id)
+    const arr = get().solicitudes.filter((r) => r.id !== id)
+    set({ solicitudes: arr })
+    await saveCol('solicitudes', arr)
   },
 }), { name: 'portal-solicitudes-storage', storage: createJSONStorage(() => localStorage) }))

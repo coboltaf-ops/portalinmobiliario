@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 
 export type Comercial = {
   id: string
@@ -30,22 +30,23 @@ export const useComercialesStore = create<ComercialesState>()(persist((set, get)
   comerciales: [],
   loaded: false,
   fetchComerciales: async () => {
-    try {
-      const { data } = await (supabase as any).from('comerciales').select('*')
-      if (data && data.length > 0) { set({ comerciales: data, loaded: true }); return }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<Comercial[]>('comerciales')
+    if (Array.isArray(data) && data.length > 0) { set({ comerciales: data, loaded: true }); return }
     set({ loaded: true })
   },
   addComercial: async (c) => {
-    set((s) => ({ comerciales: [...s.comerciales, c] }))
-    await (supabase as any).from('comerciales').insert(c)
+    const arr = [...get().comerciales, c]
+    set({ comerciales: arr })
+    await saveCol('comerciales', arr)
   },
   updateComercial: async (id, c) => {
-    set((s) => ({ comerciales: s.comerciales.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await (supabase as any).from('comerciales').update(c).eq('id', id)
+    const arr = get().comerciales.map((r) => r.id === id ? { ...r, ...c } : r)
+    set({ comerciales: arr })
+    await saveCol('comerciales', arr)
   },
   deleteComercial: async (id) => {
-    set((s) => ({ comerciales: s.comerciales.filter((r) => r.id !== id) }))
-    await (supabase as any).from('comerciales').delete().eq('id', id)
+    const arr = get().comerciales.filter((r) => r.id !== id)
+    set({ comerciales: arr })
+    await saveCol('comerciales', arr)
   },
 }), { name: 'portal-comerciales-storage', storage: createJSONStorage(() => localStorage) }))

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/features/auth/store/auth-store'
@@ -11,6 +12,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const router = useRouter()
   const user = useAuthStore(s => s.user)
   const logout = useAuthStore(s => s.logout)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
@@ -30,7 +32,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen bg-white">
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#001e4d] border-r border-white/10 z-50 flex flex-col">
+      <aside className={`fixed left-0 top-0 bottom-0 w-64 bg-[#001e4d] border-r border-white/10 z-50 flex flex-col transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Botón cerrar (X) — esconde el menú para ver más ancho */}
+        <button
+          onClick={() => setSidebarOpen(false)}
+          title="Ocultar menú"
+          className="absolute top-3 right-3 z-10 w-8 h-8 rounded-lg flex items-center justify-center text-white hover:bg-white/10 transition-all"
+        >
+          ✕
+        </button>
         <div className="px-6 py-5 shrink-0 flex flex-col items-center gap-2">
           <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: 'rgba(30,64,175,0.2)', border: '1px solid rgba(30,64,175,0.3)' }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -78,7 +88,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
 
-      <main className="ml-64 flex-1 flex flex-col min-h-screen bg-white">
+      {/* Botón para reabrir el menú cuando está oculto */}
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          title="Mostrar menú"
+          className="fixed top-3 left-3 z-50 w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-lg transition-all hover:opacity-90"
+          style={{ background: '#001e4d' }}
+        >
+          ☰
+        </button>
+      )}
+
+      <main className={`flex-1 flex flex-col min-h-screen bg-white transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <header className="px-8 py-3 shrink-0 flex items-center justify-between bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
           <div className="w-16" />
           {user && (

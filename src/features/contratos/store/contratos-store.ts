@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { supabase } from '@/shared/lib/supabase'
+import { getCol, saveCol } from '@/shared/lib/cloud'
 import { demoContratos } from '../demo-contratos'
 
 export type Documento = {
@@ -44,30 +44,31 @@ export const useContratosStore = create<ContratosState>()(persist((set, get) => 
   contratos: [],
   loaded: false,
   fetchContratos: async () => {
-    try {
-      const { data } = await (supabase as any).from('contratos').select('*')
-      if (data && data.length > 0) {
-        const contratos = data.map((c: Record<string, unknown>) => ({
-          ...c,
-          documentos: (c.documentos as Documento[]) || [],
-        })) as Contrato[]
-        set({ contratos, loaded: true })
-        return
-      }
-    } catch { /* sin backend disponible */ }
+    const data = await getCol<Record<string, unknown>[]>('contratos')
+    if (Array.isArray(data) && data.length > 0) {
+      const contratos = data.map((c) => ({
+        ...c,
+        documentos: (c.documentos as Documento[]) || [],
+      })) as Contrato[]
+      set({ contratos, loaded: true })
+      return
+    }
     if (get().contratos.length === 0) set({ contratos: demoContratos, loaded: true })
     else set({ loaded: true })
   },
   addContrato: async (c) => {
-    set((s) => ({ contratos: [...s.contratos, c] }))
-    await (supabase as any).from('contratos').insert(c)
+    const arr = [...get().contratos, c]
+    set({ contratos: arr })
+    await saveCol('contratos', arr)
   },
   updateContrato: async (id, c) => {
-    set((s) => ({ contratos: s.contratos.map((r) => r.id === id ? { ...r, ...c } : r) }))
-    await (supabase as any).from('contratos').update(c).eq('id', id)
+    const arr = get().contratos.map((r) => r.id === id ? { ...r, ...c } : r)
+    set({ contratos: arr })
+    await saveCol('contratos', arr)
   },
   deleteContrato: async (id) => {
-    set((s) => ({ contratos: s.contratos.filter((r) => r.id !== id) }))
-    await (supabase as any).from('contratos').delete().eq('id', id)
+    const arr = get().contratos.filter((r) => r.id !== id)
+    set({ contratos: arr })
+    await saveCol('contratos', arr)
   },
 }), { name: 'portal-contratos-storage', storage: createJSONStorage(() => localStorage) }))
