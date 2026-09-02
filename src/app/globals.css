@@ -31,7 +31,9 @@ select:focus {
 /* ── Legibilidad: textos y nombres de campos más grandes en todos los módulos ── */
 .text-xs { font-size: 0.84rem !important; line-height: 1.2rem !important; }   /* ~13.5px (antes 12) */
 .text-sm { font-size: 0.97rem !important; line-height: 1.4rem !important; }   /* ~15.5px (antes 14) */
-label { font-weight: 600; }
+/* Nombres de campos (labels): negro intenso y un poco más grandes */
+label { font-weight: 700 !important; font-size: 1rem !important; color: #000000 !important; }
+aside label { color: #ffffff !important; }  /* excepto en el menú lateral */
 input, textarea, select { font-size: 0.97rem !important; }
 th { font-size: 0.84rem !important; letter-spacing: 0.2px; }
 td { font-size: 0.95rem; }
@@ -107,52 +109,67 @@ form {
   color: #000000 !important;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   ESTÁNDAR OFICIAL DE BOTONES (todos los módulos)
+   Ver=Naranja intenso · Editar=Verde oscuro · Eliminar=Rojo intenso
+   PDF=Rojo intenso · Excel=Verde oscuro · Nuevo/Agregar=Azul oscuro
+   Texto siempre BLANCO INTENSO
+   ═══════════════════════════════════════════════════════════════ */
+.btn-ver, .btn-editar, .btn-eliminar,
+.btn-pdf, .btn-excel, .btn-nuevo {
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+}
+.btn-ver     { background: #ea580c !important; }  /* Naranja intenso */
+.btn-editar  { background: #15803d !important; }  /* Verde oscuro    */
+.btn-eliminar{ background: #dc2626 !important; }  /* Rojo intenso    */
+.btn-pdf     { background: #dc2626 !important; }  /* Rojo intenso    */
+.btn-excel   { background: #15803d !important; }  /* Verde oscuro    */
+.btn-nuevo   { background: #001e4d !important; }  /* Azul oscuro     */
+.btn-ver:hover      { background: #c2410c !important; }
+.btn-editar:hover   { background: #166534 !important; }
+.btn-eliminar:hover { background: #b91c1c !important; }
+.btn-pdf:hover      { background: #b91c1c !important; }
+.btn-excel:hover    { background: #166534 !important; }
+.btn-nuevo:hover    { background: #0a2a5e !important; }
+
 /* BOTONES DE ACCIONES ESTANDARIZADOS */
 /* VER - Naranja */
-[class*="btn-ver"],
 button[title*="Ver"],
 button[aria-label*="Ver"] {
-  background-color: #ff9800 !important;
+  background-color: #ea580c !important;
   color: #ffffff !important;
   border: none !important;
 }
 
-[class*="btn-ver"]:hover,
 button[title*="Ver"]:hover,
 button[aria-label*="Ver"]:hover {
-  background-color: #f57c00 !important;
+  background-color: #c2410c !important;
 }
 
 /* EDITAR - Verde */
-[class*="btn-edit"],
-[class*="btn-editar"],
 button[title*="Editar"],
 button[aria-label*="Editar"] {
-  background-color: #10b981 !important;
+  background-color: #15803d !important;
   color: #ffffff !important;
   border: none !important;
 }
 
-[class*="btn-edit"]:hover,
-[class*="btn-editar"]:hover,
 button[title*="Editar"]:hover,
 button[aria-label*="Editar"]:hover {
-  background-color: #059669 !important;
+  background-color: #166534 !important;
 }
 
 /* ELIMINAR - Rojo */
-[class*="btn-delete"],
-[class*="btn-eliminar"],
 button[title*="Eliminar"],
 button[aria-label*="Eliminar"] {
-  background-color: #ef4444 !important;
+  background-color: #dc2626 !important;
   color: #ffffff !important;
   border: none !important;
 }
 
-[class*="btn-delete"]:hover,
-[class*="btn-eliminar"]:hover,
 button[title*="Eliminar"]:hover,
 button[aria-label*="Eliminar"]:hover {
-  background-color: #dc2626 !important;
+  background-color: #b91c1c !important;
 }

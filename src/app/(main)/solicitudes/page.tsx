@@ -180,10 +180,10 @@ export default function SolicitudesPage() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => exportToPDF('Solicitudes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
-          <button onClick={() => exportToExcel(filtered.map(s => { const prop = propiedades.find(p => p.id === s.propiedad_id); return { Codigo: s.codigo, Fecha: s.fecha, Nombre: s.nombre, Apellido: s.apellido, Correo: s.correo, Telefono: s.telefono, Propiedad: prop ? prop.urbanizacion : '-', Estado: s.estado } }), 'Solicitudes')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+          <button onClick={() => exportToPDF('Solicitudes', headers, rows)} className="btn-pdf px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+          <button onClick={() => exportToExcel(filtered.map(s => { const prop = propiedades.find(p => p.id === s.propiedad_id); return { Codigo: s.codigo, Fecha: s.fecha, Nombre: s.nombre, Apellido: s.apellido, Correo: s.correo, Telefono: s.telefono, Propiedad: prop ? prop.urbanizacion : '-', Estado: s.estado } }), 'Solicitudes')} className="btn-excel px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
           <button onClick={() => printTable('Solicitudes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
-          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nueva Solicitud</button>
+          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="btn-nuevo px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nueva Solicitud</button>
         </div>
       </div>
 
@@ -219,9 +219,9 @@ export default function SolicitudesPage() {
                     <td className="px-4 py-3 text-white/70">{com ? `${com.nombre} ${com.apellido}` : 'Sin asignar'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => setViewRecord(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
-                        <button onClick={() => handleEdit(s)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
-                        <button onClick={() => handleDelete(s.id)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
+                        <button onClick={() => setViewRecord(s)} className="btn-ver px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
+                        <button onClick={() => handleEdit(s)} className="btn-editar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
+                        <button onClick={() => handleDelete(s.id)} className="btn-eliminar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
                       </div>
                     </td>
                   </tr>

@@ -360,11 +360,11 @@ export default function PropiedadesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Propiedades</h1>
         <div className="flex items-center gap-2">
-          <button onClick={() => exportToPDF('Propiedades', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
-          <button onClick={() => exportToExcel(filtered.map(p => ({ Codigo: p.codigo, Proyecto: p.urbanizacion, Tipo: p.tipo_propiedad, Modalidad: p.modalidad, 'Precio Venta': p.precio_venta, 'Precio Alquiler': p.precio_alquiler, Moneda: p.tipo_moneda, 'Area m2': p.area_m2, 'Ciudad/Poblacion': p.ciudad, Zona: p.zona, Estado: p.estado })), 'Propiedades')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+          <button onClick={() => exportToPDF('Propiedades', headers, rows)} className="btn-pdf px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+          <button onClick={() => exportToExcel(filtered.map(p => ({ Codigo: p.codigo, Proyecto: p.urbanizacion, Tipo: p.tipo_propiedad, Modalidad: p.modalidad, 'Precio Venta': p.precio_venta, 'Precio Alquiler': p.precio_alquiler, Moneda: p.tipo_moneda, 'Area m2': p.area_m2, 'Ciudad/Poblacion': p.ciudad, Zona: p.zona, Estado: p.estado })), 'Propiedades')} className="btn-excel px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
           <button onClick={() => printTable('Propiedades', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
           <button onClick={() => window.open('/catalogo', '_blank')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(139,92,246,0.85)', border: '1px solid rgba(139,92,246,1)', color: '#fff' }}>Portal Publico</button>
-          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nueva Propiedad</button>
+          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="btn-nuevo px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nueva Propiedad</button>
         </div>
       </div>
 
@@ -398,9 +398,9 @@ export default function PropiedadesPage() {
                   <td className="px-4 py-3">{statusBadge(p.estado)}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => { setViewRecord(p); setGalleryIndex(0) }} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
-                      <button onClick={() => handleEdit(p)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
-                      <button onClick={() => handleDelete(p.id)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
+                      <button onClick={() => { setViewRecord(p); setGalleryIndex(0) }} className="btn-ver px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
+                      <button onClick={() => handleEdit(p)} className="btn-editar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
+                      <button onClick={() => handleDelete(p.id)} className="btn-eliminar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
                     </div>
                   </td>
                 </tr>

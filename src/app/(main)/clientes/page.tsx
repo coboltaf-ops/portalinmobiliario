@@ -12,6 +12,7 @@ import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-help
 import { compressImage } from '@/shared/lib/compress-image'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
+import { NumberInput } from '@/shared/components/number-input'
 
 const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 const selectSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
@@ -116,10 +117,10 @@ export default function ClientesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Clientes / Prospectos</h1>
         <div className="flex items-center gap-2">
-          <button onClick={() => exportToPDF('Clientes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
-          <button onClick={() => exportToExcel(filtered.map(c => ({ Codigo: c.codigo, Nombre: c.nombre, Apellido: c.apellido, Tipo: c.tipo, Interes: c.interes, 'Pres. Min': c.presupuesto_min, 'Pres. Max': c.presupuesto_max, Moneda: c.tipo_moneda, Zona: c.zona_preferida, Situacion: c.situacion })), 'Clientes')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+          <button onClick={() => exportToPDF('Clientes', headers, rows)} className="btn-pdf px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+          <button onClick={() => exportToExcel(filtered.map(c => ({ Codigo: c.codigo, Nombre: c.nombre, Apellido: c.apellido, Tipo: c.tipo, Interes: c.interes, 'Pres. Min': c.presupuesto_min, 'Pres. Max': c.presupuesto_max, Moneda: c.tipo_moneda, Zona: c.zona_preferida, Situacion: c.situacion })), 'Clientes')} className="btn-excel px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
           <button onClick={() => printTable('Clientes', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
-          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nuevo</button>
+          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="btn-nuevo px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nuevo</button>
         </div>
       </div>
 
@@ -153,9 +154,9 @@ export default function ClientesPage() {
                     <td className="px-4 py-3">{statusBadge(c.situacion)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => setViewRecord(c)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
-                        <button onClick={() => handleEdit(c)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
-                        <button onClick={() => handleDelete(c.id)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
+                        <button onClick={() => setViewRecord(c)} className="btn-ver px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
+                        <button onClick={() => handleEdit(c)} className="btn-editar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
+                        <button onClick={() => handleDelete(c.id)} className="btn-eliminar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
                       </div>
                     </td>
                   </tr>
@@ -259,11 +260,11 @@ export default function ClientesPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Presupuesto Minimo</label>
-                  <input type="number" min="0" value={form.presupuesto_min || ''} onChange={e => setForm(f => ({ ...f, presupuesto_min: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.presupuesto_min || 0} onValueChange={v => setForm(f => ({ ...f, presupuesto_min: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Presupuesto Maximo</label>
-                  <input type="number" min="0" value={form.presupuesto_max || ''} onChange={e => setForm(f => ({ ...f, presupuesto_max: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.presupuesto_max || 0} onValueChange={v => setForm(f => ({ ...f, presupuesto_max: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Ciudad Deseada</label>

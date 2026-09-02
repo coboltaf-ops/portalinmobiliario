@@ -90,8 +90,8 @@ export default function DatosEmpresaPage() {
         <div className="flex items-center gap-2">
           {empresa && (
             <>
-              <button onClick={() => exportToPDF('Datos de la Empresa', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
-              <button onClick={() => exportToExcel([{ Nombre: empresa.nombre, 'Tipo Identificacion': empresa.tipo_identificacion, 'Nro Documento': empresa.nro_documento, Correo: empresa.correo, Telefono: empresa.telefono, Direccion: empresa.direccion, Ciudad: empresa.ciudad, Pais: empresa.pais, 'Representante Legal': empresa.representante_legal }], 'Datos_Empresa')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+              <button onClick={() => exportToPDF('Datos de la Empresa', headers, rows)} className="btn-pdf px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+              <button onClick={() => exportToExcel([{ Nombre: empresa.nombre, 'Tipo Identificacion': empresa.tipo_identificacion, 'Nro Documento': empresa.nro_documento, Correo: empresa.correo, Telefono: empresa.telefono, Direccion: empresa.direccion, Ciudad: empresa.ciudad, Pais: empresa.pais, 'Representante Legal': empresa.representante_legal }], 'Datos_Empresa')} className="btn-excel px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
               <button onClick={() => printTable('Datos de la Empresa', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
             </>
           )}

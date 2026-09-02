@@ -107,10 +107,10 @@ export default function ComercialesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Comerciales</h1>
         <div className="flex items-center gap-2">
-          <button onClick={() => exportToPDF('Comerciales', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
-          <button onClick={() => exportToExcel(filtered.map(c => ({ Codigo: c.codigo, Nombre: c.nombre, Apellido: c.apellido, Cargo: c.cargo, Departamento: c.departamento, Correo: c.correo, Telefono: c.telefono, Movil: c.movil, Zona: c.zona_asignada, Situacion: c.situacion })), 'Comerciales')} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
+          <button onClick={() => exportToPDF('Comerciales', headers, rows)} className="btn-pdf px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(220,38,38,0.85)', border: '1px solid rgba(220,38,38,1)', color: '#fff' }}>PDF</button>
+          <button onClick={() => exportToExcel(filtered.map(c => ({ Codigo: c.codigo, Nombre: c.nombre, Apellido: c.apellido, Cargo: c.cargo, Departamento: c.departamento, Correo: c.correo, Telefono: c.telefono, Movil: c.movil, Zona: c.zona_asignada, Situacion: c.situacion })), 'Comerciales')} className="btn-excel px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(22,163,74,0.85)', border: '1px solid rgba(22,163,74,1)', color: '#fff' }}>Excel</button>
           <button onClick={() => printTable('Comerciales', headers, rows)} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(202,138,4,0.9)', border: '1px solid rgba(202,138,4,1)', color: '#fff' }}>Imprimir</button>
-          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nuevo Comercial</button>
+          <button onClick={() => { setForm(initForm()); setIsFormOpen(true) }} className="btn-nuevo px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, rgba(30,64,175,0.8), rgba(59,130,246,0.6))', border: '1px solid rgba(30,64,175,0.5)' }}>+ Nuevo Comercial</button>
         </div>
       </div>
 
@@ -145,9 +145,9 @@ export default function ComercialesPage() {
                   <td className="px-4 py-3">{statusBadge(c.situacion)}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => setViewRecord(c)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
-                      <button onClick={() => handleEdit(c)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
-                      <button onClick={() => handleDelete(c.id)} className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
+                      <button onClick={() => setViewRecord(c)} className="btn-ver px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ff9800', color: '#ffffff' }}>Ver</button>
+                      <button onClick={() => handleEdit(c)} className="btn-editar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#10b981', color: '#ffffff' }}>Editar</button>
+                      <button onClick={() => handleDelete(c.id)} className="btn-eliminar px-2 py-1 rounded-lg text-xs font-medium hover:opacity-90" style={{ background: '#ef4444', color: '#ffffff' }}>Eliminar</button>
                     </div>
                   </td>
                 </tr>
