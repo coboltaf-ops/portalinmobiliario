@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Cotizacion = {
@@ -25,13 +26,15 @@ interface CotizacionesState {
   deleteCotizacion: (id: string) => Promise<void>
 }
 
-export const useCotizacionesStore = create<CotizacionesState>()((set, get) => ({
+export const useCotizacionesStore = create<CotizacionesState>()(persist((set, get) => ({
   cotizaciones: [],
   loaded: false,
   fetchCotizaciones: async () => {
-
-    const { data } = await (supabase as any).from('cotizaciones').select('*')
-    if (data) set({ cotizaciones: data, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('cotizaciones').select('*')
+      if (data && data.length > 0) { set({ cotizaciones: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    set({ loaded: true })
   },
   addCotizacion: async (c) => {
     set((s) => ({ cotizaciones: [...s.cotizaciones, c] }))
@@ -45,4 +48,4 @@ export const useCotizacionesStore = create<CotizacionesState>()((set, get) => ({
     set((s) => ({ cotizaciones: s.cotizaciones.filter((r) => r.id !== id) }))
     await (supabase as any).from('cotizaciones').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-cotizaciones-storage', storage: createJSONStorage(() => localStorage) }))

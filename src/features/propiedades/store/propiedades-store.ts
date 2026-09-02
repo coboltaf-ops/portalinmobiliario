@@ -1,5 +1,7 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
+import { demoPropiedades } from '../demo-propiedades'
 
 export type Propiedad = {
   id: string
@@ -43,13 +45,18 @@ interface PropiedadesState {
   deletePropiedad: (id: string) => Promise<void>
 }
 
-export const usePropiedadesStore = create<PropiedadesState>()((set, get) => ({
+export const usePropiedadesStore = create<PropiedadesState>()(persist((set, get) => ({
   propiedades: [],
   loaded: false,
   fetchPropiedades: async () => {
-
-    const { data } = await (supabase as any).from('propiedades').select('*')
-    if (data) set({ propiedades: data, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('propiedades').select('*')
+      if (data && data.length > 0) { set({ propiedades: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    // Respaldo DEMO: si no hay backend, sembramos el catálogo solo si está vacío;
+    // de lo contrario conservamos lo que el usuario creó (persistido en localStorage).
+    if (get().propiedades.length === 0) set({ propiedades: demoPropiedades, loaded: true })
+    else set({ loaded: true })
   },
   addPropiedad: async (p) => {
     set((s) => ({ propiedades: [...s.propiedades, p] }))
@@ -63,4 +70,4 @@ export const usePropiedadesStore = create<PropiedadesState>()((set, get) => ({
     set((s) => ({ propiedades: s.propiedades.filter((r) => r.id !== id) }))
     await (supabase as any).from('propiedades').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-propiedades-storage', storage: createJSONStorage(() => localStorage) }))

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Documento = {
@@ -38,19 +39,22 @@ interface ContratosState {
   deleteContrato: (id: string) => Promise<void>
 }
 
-export const useContratosStore = create<ContratosState>()((set, get) => ({
+export const useContratosStore = create<ContratosState>()(persist((set, get) => ({
   contratos: [],
   loaded: false,
   fetchContratos: async () => {
-
-    const { data } = await (supabase as any).from('contratos').select('*')
-    if (data) {
-      const contratos = data.map((c: Record<string, unknown>) => ({
-        ...c,
-        documentos: (c.documentos as Documento[]) || [],
-      })) as Contrato[]
-      set({ contratos, loaded: true })
-    }
+    try {
+      const { data } = await (supabase as any).from('contratos').select('*')
+      if (data && data.length > 0) {
+        const contratos = data.map((c: Record<string, unknown>) => ({
+          ...c,
+          documentos: (c.documentos as Documento[]) || [],
+        })) as Contrato[]
+        set({ contratos, loaded: true })
+        return
+      }
+    } catch { /* sin backend disponible */ }
+    set({ loaded: true })
   },
   addContrato: async (c) => {
     set((s) => ({ contratos: [...s.contratos, c] }))
@@ -64,4 +68,4 @@ export const useContratosStore = create<ContratosState>()((set, get) => ({
     set((s) => ({ contratos: s.contratos.filter((r) => r.id !== id) }))
     await (supabase as any).from('contratos').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-contratos-storage', storage: createJSONStorage(() => localStorage) }))

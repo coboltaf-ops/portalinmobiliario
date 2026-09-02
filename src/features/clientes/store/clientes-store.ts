@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Cliente = {
@@ -32,13 +33,15 @@ interface ClientesState {
   deleteCliente: (id: string) => Promise<void>
 }
 
-export const useClientesStore = create<ClientesState>()((set, get) => ({
+export const useClientesStore = create<ClientesState>()(persist((set, get) => ({
   clientes: [],
   loaded: false,
   fetchClientes: async () => {
-
-    const { data } = await (supabase as any).from('clientes').select('*')
-    if (data) set({ clientes: data, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('clientes').select('*')
+      if (data && data.length > 0) { set({ clientes: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    set({ loaded: true })
   },
   addCliente: async (c) => {
     set((s) => ({ clientes: [...s.clientes, c] }))
@@ -52,4 +55,4 @@ export const useClientesStore = create<ClientesState>()((set, get) => ({
     set((s) => ({ clientes: s.clientes.filter((r) => r.id !== id) }))
     await (supabase as any).from('clientes').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-clientes-storage', storage: createJSONStorage(() => localStorage) }))

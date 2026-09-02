@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Solicitud = {
@@ -26,13 +27,15 @@ interface SolicitudesState {
   deleteSolicitud: (id: string) => Promise<void>
 }
 
-export const useSolicitudesStore = create<SolicitudesState>()((set, get) => ({
+export const useSolicitudesStore = create<SolicitudesState>()(persist((set, get) => ({
   solicitudes: [],
   loaded: false,
   fetchSolicitudes: async () => {
-
-    const { data } = await (supabase as any).from('solicitudes').select('*')
-    if (data) set({ solicitudes: data, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('solicitudes').select('*')
+      if (data && data.length > 0) { set({ solicitudes: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    set({ loaded: true })
   },
   addSolicitud: async (s) => {
     const { error } = await (supabase as any).from('solicitudes').insert(s)
@@ -47,4 +50,4 @@ export const useSolicitudesStore = create<SolicitudesState>()((set, get) => ({
     set((st) => ({ solicitudes: st.solicitudes.filter((r) => r.id !== id) }))
     await (supabase as any).from('solicitudes').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-solicitudes-storage', storage: createJSONStorage(() => localStorage) }))

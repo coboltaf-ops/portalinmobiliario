@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Comercial = {
@@ -25,13 +26,15 @@ interface ComercialesState {
   deleteComercial: (id: string) => Promise<void>
 }
 
-export const useComercialesStore = create<ComercialesState>()((set, get) => ({
+export const useComercialesStore = create<ComercialesState>()(persist((set, get) => ({
   comerciales: [],
   loaded: false,
   fetchComerciales: async () => {
-
-    const { data } = await (supabase as any).from('comerciales').select('*')
-    if (data) set({ comerciales: data, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('comerciales').select('*')
+      if (data && data.length > 0) { set({ comerciales: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    set({ loaded: true })
   },
   addComercial: async (c) => {
     set((s) => ({ comerciales: [...s.comerciales, c] }))
@@ -45,4 +48,4 @@ export const useComercialesStore = create<ComercialesState>()((set, get) => ({
     set((s) => ({ comerciales: s.comerciales.filter((r) => r.id !== id) }))
     await (supabase as any).from('comerciales').delete().eq('id', id)
   },
-}))
+}), { name: 'portal-comerciales-storage', storage: createJSONStorage(() => localStorage) }))

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type DatosEmpresa = {
@@ -23,13 +24,16 @@ interface EmpresaState {
   setEmpresa: (e: DatosEmpresa) => Promise<void>
 }
 
-export const useEmpresaStore = create<EmpresaState>()((set, get) => ({
+export const useEmpresaStore = create<EmpresaState>()(persist((set, get) => ({
   empresa: null,
   loaded: false,
   fetchEmpresa: async () => {
-
-    const { data } = await (supabase as any).from('empresa').select('*').limit(1).single()
-    set({ empresa: data ?? null, loaded: true })
+    try {
+      const { data } = await (supabase as any).from('empresa').select('*').limit(1).single()
+      if (data) { set({ empresa: data, loaded: true }); return }
+    } catch { /* sin backend disponible */ }
+    // empresa es un objeto (no array): conserva lo persistido, solo marca loaded
+    set({ loaded: true })
   },
   setEmpresa: async (e) => {
     set({ empresa: e })
@@ -40,4 +44,4 @@ export const useEmpresaStore = create<EmpresaState>()((set, get) => ({
       await (supabase as any).from('empresa').insert(e)
     }
   },
-}))
+}), { name: 'portal-empresa-storage', storage: createJSONStorage(() => localStorage) }))

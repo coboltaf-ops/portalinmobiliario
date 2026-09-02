@@ -27,31 +27,23 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   error: null,
   fetchUsers: async () => {
     set({ loading: true, error: null })
+    // Usuario DEMO de respaldo (cuando no hay backend con usuarios).
+    const demoUsers: UserRecord[] = [
+      { id: 'demo-admin', usuario: 'admin', clave: 'admin123', nombre: 'Administrador', rol: 'Admin' },
+    ]
     try {
       const { supabase } = await import('@/shared/lib/supabase')
-      const { data, error: supabaseError } = await (supabase as any).from('usuarios').select('*')
-
-      if (supabaseError) {
-        console.error('Error fetching users from Supabase:', supabaseError)
-        set({ error: `Error cargando usuarios: ${supabaseError.message}`, loading: false })
+      const { data } = await (supabase as any).from('usuarios').select('*')
+      if (data && data.length > 0) {
+        set({ users: data, loaded: true, loading: false })
         return
       }
-
-      if (!data) {
-        console.error('No data returned from Supabase usuarios query')
-        set({ error: 'No se pudieron cargar los usuarios', loading: false })
-        return
-      }
-
-      if (data.length === 0) {
-        console.warn('No usuarios found in Supabase')
-      }
-
-      set({ users: data, loaded: true, loading: false })
+      // Sin usuarios en backend → usar demo
+      set({ users: demoUsers, loaded: true, loading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.error('Exception fetching users:', message)
-      set({ error: `Error: ${message}`, loading: false })
+      console.warn('Auth: usando usuario demo (sin backend):', message)
+      set({ users: demoUsers, loaded: true, loading: false })
     }
   },
   setUser: (u) => set({ user: u }),
