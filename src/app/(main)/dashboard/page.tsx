@@ -116,6 +116,81 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Gráficos: Cotizaciones por Situación (Monto) + Propiedades por Modalidad (Pie) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* BARRAS: Cotizaciones por Situación (Monto) */}
+        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-lg font-semibold text-white mb-4">Cotizaciones por Situación (Monto)</h2>
+          {(() => {
+            const estados = Object.keys(montoCotizacionesPorEstado)
+            if (estados.length === 0) return <p className="text-white/30 text-sm">Sin cotizaciones registradas</p>
+            const colores: Record<string, string> = { 'Enviada': '#3b82f6', 'En Negociación': '#f59e0b', 'Aceptada': '#10b981', 'Rechazada': '#ef4444' }
+            const max = Math.max(...estados.map(e => montoCotizacionesPorEstado[e]))
+            return (
+              <div className="space-y-4">
+                {estados.map(e => {
+                  const val = montoCotizacionesPorEstado[e]
+                  const pct = max > 0 ? (val / max) * 100 : 0
+                  const color = colores[e] || '#8b5cf6'
+                  return (
+                    <div key={e}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm text-white/80">{e}</span>
+                        <span className="text-sm font-bold" style={{ color }}>$ {fmtNum(val)} COP</span>
+                      </div>
+                      <div className="w-full rounded-full h-3" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                        <div className="h-3 rounded-full transition-all" style={{ width: `${Math.max(pct, 2)}%`, background: color }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })()}
+        </div>
+
+        {/* PIE: Propiedades por Modalidad */}
+        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Modalidad</h2>
+          {(() => {
+            const modColores: Record<string, string> = { 'Venta': '#10b981', 'Alquiler': '#3b82f6', 'Venta y Alquiler': '#8b5cf6' }
+            const modal = ['Venta', 'Alquiler', 'Venta y Alquiler'].map(m => ({ m, n: propiedades.filter(p => p.modalidad === m).length })).filter(x => x.n > 0)
+            const total = modal.reduce((s, x) => s + x.n, 0)
+            if (total === 0) return <p className="text-white/30 text-sm">Sin propiedades registradas</p>
+            let ang = -90
+            const R = 80, C = 100
+            const rad = (a: number) => (a * Math.PI) / 180
+            const slices = modal.map(x => {
+              const frac = x.n / total
+              const a0 = ang, a1 = ang + frac * 360; ang = a1
+              const x0 = C + R * Math.cos(rad(a0)), y0 = C + R * Math.sin(rad(a0))
+              const x1 = C + R * Math.cos(rad(a1)), y1 = C + R * Math.sin(rad(a1))
+              const large = frac > 0.5 ? 1 : 0
+              const d = frac >= 0.999
+                ? `M${C - R},${C} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 -${R * 2},0`
+                : `M${C},${C} L${x0.toFixed(2)},${y0.toFixed(2)} A${R},${R} 0 ${large} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z`
+              return { m: x.m, n: x.n, d, color: modColores[x.m] || '#64748b', pct: Math.round(frac * 100) }
+            })
+            return (
+              <div className="flex items-center gap-6 flex-wrap">
+                <svg viewBox="0 0 200 200" width="170" height="170">
+                  {slices.map(s => <path key={s.m} d={s.d} fill={s.color} stroke="#0c1a3d" strokeWidth="2" />)}
+                </svg>
+                <div className="space-y-2.5">
+                  {slices.map(s => (
+                    <div key={s.m} className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded-sm" style={{ background: s.color }} />
+                      <span className="text-sm text-white/80">{s.m}</span>
+                      <span className="text-sm font-bold text-white">{s.n} <span className="text-white/50">({s.pct}%)</span></span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+        </div>
+      </div>
+
       {/* Propiedades por Ciudad y Tipo - Stacked Vertical Bars */}
       <Link href="/propiedades" className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <h2 className="text-lg font-semibold text-white mb-4">Propiedades por Ciudad y Tipo</h2>

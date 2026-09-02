@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
+import { demoContratos } from '../demo-contratos'
 
 export type Documento = {
   id: string
@@ -54,7 +55,8 @@ export const useContratosStore = create<ContratosState>()(persist((set, get) => 
         return
       }
     } catch { /* sin backend disponible */ }
-    set({ loaded: true })
+    if (get().contratos.length === 0) set({ contratos: demoContratos, loaded: true })
+    else set({ loaded: true })
   },
   addContrato: async (c) => {
     set((s) => ({ contratos: [...s.contratos, c] }))
