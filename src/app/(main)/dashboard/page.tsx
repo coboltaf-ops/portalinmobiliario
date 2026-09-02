@@ -93,25 +93,26 @@ export default function DashboardPage() {
       <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {cards.slice(0, 4).map(c => (
-          <Link key={c.label} href={c.href} className="rounded-2xl p-6 hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <div className="flex items-center justify-between mb-3">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
-              <div className="w-2 h-2 rounded-full" style={{ background: c.color }} />
+          <Link key={c.label} href={c.href} className="rounded-xl p-3.5 transition-all cursor-pointer block hover:shadow-lg" style={{ background: '#ffffff', border: '2px solid #001e4d', boxShadow: '0 2px 6px rgba(0,30,77,0.10)' }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-2" style={{ background: c.color }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
             </div>
-            <p className="font-black" style={{ color: '#000000', fontSize: '32px', fontWeight: 900 }}>{fmtNum(c.value)}</p>
-            <p className="mt-2" style={{ color: '#000000', fontSize: '16px', fontWeight: 600 }}>{c.label}</p>
+            <p style={{ color: '#000000', fontSize: '24px', fontWeight: 900, lineHeight: 1 }}>{fmtNum(c.value)}</p>
+            <p className="mt-1" style={{ color: '#000000', fontSize: '12px', fontWeight: 800, lineHeight: 1.2 }}>{c.label}</p>
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {cards.slice(4).map(c => (
-          <Link key={c.label} href={c.href} className="rounded-xl p-4 text-center hover:bg-white/10 transition-all cursor-pointer block" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <svg className="mx-auto" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
-            <p className="font-black mt-2" style={{ color: '#000000', fontSize: '24px', fontWeight: 900 }}>{fmtNum(c.value)}</p>
-            <p className="mt-1" style={{ color: '#000000', fontSize: '14px', fontWeight: 600 }}>{c.label}</p>
+          <Link key={c.label} href={c.href} className="rounded-xl p-3.5 text-center transition-all cursor-pointer block hover:shadow-lg" style={{ background: '#ffffff', border: '2px solid #001e4d', boxShadow: '0 2px 6px rgba(0,30,77,0.10)' }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-2" style={{ background: c.color }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
+            </div>
+            <p style={{ color: '#000000', fontSize: '22px', fontWeight: 900, lineHeight: 1 }}>{fmtNum(c.value)}</p>
+            <p className="mt-1" style={{ color: '#000000', fontSize: '12px', fontWeight: 800, lineHeight: 1.2 }}>{c.label}</p>
           </Link>
         ))}
       </div>
