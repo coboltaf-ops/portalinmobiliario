@@ -160,13 +160,13 @@ export default function PropiedadDetallePage() {
                 {propiedad.precio_venta > 0 && (
                   <div>
                     <p className="text-xs font-semibold mb-0.5" style={{ color: '#94a3b8' }}>Precio Venta</p>
-                    <p className="text-3xl font-black" style={{ color: '#2563eb' }}>{monedaSimbolo(propiedad.tipo_moneda)} {fmtNum(propiedad.precio_venta, 2)}</p>
+                    <p className="text-3xl font-black" style={{ color: '#2563eb' }}>{monedaSimbolo(propiedad.tipo_moneda)} {fmtNum(propiedad.precio_venta, 0)} <span style={{ fontSize: '0.5em', color: '#64748b', fontWeight: 600 }}>{propiedad.tipo_moneda}</span></p>
                   </div>
                 )}
                 {propiedad.precio_alquiler > 0 && (
                   <div>
                     <p className="text-xs font-semibold mb-0.5" style={{ color: '#94a3b8' }}>Precio Alquiler</p>
-                    <p className="text-3xl font-black" style={{ color: '#2563eb' }}>{monedaSimbolo(propiedad.tipo_moneda)} {fmtNum(propiedad.precio_alquiler, 2)}</p>
+                    <p className="text-3xl font-black" style={{ color: '#2563eb' }}>{monedaSimbolo(propiedad.tipo_moneda)} {fmtNum(propiedad.precio_alquiler, 0)} <span style={{ fontSize: '0.5em', color: '#64748b', fontWeight: 600 }}>{propiedad.tipo_moneda}</span></p>
                   </div>
                 )}
               </div>

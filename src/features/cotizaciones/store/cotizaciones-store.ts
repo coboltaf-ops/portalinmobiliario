@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
+import { demoCotizaciones } from '../demo-cotizaciones'
 
 export type Cotizacion = {
   id: string
@@ -34,7 +35,8 @@ export const useCotizacionesStore = create<CotizacionesState>()(persist((set, ge
       const { data } = await (supabase as any).from('cotizaciones').select('*')
       if (data && data.length > 0) { set({ cotizaciones: data, loaded: true }); return }
     } catch { /* sin backend disponible */ }
-    set({ loaded: true })
+    if (get().cotizaciones.length === 0) set({ cotizaciones: demoCotizaciones, loaded: true })
+    else set({ loaded: true })
   },
   addCotizacion: async (c) => {
     set((s) => ({ cotizaciones: [...s.cotizaciones, c] }))

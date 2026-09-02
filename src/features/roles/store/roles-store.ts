@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
 
 export type Rol = {
@@ -20,7 +21,7 @@ interface RolesState {
   clearError: () => void
 }
 
-export const useRolesStore = create<RolesState>()((set, get) => ({
+export const useRolesStore = create<RolesState>()(persist((set, get) => ({
   roles: [],
   loaded: false,
   loading: false,
@@ -29,23 +30,18 @@ export const useRolesStore = create<RolesState>()((set, get) => ({
   fetchRoles: async () => {
     set({ loading: true, error: null })
     try {
-      const { data, error: supabaseError } = await (supabase as any)
+      const { data } = await (supabase as any)
         .from('roles')
         .select('id, nombre, descripcion, created_at')
         .order('created_at', { ascending: false })
 
-      if (supabaseError) {
-        set({ error: `Error al cargar roles: ${supabaseError.message}`, loading: false })
+      if (data && data.length > 0) {
+        set({ roles: data, loaded: true, loading: false })
         return
       }
-
-      if (data) {
-        set({ roles: data, loaded: true, loading: false })
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      set({ error: `Error: ${message}`, loading: false })
-    }
+    } catch { /* sin backend disponible */ }
+    // Conserva lo persistido en localStorage cuando no hay backend
+    set({ loaded: true, loading: false })
   },
 
   addRol: async (r) => {
@@ -124,4 +120,4 @@ export const useRolesStore = create<RolesState>()((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
-}))
+}), { name: 'portal-roles-storage', storage: createJSONStorage(() => localStorage) }))

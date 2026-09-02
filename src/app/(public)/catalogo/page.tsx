@@ -45,7 +45,7 @@ function PropertyCard({ p, monedaSimbolo }: { p: Propiedad; monedaSimbolo: (c: s
       </div>
       <div className="p-5">
         <p className="text-2xl font-extrabold mb-1" style={{ color: '#2563eb' }}>
-          {monedaSimbolo(p.tipo_moneda)} {fmtNum(precio, 2)}
+          {monedaSimbolo(p.tipo_moneda)} {fmtNum(precio, 0)} <span style={{ fontSize: '0.65em', color: '#64748b', fontWeight: 600 }}>{p.tipo_moneda}</span>
         </p>
         <h3 className="font-bold text-base mb-1 truncate" style={{ color: '#0f172a' }}>{p.urbanizacion || 'Propiedad'}</h3>
         <p className="flex items-center gap-1 text-sm mb-4" style={{ color: '#94a3b8' }}>

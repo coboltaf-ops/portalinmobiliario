@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { supabase } from '@/shared/lib/supabase'
+import { demoSolicitudes } from '../demo-solicitudes'
 
 export type Solicitud = {
   id: string
@@ -35,7 +36,8 @@ export const useSolicitudesStore = create<SolicitudesState>()(persist((set, get)
       const { data } = await (supabase as any).from('solicitudes').select('*')
       if (data && data.length > 0) { set({ solicitudes: data, loaded: true }); return }
     } catch { /* sin backend disponible */ }
-    set({ loaded: true })
+    if (get().solicitudes.length === 0) set({ solicitudes: demoSolicitudes, loaded: true })
+    else set({ loaded: true })
   },
   addSolicitud: async (s) => {
     const { error } = await (supabase as any).from('solicitudes').insert(s)

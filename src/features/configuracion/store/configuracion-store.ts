@@ -39,7 +39,7 @@ const getTable = (state: ConfigState, table: string): (RefItem | MonedaItem)[] =
   }
 }
 
-export const useConfigStore = create<ConfigState>()((set, get) => ({
+export const useConfigStore = create<ConfigState>()(persist((set, get) => ({
   tiposPropiedad: [],
   monedas: [],
   ciudades: [],
@@ -50,9 +50,13 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
   loaded: false,
 
   fetchConfig: async () => {
-
-    const { data } = await (supabase as any).from('configuracion').select('*')
-    if (!data) return
+    let data: Record<string, unknown>[] | null = null
+    try {
+      const res = await (supabase as any).from('configuracion').select('*')
+      data = res.data
+    } catch { /* sin backend disponible */ }
+    // Conserva la configuración persistida en localStorage cuando no hay backend
+    if (!data || data.length === 0) { set({ loaded: true }); return }
     const grouped: Record<string, unknown[]> = {}
     for (const row of data) {
       const tabla = row.tabla as string
@@ -132,7 +136,7 @@ export const useConfigStore = create<ConfigState>()((set, get) => ({
     const ciudad = newCiudades.find(c => c.id === ciudadId)
     if (ciudad) await (supabase as any).from('configuracion').update({ zonas: ciudad.zonas }).eq('id', ciudadId)
   },
-}))
+}), { name: 'portal-configuracion-storage', storage: createJSONStorage(() => localStorage) }))
 
 export function getAllZonas(ciudades: CiudadItem[]): RefItem[] {
   const seen = new Set<string>()
