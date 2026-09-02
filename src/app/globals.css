@@ -28,6 +28,14 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(0, 30, 77, 0.1);
 }
 
+/* ── Legibilidad: textos y nombres de campos más grandes en todos los módulos ── */
+.text-xs { font-size: 0.84rem !important; line-height: 1.2rem !important; }   /* ~13.5px (antes 12) */
+.text-sm { font-size: 0.97rem !important; line-height: 1.4rem !important; }   /* ~15.5px (antes 14) */
+label { font-weight: 600; }
+input, textarea, select { font-size: 0.97rem !important; }
+th { font-size: 0.84rem !important; letter-spacing: 0.2px; }
+td { font-size: 0.95rem; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }

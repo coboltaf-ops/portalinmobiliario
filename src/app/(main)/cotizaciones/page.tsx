@@ -18,6 +18,7 @@ import { ModalHeader } from '@/shared/components/modal-header'
 import { compressImage } from '@/shared/lib/compress-image'
 import jsPDF from 'jspdf'
 import { PDFPreview } from '@/shared/components/pdf-preview'
+import { NumberInput } from '@/shared/components/number-input'
 
 const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 const selectSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
@@ -428,7 +429,7 @@ export default function CotizacionesPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Precio Ofertado</label>
-                  <input type="number" min="0" step="0.01" value={form.precio_ofertado || ''} onChange={e => setForm(f => ({ ...f, precio_ofertado: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.precio_ofertado || 0} onValueChange={v => setForm(f => ({ ...f, precio_ofertado: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Situacion</label>

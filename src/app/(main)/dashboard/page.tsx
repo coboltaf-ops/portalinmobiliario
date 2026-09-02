@@ -93,26 +93,14 @@ export default function DashboardPage() {
       <div className="space-y-6">
       <h1 className="text-2xl font-bold text-white">Dashboard</h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {cards.slice(0, 4).map(c => (
-          <Link key={c.label} href={c.href} className="rounded-xl p-3.5 transition-all cursor-pointer block hover:shadow-lg" style={{ background: '#ffffff', border: '2px solid #001e4d', boxShadow: '0 2px 6px rgba(0,30,77,0.10)' }}>
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-2" style={{ background: c.color }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
-            </div>
-            <p style={{ color: '#000000', fontSize: '24px', fontWeight: 900, lineHeight: 1 }}>{fmtNum(c.value)}</p>
-            <p className="mt-1" style={{ color: '#000000', fontSize: '12px', fontWeight: 800, lineHeight: 1.2 }}>{c.label}</p>
-          </Link>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {cards.slice(4).map(c => (
-          <Link key={c.label} href={c.href} className="rounded-xl p-3.5 text-center transition-all cursor-pointer block hover:shadow-lg" style={{ background: '#ffffff', border: '2px solid #001e4d', boxShadow: '0 2px 6px rgba(0,30,77,0.10)' }}>
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-2" style={{ background: c.color }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl">
+        {cards.map(c => (
+          <Link key={c.label} href={c.href} className="rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all cursor-pointer hover:shadow-md" style={{ background: '#ffffff', border: '2px solid #001e4d', boxShadow: '0 2px 5px rgba(0,30,77,0.10)' }}>
+            <div className="w-8 h-8 rounded-md flex items-center justify-center mb-1.5" style={{ background: c.color }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={c.icon} /></svg>
             </div>
             <p style={{ color: '#000000', fontSize: '22px', fontWeight: 900, lineHeight: 1 }}>{fmtNum(c.value)}</p>
-            <p className="mt-1" style={{ color: '#000000', fontSize: '12px', fontWeight: 800, lineHeight: 1.2 }}>{c.label}</p>
+            <p className="mt-0.5" style={{ color: '#000000', fontSize: '11px', fontWeight: 800, lineHeight: 1.15 }}>{c.label}</p>
           </Link>
         ))}
       </div>

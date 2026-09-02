@@ -15,6 +15,7 @@ import { ModalHeader } from '@/shared/components/modal-header'
 import jsPDF from 'jspdf'
 import { compressImage } from '@/shared/lib/compress-image'
 import { PDFPreview } from '@/shared/components/pdf-preview'
+import { NumberInput } from '@/shared/components/number-input'
 
 const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
 const selectSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
@@ -528,15 +529,15 @@ export default function PropiedadesPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Precio Venta</label>
-                  <input type="number" min="0" step="0.01" value={form.precio_venta || ''} onChange={e => setForm(f => ({ ...f, precio_venta: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.precio_venta || 0} onValueChange={v => setForm(f => ({ ...f, precio_venta: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Precio Alquiler</label>
-                  <input type="number" min="0" step="0.01" value={form.precio_alquiler || ''} onChange={e => setForm(f => ({ ...f, precio_alquiler: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.precio_alquiler || 0} onValueChange={v => setForm(f => ({ ...f, precio_alquiler: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Area m²</label>
-                  <input type="number" min="0" value={form.area_m2 || ''} onChange={e => setForm(f => ({ ...f, area_m2: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.area_m2 || 0} onValueChange={v => setForm(f => ({ ...f, area_m2: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Habitaciones</label>
@@ -591,11 +592,11 @@ export default function PropiedadesPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Monto Administracion (Mes)</label>
-                  <input type="number" min="0" step="0.01" value={form.monto_administracion_mes || ''} onChange={e => setForm(f => ({ ...f, monto_administracion_mes: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.monto_administracion_mes || 0} onValueChange={v => setForm(f => ({ ...f, monto_administracion_mes: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Monto Predial (Anual)</label>
-                  <input type="number" min="0" step="0.01" value={form.monto_predial_anual || ''} onChange={e => setForm(f => ({ ...f, monto_predial_anual: parseFloat(e.target.value) || 0 }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
+                  <NumberInput value={form.monto_predial_anual || 0} onValueChange={v => setForm(f => ({ ...f, monto_predial_anual: v }))} className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={inputSt} />
                 </div>
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-700">Direccion</label>
