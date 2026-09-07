@@ -61,7 +61,7 @@ export default function LoginPage() {
           <img
             src="/casa-login.svg"
             alt="Casa Portal Inmobiliario"
-            style={{ width: '100%', maxWidth: 240, height: 'auto', marginTop: 4 }}
+            style={{ width: '100%', maxWidth: 300, height: 'auto', marginTop: 8, borderRadius: 16, boxShadow: '0 6px 18px rgba(15,27,61,0.25)' }}
           />
         </div>
 

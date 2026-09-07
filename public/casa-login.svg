@@ -1,44 +1,51 @@
-<svg width="360" height="120" viewBox="0 0 360 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="360" height="180" viewBox="0 0 360 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="1" stop-color="#0f1b3d"/>
+    </linearGradient>
     <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#eaf0fb"/>
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#dbe4f5"/>
     </linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="0" stop-color="#93c5fd"/>
       <stop offset="1" stop-color="#2563eb"/>
     </linearGradient>
   </defs>
 
-  <!-- Base / línea de suelo -->
-  <line x1="40" y1="96" x2="320" y2="96" stroke="#2563eb" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Fondo propio para que la casa resalte -->
+  <rect x="0" y="0" width="360" height="180" rx="16" fill="url(#bg)"/>
 
-  <!-- Casa moderna minimalista (dos volúmenes) -->
-  <!-- Volumen bajo izquierdo -->
-  <rect x="112" y="60" width="60" height="36" fill="url(#wall)"/>
-  <!-- Volumen alto derecho -->
-  <rect x="172" y="34" width="76" height="62" fill="url(#wall)"/>
+  <!-- Suelo -->
+  <line x1="70" y1="140" x2="290" y2="140" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
 
-  <!-- Techos planos con voladizo -->
-  <rect x="106" y="56" width="72" height="6" rx="2" fill="#1e3a8a"/>
-  <rect x="166" y="30" width="88" height="6" rx="2" fill="#1e3a8a"/>
+  <!-- Casa moderna: dos volúmenes -->
+  <!-- Volumen bajo (izquierda) -->
+  <rect x="118" y="96" width="70" height="44" fill="url(#wall)" stroke="#0f1b3d" stroke-width="2"/>
+  <!-- Volumen alto (derecha) -->
+  <rect x="188" y="58" width="88" height="82" fill="url(#wall)" stroke="#0f1b3d" stroke-width="2"/>
+
+  <!-- Losas / techos planos con voladizo -->
+  <rect x="110" y="90" width="86" height="8" rx="2" fill="#60a5fa"/>
+  <rect x="180" y="52" width="104" height="8" rx="2" fill="#60a5fa"/>
 
   <!-- Ventanal grande (volumen alto) -->
-  <rect x="184" y="46" width="30" height="42" rx="2" fill="url(#glass)"/>
-  <line x1="199" y1="46" x2="199" y2="88" stroke="#eaf0fb" stroke-width="1.5"/>
-  <line x1="184" y1="67" x2="214" y2="67" stroke="#eaf0fb" stroke-width="1.5"/>
+  <rect x="204" y="74" width="38" height="52" rx="2" fill="url(#glass)" stroke="#0f1b3d" stroke-width="1.5"/>
+  <line x1="223" y1="74" x2="223" y2="126" stroke="#f8fafc" stroke-width="1.5"/>
+  <line x1="204" y1="100" x2="242" y2="100" stroke="#f8fafc" stroke-width="1.5"/>
 
   <!-- Ventana pequeña superior -->
-  <rect x="224" y="46" width="16" height="16" rx="2" fill="url(#glass)"/>
+  <rect x="252" y="74" width="18" height="18" rx="2" fill="url(#glass)" stroke="#0f1b3d" stroke-width="1.5"/>
 
   <!-- Puerta moderna -->
-  <rect x="128" y="70" width="18" height="26" rx="1.5" fill="#1e3a8a"/>
-  <line x1="142" y1="80" x2="142" y2="86" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+  <rect x="132" y="110" width="22" height="30" rx="2" fill="#0f1b3d"/>
+  <line x1="149" y1="121" x2="149" y2="129" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
 
   <!-- Ventana volumen bajo -->
-  <rect x="152" y="70" width="14" height="14" rx="2" fill="url(#glass)"/>
+  <rect x="162" y="108" width="18" height="16" rx="2" fill="url(#glass)" stroke="#0f1b3d" stroke-width="1.5"/>
 
-  <!-- Detalle vegetación minimalista -->
-  <circle cx="92" cy="90" r="7" fill="#2563eb" opacity="0.35"/>
-  <rect x="90" y="90" width="4" height="8" rx="2" fill="#1e3a8a" opacity="0.5"/>
+  <!-- Arbusto minimalista -->
+  <circle cx="98" cy="132" r="9" fill="#3b82f6"/>
+  <rect x="96" y="132" width="4" height="10" rx="2" fill="#1e3a8a"/>
 </svg>
