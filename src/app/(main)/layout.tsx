@@ -101,10 +101,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       )}
 
       <main className={`flex-1 flex flex-col min-h-screen bg-white transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <header className="px-8 py-3 shrink-0 flex items-center justify-between bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-          <div className="w-16" />
+        <header className="px-8 py-3 shrink-0 flex items-center justify-end gap-4 bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
           {user && (
-            <div className="text-center flex-1">
+            <div className="text-right leading-tight">
               <p className="text-sm font-black text-[#001e4d]">{user.nombre.toUpperCase()}</p>
               <p className="text-xs font-bold text-[#001e4d]/70">{user.rol?.toUpperCase() || 'USUARIO'}</p>
             </div>
