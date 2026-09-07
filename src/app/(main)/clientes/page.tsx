@@ -9,6 +9,7 @@ import { useConfigStore, getZonasByCiudad, getAllZonas } from '@/features/config
 import { useAuthStore } from '@/features/auth/store/auth-store'
 import { fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
+import { estadoBadgeStyle } from '@/shared/lib/estado-badge'
 import { compressImage } from '@/shared/lib/compress-image'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
@@ -63,23 +64,13 @@ export default function ClientesPage() {
   const handleEdit = (c: Cliente) => { setForm({ ...c }); setIsFormOpen(true) }
   const handleDelete = (id: string) => { if (confirm('¿Eliminar este registro?')) deleteCliente(id) }
 
-  const statusBadge = (s: string) => {
-    const isActive = s === 'Activo'
-    return <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{
-      background: isActive ? 'rgba(29,78,216,0.2)' : 'rgba(239,68,68,0.2)',
-      color: isActive ? '#3b82f6' : '#f87171',
-      border: isActive ? '1px solid rgba(29,78,216,0.3)' : '1px solid rgba(239,68,68,0.3)',
-    }}>{s}</span>
-  }
+  const statusBadge = (s: string) => (
+    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(s)}>{s}</span>
+  )
 
-  const tipoBadge = (t: string) => {
-    const isCliente = t === 'Cliente'
-    return <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{
-      background: isCliente ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)',
-      color: isCliente ? '#34d399' : '#60a5fa',
-      border: isCliente ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(245,158,11,0.3)',
-    }}>{t}</span>
-  }
+  const tipoBadge = (t: string) => (
+    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(t)}>{t}</span>
+  )
 
   const monedaSimbolo = (code: string) => {
     const m = config.monedas.find(m => m.nombre === code)

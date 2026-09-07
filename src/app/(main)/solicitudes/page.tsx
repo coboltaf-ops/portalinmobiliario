@@ -12,6 +12,7 @@ import { useConfigStore } from '@/features/configuracion/store/configuracion-sto
 import { useAuthStore } from '@/features/auth/store/auth-store'
 import { fmtNum } from '@/shared/lib/format-date'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
+import { estadoBadgeStyle } from '@/shared/lib/estado-badge'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
 
@@ -130,16 +131,9 @@ export default function SolicitudesPage() {
     router.push('/cotizaciones')
   }
 
-  const statusBadge = (s: string) => {
-    const colors: Record<string, { bg: string; color: string; border: string }> = {
-      'Nueva': { bg: 'rgba(245,158,11,0.2)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.3)' },
-      'En Atencion': { bg: 'rgba(59,130,246,0.2)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' },
-      'Atendida': { bg: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid rgba(16,185,129,0.3)' },
-      'Descartada': { bg: 'rgba(239,68,68,0.2)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' },
-    }
-    const c = colors[s] || { bg: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }
-    return <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{ background: c.bg, color: c.color, border: c.border }}>{s}</span>
-  }
+  const statusBadge = (s: string) => (
+    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(s)}>{s}</span>
+  )
 
   const nuevasCount = solicitudes.filter(s => s.estado === 'Nueva').length
 

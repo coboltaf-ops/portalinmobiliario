@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { useUsuariosStore, type Usuario } from '@/features/usuarios/store/usuarios-store'
 import { useAuthStore } from '@/features/auth/store/auth-store'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
+import { estadoBadgeStyle } from '@/shared/lib/estado-badge'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
 
@@ -149,21 +150,9 @@ export default function UsuariosPage() {
     setFormError('')
   }
 
-  const rolBadge = (rol: string) => {
-    const isAdmin = rol === 'Admin'
-    return (
-      <span
-        className="px-2 py-1 rounded-lg text-xs font-semibold"
-        style={{
-          background: isAdmin ? 'rgba(30,64,175,0.2)' : 'rgba(107,114,128,0.2)',
-          color: isAdmin ? '#3b82f6' : '#6b7280',
-          border: isAdmin ? '1px solid rgba(30,64,175,0.3)' : '1px solid rgba(107,114,128,0.3)',
-        }}
-      >
-        {rol}
-      </span>
-    )
-  }
+  const rolBadge = (rol: string) => (
+    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(rol)}>{rol}</span>
+  )
 
   const headers = ['Usuario', 'Nombre', 'Rol']
   const rows = filtered.map(u => [u.usuario, u.nombre, u.rol])

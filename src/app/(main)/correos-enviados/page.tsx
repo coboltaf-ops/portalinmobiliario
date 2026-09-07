@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useCorreosStore } from '@/features/correos-enviados/store/correos-store'
+import { estadoBadgeStyle } from '@/shared/lib/estado-badge'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 
 const inputSt: React.CSSProperties = { background: '#ffffff', border: '2px solid #000000', color: '#000000' }
@@ -67,7 +68,7 @@ export default function CorreosEnviadosPage() {
                   <td className="px-4 py-3 text-white/70 max-w-xs truncate">{c.asunto}</td>
                   <td className="px-4 py-3 font-mono text-xs text-white/60">{c.consecutivo}</td>
                   <td className="px-4 py-3">
-                    <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{ background: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid rgba(16,185,129,0.3)' }}>{c.estado}</span>
+                    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(c.estado)}>{c.estado}</span>
                   </td>
                   <td className="px-4 py-3">
                     <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-white/10" title="Eliminar">

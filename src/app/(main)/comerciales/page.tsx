@@ -8,6 +8,7 @@ import { compressImage } from '@/shared/lib/compress-image'
 import { useConfigStore, getAllZonas } from '@/features/configuracion/store/configuracion-store'
 import { useAuthStore } from '@/features/auth/store/auth-store'
 import { exportToExcel, exportToPDF, printTable } from '@/shared/lib/export-helpers'
+import { estadoBadgeStyle } from '@/shared/lib/estado-badge'
 import VoiceSearchButton from '@/shared/components/voice-search-button'
 import { ModalHeader } from '@/shared/components/modal-header'
 
@@ -72,14 +73,9 @@ export default function ComercialesPage() {
   const handleEdit = (c: Comercial) => { setForm({ ...c }); setIsFormOpen(true) }
   const handleDelete = (id: string) => { if (confirm('¿Eliminar este comercial?')) deleteComercial(id) }
 
-  const statusBadge = (s: string) => {
-    const isActive = s === 'Activo'
-    return <span className="px-2 py-1 rounded-lg text-xs font-semibold" style={{
-      background: isActive ? 'rgba(29,78,216,0.2)' : 'rgba(239,68,68,0.2)',
-      color: isActive ? '#3b82f6' : '#f87171',
-      border: isActive ? '1px solid rgba(29,78,216,0.3)' : '1px solid rgba(239,68,68,0.3)',
-    }}>{s}</span>
-  }
+  const statusBadge = (s: string) => (
+    <span className="px-2 py-1 rounded-lg text-xs" style={estadoBadgeStyle(s)}>{s}</span>
+  )
 
   const headers = ['Codigo', 'Nombre', 'Apellido', 'Cargo', 'Departamento', 'Correo', 'Telefono', 'Movil', 'Zona', 'Situacion']
   const rows = filtered.map(c => [c.codigo, c.nombre, c.apellido, c.cargo, c.departamento, c.correo, c.telefono, c.movil, c.zona_asignada, c.situacion])
