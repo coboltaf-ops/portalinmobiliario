@@ -55,19 +55,19 @@ export default function LoginPage() {
       {/* LOGIN CARD - Logo y Portal Inmobiliario DENTRO */}
       <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
         {/* Logo y Título DENTRO de la tarjeta - Vertical */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 8, background: '#001e4d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#001e4d', margin: 0, textAlign: 'center' }}>PORTAL INMOBILIARIO</h1>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#001e4d', margin: 0, textAlign: 'center', letterSpacing: 0.5 }}>PORTAL INMOBILIARIO</h1>
+          {/* Ilustración de casa moderna debajo del título */}
+          <img
+            src="/casa-login.svg"
+            alt="Casa Portal Inmobiliario"
+            style={{ width: '100%', maxWidth: 240, height: 'auto', marginTop: 4 }}
+          />
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#ffffff', marginBottom: 4 }}>Inicia Sesión</h2>
-          <p style={{ color: '#ffffff', fontSize: 14 }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#001e4d', marginBottom: 4 }}>Inicia Sesión</h2>
+          <p style={{ color: '#475569', fontSize: 14 }}>
             {usersLoading ? 'Cargando usuarios...' : 'Inicia sesión en tu cuenta'}
           </p>
         </div>
