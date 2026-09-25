@@ -56,6 +56,14 @@ export default function LoginPage() {
       <div className="login-card" style={{ background: '#0f1b3d', border: '3px solid #1e3a8a', borderRadius: 20, padding: 40, width: 400 }}>
         {/* Logo y Título DENTRO de la tarjeta - Vertical */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20 }}>
+          {/* Marca del consultor: logo JP redondo y rojo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+            <img src="/logo-jp.png" alt="Consultor Palomares" style={{ width: 64, height: 64, flexShrink: 0, filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.30))' }} />
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#001e4d', lineHeight: 1.1 }}>Consultor Palomares</div>
+              <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 2, color: '#dc2626' }}>ASESORÍA INMOBILIARIA</div>
+            </div>
+          </div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: '#001e4d', margin: 0, textAlign: 'center', letterSpacing: 0.5 }}>PORTAL INMOBILIARIO</h1>
           {/* Ilustración de casa moderna debajo del título */}
           <img
